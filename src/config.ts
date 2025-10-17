@@ -127,10 +127,10 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	theme: "github-dark",
 };
 
-// export const imageLibraryConfig = {
-// 	apiBaseUrl: "", // 兰空图床API地址
-// 	apiToken: "", // 用户token
-// 	albumsEndpoint: "/albums?order=earliest", // 相册列表接口
-// 	imagesEndpoint: "/images", // 图片列表接口
-// 	defaultAlbumId: 4, // 默认相册ID
-// };
+export const imageLibraryConfig = {
+	apiBaseUrl: "", // 兰空图床API地址
+	apiToken: "", // 用户token
+	albumsEndpoint: "/albums?order=earliest", // 相册列表接口
+	imagesEndpoint: "/images", // 图片列表接口
+	defaultAlbumId: 4, // 默认相册ID
+};
