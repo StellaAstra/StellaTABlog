@@ -145,7 +145,23 @@ const bannerOffset =
 
 		<slot name="head"></slot>
 
+		{/* 音乐播放器样式 */}
+		{siteConfig.musicPlayer.enable && (
+			<link href="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
+		)}
+
 		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
+
+		{/* Microsoft Clarity 分析脚本 */}
+		{siteConfig.clarity.enable && (
+			<script is:inline define:vars={{projectId: siteConfig.clarity.projectId}}>
+				(function(c,l,a,r,i,t,y){
+					c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+					t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+					y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+				})(window, document, "clarity", "script", projectId);
+			</script>
+		)}
 
 	</head>
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
@@ -154,8 +170,113 @@ const bannerOffset =
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
 
+		{/* 音乐播放器容器 */}
+		{siteConfig.musicPlayer.enable && (
+			<div id="player" class="aplayer"></div>
+		)}
+
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
+
+		{/* 音乐播放器脚本 */}
+		{siteConfig.musicPlayer.enable && (
+			<script is:inline>
+			// 防止重复加载脚本
+			if (!window.aplayerLoaded) {
+				window.aplayerLoaded = true;
+				
+				// 定义全局加载函数
+				window.loadMasterMusic = function() {
+					// 防止重复加载 MasterMusic
+					if (window.musicPlayerInitialized) {
+						console.log('音乐播放器已存在，跳过重复加载');
+						return;
+					}
+					
+					// 确保 APlayer 加载完成后再加载 MasterMusic.js
+					const script = document.createElement('script');
+					script.src = '/lib/MasterMusic.js';
+					document.head.appendChild(script);
+				};
+				
+				// 加载 APlayer CSS
+				const aplayerCSS = document.createElement('link');
+				aplayerCSS.rel = 'stylesheet';
+				aplayerCSS.href = 'https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css';
+				document.head.appendChild(aplayerCSS);
+				
+				// 加载 APlayer 库
+				const aplayerScript = document.createElement('script');
+				aplayerScript.src = 'https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.js';
+				aplayerScript.onload = window.loadMasterMusic;
+				document.head.appendChild(aplayerScript);
+			} else {
+				console.log('APlayer 已加载，跳过重复加载');
+			}
+
+			// 监听 Astro 页面导航事件，确保音乐播放器容器和样式存在
+			document.addEventListener('astro:page-load', function() {
+				// 确保 APlayer CSS 始终存在
+				if (!document.querySelector('link[href*="aplayer"]')) {
+					const aplayerCSS = document.createElement('link');
+					aplayerCSS.rel = 'stylesheet';
+					aplayerCSS.href = 'https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css';
+					document.head.appendChild(aplayerCSS);
+				}
+				
+				// 确保音乐播放器容器存在
+				if (!document.getElementById('player')) {
+					const playerContainer = document.createElement('div');
+					playerContainer.id = 'player';
+					playerContainer.className = 'aplayer';
+					document.body.appendChild(playerContainer);
+				}
+				
+				// 如果音乐播放器已初始化但容器被重新创建，需要重新绑定
+				if (window.musicPlayer && window.musicPlayerInitialized) {
+					const newContainer = document.getElementById('player');
+					if (newContainer && !newContainer.querySelector('.aplayer-body')) {
+						// 容器为空，需要重新初始化播放器到新容器
+						console.log('检测到播放器容器重建，重新初始化音乐播放器...');
+						window.musicPlayerInitialized = false;
+						window.loadMasterMusic();
+					}
+				}
+			});
+
+			// 页面卸载前保存播放状态
+			document.addEventListener('astro:before-swap', function() {
+				if (window.musicPlayer) {
+					// 保存当前播放状态
+					window.musicPlayerState = {
+						currentTime: window.musicPlayer.audio.currentTime,
+						paused: window.musicPlayer.audio.paused,
+						currentIndex: window.musicPlayer.list.index
+					};
+				}
+			});
+
+			// 全局用户交互处理 - 确保页面切换后能恢复播放
+			if (!window.hasInteracted) {
+				window.hasInteracted = false;
+				
+				window.enableAutoplay = () => {
+					if (!window.hasInteracted) {
+						window.hasInteracted = true;
+						window.musicPlayer.play();
+					}
+				};
+
+				// 监听各种用户交互事件
+				['click', 'keydown', 'touchstart', 'scroll'].forEach(eventType => {
+					document.addEventListener(eventType, window.enableAutoplay, { 
+						once: true, 
+						passive: true 
+					});
+				});
+			}
+		</script>
+		)}
 	</body>
 </html>
 
@@ -190,6 +311,33 @@ const bannerOffset =
 	}
 	.navbar-hidden {
 		@apply opacity-0 -translate-y-16
+	}
+	
+	/* 音乐播放器样式 */
+	#player {
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		z-index: 999;
+		width: 300px;
+		border-radius: 12px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+		transition: all 0.3s ease;
+	}
+	
+	/* 响应式适配 */
+	@media (max-width: 768px) {
+		#player {
+			bottom: 10px;
+			right: 10px;
+			left: 10px;
+			width: auto;
+		}
+	}
+	
+	/* 深色模式适配 */
+	:root.dark #player {
+		box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
 	}
 }
 </style>

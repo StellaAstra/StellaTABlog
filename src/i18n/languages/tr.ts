@@ -5,6 +5,8 @@ export const tr: Translation = {
 	[Key.home]: "Anasayfa",
 	[Key.about]: "Hakkında",
 	[Key.archive]: "Arşiv",
+	[Key.images]: "Resimler",
+	[Key.links]: "Linkler",
 	[Key.search]: "Ara",
 
 	[Key.tags]: "Taglar",

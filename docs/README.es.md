@@ -67,6 +67,7 @@ image: /images/cover.jpg
 tags: [Foo, Bar]
 category: Front-end
 draft: false
+pinned: false
 ---
 ```
 

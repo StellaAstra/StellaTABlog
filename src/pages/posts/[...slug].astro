@@ -1,5 +1,6 @@
 ---
 import path from "node:path";
+import Comment from "@components/Comment.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
@@ -110,7 +111,9 @@ const jsonLd = {
 
         </div>
     </div>
-
+    
+    <Comment />
+    
     <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
            class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
@@ -132,5 +135,6 @@ const jsonLd = {
             </div>}
         </a>
     </div>
-
 </MainGridLayout>
+
+

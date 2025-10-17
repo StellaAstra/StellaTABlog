@@ -24,6 +24,7 @@ export type SiteConfig = {
 		enable: boolean;
 		src: string;
 		position?: "top" | "center" | "bottom";
+		type?: "image" | "video"; // 支持图片或视频格式
 		credit: {
 			enable: boolean;
 			text: string;
@@ -36,6 +37,15 @@ export type SiteConfig = {
 	};
 
 	favicon: Favicon[];
+
+	clarity: {
+		enable: boolean;
+		projectId: string;
+	};
+
+	musicPlayer: {
+		enable: boolean;
+	};
 };
 
 export type Favicon = {
@@ -48,6 +58,8 @@ export enum LinkPreset {
 	Home = 0,
 	Archive = 1,
 	About = 2,
+	Links = 3,
+	Images = 4,
 }
 
 export type NavBarLink = {

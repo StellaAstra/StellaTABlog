@@ -6,11 +6,14 @@ image: ''
 tags: [Introduce]
 category: 'Introduce'
 draft: false 
+pinned: true
 lang: 'zh_CN'
 ---
 
 # 介绍
-本站仅作为个人知识分享博客，内容导致包括
+
+本站仅作为个人知识分享博客，内容大致包括
+
 - 数学
 - 物理学
 - 流体
