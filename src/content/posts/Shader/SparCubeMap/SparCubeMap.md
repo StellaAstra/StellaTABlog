@@ -1,5 +1,5 @@
 ---
-title: SparCubeMap
+title: 基于CubeMap的晶石效果
 published: 2025-10-18
 description: '通过Reflection Probe烘焙CubeMap实现晶石折射与反射效果'
 image: './image-2.png'

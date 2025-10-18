@@ -1,5 +1,5 @@
 ---
-title: ParallaxCard
+title: 光追视差卡牌效果
 published: 2025-10-18
 description: '光追视差原理'
 image: './image-0.png'

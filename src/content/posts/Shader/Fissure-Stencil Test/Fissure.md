@@ -1,5 +1,5 @@
 ---
-title: Fissure
+title: 地裂效果
 published: 2025-10-18
 description: '基于Stencil Test的地裂效果'
 image: './image-6.png'
