@@ -102,6 +102,11 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa6-brands:bilibili",
 			url: "https://space.bilibili.com/38784899?spm_id_from=333.1007.0.0",
 		},
+		{
+			name: "TalkArtist",
+			icon: "fa6-brands:adn",
+			url: "https://talkartist.cn/user/1942558720317259776",
+		},
 	],
 };
 

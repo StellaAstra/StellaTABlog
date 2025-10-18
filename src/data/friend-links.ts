@@ -22,16 +22,22 @@ export const friendLinkSections: FriendLinkSection[] = [
 			},
 			{
 				title: "GitHub",
-				url: "https://github.com/ZyPLJ",
+				url: "https://github.com/StellaAstra",
 				avatar:
 					"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
 				desc: "代码托管与开源项目分享",
 			},
 			{
 				title: "bilibili",
-				url: "https://pljzy.top",
+				url: "https://space.bilibili.com/38784899?spm_id_from=333.1007.0.0",
 				avatar: "https://www.bilibili.com/favicon.ico",
 				desc: "记录技术成长的足迹",
+			},
+			{
+				title: "Talk Artist",
+				url: "https://talkartist.cn/user/1942558720317259776",
+				avatar: "https://talkartist.cn/favicon.ico",
+				desc: "TA交流的小天地",
 			},
 		],
 	},
