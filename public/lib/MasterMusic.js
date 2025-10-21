@@ -82,6 +82,102 @@
 						"http://p1.music.126.net/VYrOp9s17r8DWvKKwkmWIw==/109951164765426714.jpg?param=300x300",
 					lrc: "[00:00.00] 暂无歌词",
 				},
+				{
+					name: "A Shadow in My Heart",
+					artist: "Koi no Koe",
+					url: "http://music.163.com/song/media/outer/url?id=1427978795.mp3",
+					cover:
+						"http://p1.music.126.net/VYrOp9s17r8DWvKKwkmWIw==/109951164765426714.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "花降らし",
+					artist: "Winky诗",
+					url: "http://music.163.com/song/media/outer/url?id=422790932.mp3",
+					cover:
+						"http://p1.music.126.net/pwpTt5raiqkgGPcqX05HQw==/109951163292374223.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "山鬼",
+					artist: "Wthegg",
+					url: "http://music.163.com/song/media/outer/url?id=28496172.mp3",
+					cover:
+						"http://p2.music.126.net/gJ1tIJ7s7g_d7vheVDBkjA==/109951164503300910.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "恋音と雨空",
+					artist: "AAA",
+					url: "http://music.163.com/song/media/outer/url?id=1905677176.mp3",
+					cover:
+						"http://p2.music.126.net/pi4CfJheRtnW5pRwrESyUg==/109951166779457794.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "春日影",
+					artist: "CRYCHIC",
+					url: "http://music.163.com/song/media/outer/url?id=2149887904.mp3",
+					cover:
+						"http://p2.music.126.net/ftPKFERCtl52kJ3YAQ9jFw==/109951170517222756.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "Harmonious",
+					artist: "Binary Haze Interactive / Mili",
+					url: "http://music.163.com/song/media/outer/url?id=1850441824.mp3",
+					cover:
+						"http://p2.music.126.net/cCXt0Rbny_HPiEKLNmA6Fw==/109951166057712738.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "防晒",
+					artist: "多多poi",
+					url: "http://music.163.com/song/media/outer/url?id=1472581969.mp3",
+					cover:
+						"http://p2.music.126.net/dpJ8BbO0Al39b9UVt6hrjg==/109951165253010590.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "ZERO",
+					artist: "小林啓樹",
+					url: "http://music.163.com/song/media/outer/url?id=28762669.mp3",
+					cover:
+						"http://p2.music.126.net/Zn7vc55s3L4OZVeQ0q17oA==/6023124697610248.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "酸的。",
+					artist: "ChiliChill",
+					url: "http://music.163.com/song/media/outer/url?id=2048823150.mp3",
+					cover:
+						"http://p2.music.126.net/FAliF-dGwVxp-pbE6ZcK7A==/109951168624114464.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "ZERO",
+					artist: "小林啓樹",
+					url: "http://music.163.com/song/media/outer/url?id=28762669.mp3",
+					cover:
+						"http://p2.music.126.net/Zn7vc55s3L4OZVeQ0q17oA==/6023124697610248.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "独角",
+					artist: "UnicornPhantom",
+					url: "http://music.163.com/song/media/outer/url?id=1934213146.mp3",
+					cover:
+						"http://p2.music.126.net/1HOpmf61G-QHQmm5xIv9rg==/109951167230524234.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
+				{
+					name: "眼镜的葬礼",
+					artist: "ChiliChill",
+					url: "http://music.163.com/song/media/outer/url?id=2038565489.mp3",
+					cover:
+						"http://p2.music.126.net/9CUSX5TMwwcWzCIHizA_Sg==/109951168540374251.jpg?param=300x300",
+					lrc: "[00:00.00] 暂无歌词",
+				},
 			],
 		});
 
