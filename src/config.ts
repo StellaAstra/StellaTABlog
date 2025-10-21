@@ -46,7 +46,7 @@ export const siteConfig: SiteConfig = {
 		projectId: "trinn56fhz", // Clarity 项目 ID
 	},
 	musicPlayer: {
-		enable: true, // 是否启用音乐播放器
+		enable: false, // 是否启用音乐播放器
 	},
 };
 
