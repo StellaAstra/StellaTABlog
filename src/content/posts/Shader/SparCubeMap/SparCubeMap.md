@@ -59,11 +59,13 @@ half4 Refle         = SAMPLE_TEXTURECUBE_LOD(_ReflectTex, sampler_ReflectTex, RD
 
 不错我们的效果实现了！！
 
-下面是gif动态效果：
+下面是gif动态效果：有点bug好像显示不出来还是直接看b站的吧
 
 ![](https://cdn.nlark.com/yuque/0/2025/gif/25961556/1752325316389-b5431455-6f50-4f94-b626-3e638e29cab9.gif)
 
 好吧建议看b站上传的mp4视频
+:::
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV14rM9zYEuN" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 # 三、完整代码展示
 
