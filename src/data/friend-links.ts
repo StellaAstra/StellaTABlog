@@ -68,6 +68,12 @@ export const friendLinkSections: FriendLinkSection[] = [
 				avatar: "https://moretoil.github.io/images/head.jpg",
 				desc: "Fox_dream の 小站",
 			},
+			{
+				title: "WindHolm",
+				url: "https://windandholm.blogspot.com",
+				avatar: "https://windandholm.blogspot.com/favicon.ico",
+				desc: "用代码敲出生活",
+			},
 		],
 	},
 	{
