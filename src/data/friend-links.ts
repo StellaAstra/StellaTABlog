@@ -59,7 +59,8 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "yousen的博客",
 				url: "http://www.yousen1.top",
-				avatar: "http://www.yousen1.top/favicon.ico",
+				avatar:
+					"http://www.yousen1.top/wp-content/uploads/2025/08/b_762b581430baef6e7a6bb9cc07d259a1-150x150.jpg",
 				desc: "机械结构设计师",
 			},
 		],
