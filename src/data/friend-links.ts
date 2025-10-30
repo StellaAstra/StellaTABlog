@@ -48,8 +48,7 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "yoyo鹿鸣_Lumi",
 				url: "https://space.bilibili.com/488836173?spm_id_from=333.337.0.0",
-				avatar:
-					"https://img.moegirl.org.cn/common/thumb/1/1b/Yoyo_lumi.jpg/280px-Yoyo_lumi.jpg",
+				avatar: "/favicon/Yoyo_lumi.png",
 				desc: "参与过的项目",
 			},
 		],
