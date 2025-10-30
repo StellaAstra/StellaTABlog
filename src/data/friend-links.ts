@@ -12,7 +12,7 @@ export type FriendLinkSection = {
 
 export const friendLinkSections: FriendLinkSection[] = [
 	{
-		title: "🌟 友情博客",
+		title: "🌟 个人链接",
 		items: [
 			{
 				title: "知乎",
@@ -48,8 +48,19 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "yoyo鹿鸣_Lumi",
 				url: "https://space.bilibili.com/488836173?spm_id_from=333.337.0.0",
-				avatar: "https://stellaastra.dpdns.org/favicon/icon.png",
+				avatar: "https://stellaastra.dpdns.org/favicon/Yoyo_lumi.png",
 				desc: "参与过的项目",
+			},
+		],
+	},
+	{
+		title: "🧍 友情链接",
+		items: [
+			{
+				title: "yousen的博客",
+				url: "http://www.yousen1.top",
+				avatar: "http://www.yousen1.top/favicon.ico",
+				desc: "机械结构设计师",
 			},
 		],
 	},
