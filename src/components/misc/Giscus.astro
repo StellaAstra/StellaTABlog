@@ -1,0 +1,89 @@
+---
+const configHTML = `
+<script src="https://giscus.app/client.js"
+        data-repo="StellaAstra/StellaTABlog"
+        data-repo-id="R_kgDOPe85cQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOPe85cc4CuYZG"
+        data-mapping="pathname"
+        data-strict="1"
+        data-reactions-enabled="1"
+        data-emit-metadata="1"
+        data-input-position="top"
+        data-theme="https://giscus-dkh.pages.dev/A.css"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+`;
+
+// 使用正则表达式解析配置
+function extractAttribute(html: string, attr: string): string {
+	const regex = new RegExp(`${attr}="([^"]*)"`, "i");
+	const match = html.match(regex);
+	return match ? match[1] : "";
+}
+
+const config = {
+	src: extractAttribute(configHTML, "src"),
+	repo: extractAttribute(configHTML, "data-repo"),
+	repoId: extractAttribute(configHTML, "data-repo-id"),
+	category: extractAttribute(configHTML, "data-category"),
+	categoryId: extractAttribute(configHTML, "data-category-id"),
+	mapping: extractAttribute(configHTML, "data-mapping") || "pathname",
+	strict: extractAttribute(configHTML, "data-strict") || "0",
+	reactionsEnabled:
+		extractAttribute(configHTML, "data-reactions-enabled") || "1",
+	emitMetadata: extractAttribute(configHTML, "data-emit-metadata") || "0",
+	inputPosition:
+		extractAttribute(configHTML, "data-input-position") || "bottom",
+	theme: extractAttribute(configHTML, "data-theme") || "preferred_color_scheme",
+	lang: extractAttribute(configHTML, "data-lang") || "zh-CN",
+	loading: extractAttribute(configHTML, "data-loading") || "lazy",
+};
+---
+
+<div id="giscus-container"></div>
+
+<script define:vars={{ config }}>
+  // 获取当前主题
+  function getCurrentTheme() {
+    if (config.theme !== 'preferred_color_scheme') {
+      return config.theme;
+    }
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  }
+
+  // 加载 Giscus
+  function loadGiscus() {
+    const container = document.getElementById('giscus-container');
+    if (!container || container.querySelector('script')) return; // 避免重复加载
+
+    const script = document.createElement('script');
+    script.src = config.src || 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', config.repo);
+    script.setAttribute('data-repo-id', config.repoId);
+    script.setAttribute('data-category', config.category);
+    script.setAttribute('data-category-id', config.categoryId);
+    script.setAttribute('data-mapping', config.mapping);
+    script.setAttribute('data-strict', config.strict);
+    script.setAttribute('data-reactions-enabled', config.reactionsEnabled);
+    script.setAttribute('data-emit-metadata', config.emitMetadata);
+    script.setAttribute('data-input-position', config.inputPosition);
+    script.setAttribute('data-theme', getCurrentTheme());
+    script.setAttribute('data-lang', config.lang);
+    script.setAttribute('data-loading', config.loading);
+    script.crossOrigin = 'anonymous';
+    script.async = true;
+
+    container.appendChild(script);
+  }
+
+  // 页面加载时初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadGiscus);
+  } else {
+    loadGiscus();
+  }
+</script>

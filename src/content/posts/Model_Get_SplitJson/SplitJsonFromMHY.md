@@ -203,7 +203,6 @@ with open(json_file_path, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 asset_entries = data.get("AssetEntries", [])
-
 ```
 
 ### 交互式搜索循环
@@ -257,13 +256,13 @@ print("=" * 50)
 
 好了下面是效果和完整的代码，我对你们还是太好了代码都已经补上注释
 
-![](image-1.png)
+![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-33-07-image.png)
 
-![](image-2.png)
+![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-37-42-image.png)
 
-![](image-3.png)
+![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-39-27-image.png)
 
-![](image-4.png)
+![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-40-30-image.png)
 
 ## 完整代码
 
@@ -472,7 +471,7 @@ def read_and_search_assets(json_file_path):
         # 读取JSON文件
         with open(json_file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-        
+
         # 提取AssetEntries数组
         asset_entries = data.get("AssetEntries", [])
 

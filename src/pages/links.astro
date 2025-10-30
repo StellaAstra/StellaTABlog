@@ -1,6 +1,7 @@
 ---
 import { getEntry, render } from "astro:content";
 import Comment from "@components/Comment.astro";
+import Giscus from "@components/misc/Giscus.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import FriendLinks from "@components/widget/FriendLinks.astro";
 import I18nKey from "@i18n/i18nKey";
@@ -31,5 +32,12 @@ const { Content } = await render(linksPost);
 			</Markdown>
 		</div>
 	</div>
-	<div class="mt-4"><Comment /></div>
+
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mt-4">
+        <div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+            <Giscus />
+        </div>
+    </div>
+
+	<!-- <div class="mt-4"><Comment /></div> -->
 </MainGridLayout>
