@@ -39,6 +39,19 @@ export const friendLinkSections: FriendLinkSection[] = [
 				avatar: "https://talkartist.cn/favicon.ico",
 				desc: "TA交流的小天地",
 			},
+			{
+				title: "n0va",
+				url: "https://n0va.mihoyo.com/#/",
+				avatar: "https://n0va.mihoyo.com/favicon.ico",
+				desc: "人工桌面",
+			},
+			{
+				title: "yoyo鹿鸣_Lumi",
+				url: "https://space.bilibili.com/488836173?spm_id_from=333.337.0.0",
+				avatar:
+					"https://i0.hdslb.com/bfs/face/875d576c8212a90f659775a9bb27f369bfdb3fce.jpg@128w_128h_1c_1s.webp",
+				desc: "参与过的项目",
+			},
 		],
 	},
 	{
