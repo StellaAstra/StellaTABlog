@@ -48,7 +48,7 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "yoyo鹿鸣_Lumi",
 				url: "https://space.bilibili.com/488836173?spm_id_from=333.337.0.0",
-				avatar: "/favicon/icon2.png",
+				avatar: "https://stellaastra.dpdns.org/favicon/icon2.png",
 				desc: "",
 			},
 		],
