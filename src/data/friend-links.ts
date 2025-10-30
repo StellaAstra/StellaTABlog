@@ -42,7 +42,7 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "n0va",
 				url: "https://n0va.mihoyo.com/#/",
-				avatar: "https://n0va.mihoyo.com/favicon.ico",
+				avatar: "https://stellaastra.dpdns.org/favicon/N0va.png",
 				desc: "人工桌面",
 			},
 			{
@@ -61,6 +61,12 @@ export const friendLinkSections: FriendLinkSection[] = [
 				url: "http://www.yousen1.top",
 				avatar: "https://stellaastra.dpdns.org/favicon/yousenblog.jpg",
 				desc: "机械结构设计师",
+			},
+			{
+				title: "Fox_dream的博客",
+				url: "https://moretoil.github.io/",
+				avatar: "https://moretoil.github.io/images/head.jpg",
+				desc: "Fox_dream の 小站",
 			},
 		],
 	},
