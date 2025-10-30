@@ -65,7 +65,7 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "Fox_dream的博客",
 				url: "https://moretoil.github.io/",
-				avatar: "https://moretoil.github.io/images/head.jpg",
+				avatar: "",
 				desc: "Fox_dream の 小站",
 			},
 		],
