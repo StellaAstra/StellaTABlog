@@ -57,14 +57,9 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.About,
 		LinkPreset.Links,
 		// LinkPreset.Images, // 如果没有lsky.pro图床，则注释掉 https://docs.lsky.pro/archive/free/v2/
-		// {
-		// 	name: "开往🚆",
-		// 	url: "https://www.travellings.cn/go.html", // Internal links should not include the base path, as it is automatically added
-		// 	external: true, // Show an external link icon and will open in a new tab
-		// },
 		{
-			name: "GitHub🚆",
-			url: "https://github.com/StellaAstra", // Internal links should not include the base path, as it is automatically added
+			name: "开往🚆",
+			url: "https://www.travellings.cn/train.html", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
 		},
 	],
