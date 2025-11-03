@@ -134,3 +134,35 @@ export const imageLibraryConfig = {
 	imagesEndpoint: "/images", // 图片列表接口
 	defaultAlbumId: 4, // 默认相册ID
 };
+
+// Pio 看板娘配置
+export const pioConfig: import("./types/config").PioConfig = {
+	enable: true, // 启用看板娘
+	models: ["/pio/models/illyasviel/illyasviel.model.json"], // 默认模型路径
+	position: "left", // 默认位置在右侧
+	width: 280, // 默认宽度
+	height: 250, // 默认高度
+	mode: "draggable", // 默认为可拖拽模式
+	hiddenOnMobile: true, // 默认在移动设备上隐藏
+	dialog: {
+		welcome: "Welcome to Stella's TA Blog!", // 欢迎词
+		touch: [
+			"你好！我是伊莉雅丝菲尔·冯·爱因兹贝伦~",
+			"有什么需要帮助的吗？",
+			"今天天气真不错呢！",
+			"要不要一起玩游戏？",
+			"记得按时休息哦！",
+			"今天也要加油哦！✨",
+			"想要一起去看星空吗？🌟",
+			"记得要好好休息呢~",
+			"有什么想对我说的吗？💫",
+			"让我们一起探索未知的世界吧！🚀",
+			"每一颗星星都有自己的故事~⭐",
+			"希望能带给你温暖和快乐！💖",
+		], // 触摸提示
+		home: "点这里返回首页！", // 首页提示
+		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
+		close: "下次再见~", // 关闭提示
+		link: "https://space.bilibili.com/38784899?spm_id_from=333.1007.0.0", // 关于链接
+	},
+};
