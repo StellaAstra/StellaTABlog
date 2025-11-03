@@ -107,7 +107,7 @@ export const friendLinkSections: FriendLinkSection[] = [
 			{
 				title: "软仓",
 				url: "https://www.ruancang.net/",
-				avatar: "https://stellaastra.dpdns.org/favicon/youcang.png",
+				avatar: "https://stellaastra.dpdns.org/favicon/ruancang.png",
 				desc: "软件仓库",
 			},
 			{
