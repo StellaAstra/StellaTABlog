@@ -17,7 +17,7 @@ export const siteConfig: SiteConfig = {
 	},
 	banner: {
 		enable: true,
-		src: "/videos/banner-video1.mp4", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: "/videos/Cyrene.mp4", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		// 如果要使用MP4视频，可以这样配置：
 		// src: "/videos/banner-video.mp4", // 视频文件放在 public/videos/ 目录下
 		// type: "video", // 设置为视频类型
