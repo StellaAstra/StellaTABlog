@@ -4,6 +4,7 @@ import type {
 	NavBarConfig,
 	ProfileConfig,
 	SiteConfig,
+	SpineModelConfig,
 } from "./types/config";
 import { LinkPreset } from "./types/config";
 
@@ -136,8 +137,62 @@ export const imageLibraryConfig = {
 };
 
 // Pio 看板娘配置
+
+// Spine 看板娘配置
+export const spineModelConfig: SpineModelConfig = {
+	enable: true, // 启用 Spine 看板娘
+	model: {
+		// Spine模型文件路径
+		path: "/pio/models/Spine/Cyrene/xilian.json",
+		scale: 1.0, // 模型缩放比例
+		x: 0, // X轴偏移
+		y: 0, // Y轴偏移
+	},
+	position: {
+		// 显示位置 bottom-left，bottom-right，top-left，top-right，注意：在右下角可能会挡住返回顶部按钮
+		corner: "bottom-left",
+		offsetX: 50, // 距离右边缘0px
+		offsetY: 0, // 距离底部0px
+	},
+	size: {
+		width: 335, // 容器宽度
+		height: 365, // 容器高度
+	},
+	interactive: {
+		enabled: true, // 启用交互功能
+		clickAnimations: [
+			// "emoji_0",
+			// "emoji_1",
+			// "emoji_2",
+			// "emoji_3",
+			// "emoji_4",
+			// "emoji_5",
+			// "emoji_6",
+		], // 点击时随机播放的动画列表
+		clickMessages: [
+			"嗨，好久不见！我是昔涟~",
+			"这一次，该从哪一页讲起呢？✨",
+			"这一定是个不同以往的浪漫故事……🌟",
+			"你也是这么想的，对吧？",
+			"有什么想对我说的吗？💫",
+			"流星划过夜空，生命的长河荡起涟漪，闪烁十三种光彩。🚀",
+			"你要栽下记忆的种子，让往昔的花朵在明日绽放。⭐",
+			"然后，一起写下不同以往的诗篇吧♪💖",
+		], // 点击时随机显示的文字消息
+		messageDisplayTime: 3000, // 文字显示时间（毫秒）
+		idleAnimations: ["idle"], // 待机动画列表
+		idleInterval: 8000, // 待机动画切换间隔（8秒）
+	},
+	responsive: {
+		hideOnMobile: true, // 在移动端隐藏
+		mobileBreakpoint: 768, // 移动端断点
+	},
+	zIndex: 1000, // 层级
+	opacity: 1.0, // 完全不透明
+};
+
 export const pioConfig: import("./types/config").PioConfig = {
-	enable: true, // 启用看板娘
+	enable: false, // 启用看板娘
 	models: ["/pio/models/illyasviel/illyasviel.model.json"], // 默认模型路径
 	position: "left", // 默认位置在右侧
 	width: 280, // 默认宽度
