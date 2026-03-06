@@ -68,6 +68,9 @@ importers:
       astro-icon:
         specifier: ^1.1.5
         version: 1.1.5
+      fuwari:
+        specifier: 'link:'
+        version: 'link:'
       hastscript:
         specifier: ^9.0.1
         version: 9.0.1
