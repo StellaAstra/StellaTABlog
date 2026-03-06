@@ -2,7 +2,7 @@
 title: RenderDoc 扩展工具集 — 技术原理解析
 published: 2026-03-06
 description: '截帧过程中遇到的需求开发的一些方便的工具，会持续更新如果有遇到新需求的话'
-image: ''
+image: './0.png'
 tags: [小工具,RenderDoc,模型提取,贴图提取]
 category: '小工具'
 draft: false

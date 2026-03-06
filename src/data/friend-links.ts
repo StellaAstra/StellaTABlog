@@ -51,6 +51,12 @@ export const friendLinkSections: FriendLinkSection[] = [
 				avatar: "https://stellaastra.dpdns.org/favicon/Yoyo_lumi.png",
 				desc: "参与过的项目",
 			},
+			{
+				title: "金铲铲之战",
+				url: "https://jcc.qq.com/#/index",
+				avatar: "https://stellaastra.dpdns.org/favicon/JKLogo.png",
+				desc: "参与过的项目",
+			},
 		],
 	},
 	{
