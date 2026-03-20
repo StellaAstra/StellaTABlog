@@ -129,9 +129,11 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 };
 
 export const imageLibraryConfig = {
-	apiBaseUrl: "https://api.stardots.io", // StarDots图床API地址
-	key: "d1247e0d-7b3f-42c9-a835-53f37d08759b", // StarDots发布的key信息，在控制台设置页面获取 https://dashboard.stardots.io
-	secret: "tz6UjlVi37iDwH6ycU6an56gWXv0yQ3r7d4jFC04R5tetawaNbmV5wbta4F74hsi9Yg1n9e5aXXSVqnzmmV0I9QiAx5VIBIHUxcESPjN3m4BlDcX1pQyg8ees8WlMOeG169aP70fombbhPFFOlc8ra7T2xhr6Z9BX1QYq21q7TsKkxjidyGjttaoWaZYefAr5z2EoVxjf7BcNXre7DVhOwK1dDWPdX8r7XFHZHK3boa43mK0GJbB9RDklrXtiY5", // StarDots发布的secret信息，在控制台设置页面获取
+	// API 密钥已移至 Cloudflare Pages 环境变量（STARDOTS_KEY / STARDOTS_SECRET），不在前端暴露
+	// 请在 Cloudflare Dashboard → Pages → 项目设置 → Environment Variables 中配置：
+	//   STARDOTS_KEY = 你的key
+	//   STARDOTS_SECRET = 你的secret
+	// 获取地址: https://dashboard.stardots.io
 	defaultSpace: "stella1028", // 默认空间名称
 };
 
