@@ -162,7 +162,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 			status: 204,
 			headers: {
 				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Methods": "PUT, POST, OPTIONS",
 				"Access-Control-Allow-Headers": "Content-Type",
 				"Access-Control-Max-Age": "86400",
 			},
@@ -209,12 +209,37 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 		const headers = getStardotsSignHeaders(key, secret);
 
 		const response = await fetch("https://api.stardots.io/openapi/file/upload", {
-			method: "POST",
+			method: "PUT",
 			headers: headers,
 			body: uploadFormData,
+			redirect: "manual", // 不自动跟随重定向，以便检测 API 是否失效
 		});
 
+		// 如果被重定向（302 等），说明 API 端点可能已失效
+		if (response.status >= 300 && response.status < 400) {
+			const location = response.headers.get("Location") || "unknown";
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: `API 端点已失效 (${response.status} → ${location})，请检查 Stardots API 地址是否变更`,
+				}),
+				{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+			);
+		}
+
 		const data = await response.text();
+
+		// 检测是否返回了 HTML 而不是 JSON（API 失效的典型表现）
+		if (data.trimStart().startsWith("<!DOCTYPE") || data.trimStart().startsWith("<html")) {
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: "API 返回了 HTML 页面而非 JSON，端点可能已失效或地址已变更",
+				}),
+				{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+			);
+		}
+
 		return new Response(data, {
 			status: response.status,
 			headers: {

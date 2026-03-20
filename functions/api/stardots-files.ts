@@ -176,9 +176,34 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 		const apiUrl = `https://api.stardots.io/openapi/file/list?space=${encodeURIComponent(space)}&page=${page}&pageSize=${pageSize}`;
 		const response = await fetch(apiUrl, {
 			headers: getStardotsHeaders(key, secret),
+			redirect: "manual",
 		});
 
+		// 如果被重定向，说明 API 端点可能已失效
+		if (response.status >= 300 && response.status < 400) {
+			const location = response.headers.get("Location") || "unknown";
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: `API 端点已失效 (${response.status} → ${location})，请检查 Stardots API 地址是否变更`,
+				}),
+				{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+			);
+		}
+
 		const data = await response.text();
+
+		// 检测是否返回了 HTML 而不是 JSON
+		if (data.trimStart().startsWith("<!DOCTYPE") || data.trimStart().startsWith("<html")) {
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: "API 返回了 HTML 页面而非 JSON，端点可能已失效或地址已变更",
+				}),
+				{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+			);
+		}
+
 		return new Response(data, {
 			status: response.status,
 			headers: {

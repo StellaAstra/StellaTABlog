@@ -169,10 +169,37 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 	try {
 		const response = await fetch(
 			"https://api.stardots.io/openapi/space/list?page=1&pageSize=100",
-			{ headers: getStardotsHeaders(key, secret) }
+			{
+				headers: getStardotsHeaders(key, secret),
+				redirect: "manual",
+			}
 		);
 
+		// 如果被重定向，说明 API 端点可能已失效
+		if (response.status >= 300 && response.status < 400) {
+			const location = response.headers.get("Location") || "unknown";
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: `API 端点已失效 (${response.status} → ${location})，请检查 Stardots API 地址是否变更`,
+				}),
+				{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+			);
+		}
+
 		const data = await response.text();
+
+		// 检测是否返回了 HTML 而不是 JSON
+		if (data.trimStart().startsWith("<!DOCTYPE") || data.trimStart().startsWith("<html")) {
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: "API 返回了 HTML 页面而非 JSON，端点可能已失效或地址已变更",
+				}),
+				{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+			);
+		}
+
 		return new Response(data, {
 			status: response.status,
 			headers: {
@@ -183,7 +210,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 	} catch (err) {
 		return new Response(
 			JSON.stringify({ success: false, message: "代理请求失败: " + (err instanceof Error ? err.message : "未知错误") }),
-			{ status: 502, headers: { "Content-Type": "application/json" } }
+			{ status: 502, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
 		);
 	}
 };
