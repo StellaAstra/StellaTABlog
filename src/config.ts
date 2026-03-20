@@ -57,7 +57,7 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Archive,
 		LinkPreset.About,
 		LinkPreset.Links,
-		// LinkPreset.Images, // 如果没有lsky.pro图床，则注释掉 https://docs.lsky.pro/archive/free/v2/
+		LinkPreset.Images, // 如果没有StarDots图床，则注释掉 https://stardots.io/zh/documentation/openapi
 		{
 			name: "开往🚆",
 			url: "https://www.travellings.cn/train.html", // Internal links should not include the base path, as it is automatically added
@@ -129,11 +129,10 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 };
 
 export const imageLibraryConfig = {
-	apiBaseUrl: "", // 兰空图床API地址
-	apiToken: "", // 用户token
-	albumsEndpoint: "/albums?order=earliest", // 相册列表接口
-	imagesEndpoint: "/images", // 图片列表接口
-	defaultAlbumId: 4, // 默认相册ID
+	apiBaseUrl: "https://api.stardots.io", // StarDots图床API地址
+	key: "d1247e0d-7b3f-42c9-a835-53f37d08759b", // StarDots发布的key信息，在控制台设置页面获取 https://dashboard.stardots.io
+	secret: "tz6UjlVi37iDwH6ycU6an56gWXv0yQ3r7d4jFC04R5tetawaNbmV5wbta4F74hsi9Yg1n9e5aXXSVqnzmmV0I9QiAx5VIBIHUxcESPjN3m4BlDcX1pQyg8ees8WlMOeG169aP70fombbhPFFOlc8ra7T2xhr6Z9BX1QYq21q7TsKkxjidyGjttaoWaZYefAr5z2EoVxjf7BcNXre7DVhOwK1dDWPdX8r7XFHZHK3boa43mK0GJbB9RDklrXtiY5", // StarDots发布的secret信息，在控制台设置页面获取
+	defaultSpace: "stella1028", // 默认空间名称
 };
 
 // Pio 看板娘配置
