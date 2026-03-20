@@ -138,12 +138,13 @@ function generateNonce(length = 16): string {
 	return result;
 }
 
-function getStardotsHeaders(key: string, secret: string): Record<string, string> {
+function getStardotsSignHeaders(key: string, secret: string): Record<string, string> {
 	const timestamp = Math.floor(Date.now() / 1000).toString();
 	const nonce = generateNonce();
 	const needSignStr = `${timestamp}|${secret}|${nonce}`;
 	const sign = md5(needSignStr).toUpperCase();
 
+	// 注意：上传文件时不要设置 Content-Type，让 fetch 自动为 FormData 设置正确的 multipart/form-data boundary
 	return {
 		"x-stardots-timestamp": timestamp,
 		"x-stardots-nonce": nonce,
@@ -205,7 +206,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 			uploadFormData.append("space", space.toString());
 		}
 
-		const headers = getStardotsHeaders(key, secret);
+		const headers = getStardotsSignHeaders(key, secret);
 
 		const response = await fetch("https://api.stardots.io/openapi/file/upload", {
 			method: "POST",

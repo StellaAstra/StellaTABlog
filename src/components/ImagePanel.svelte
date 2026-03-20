@@ -365,17 +365,19 @@ async function uploadSingleFile(item: UploadItem): Promise<void> {
 							reject(new Error(response.message));
 						}
 					} catch {
+						const preview = xhr.responseText?.substring(0, 100) || '(空响应)';
 						uploadItems = uploadItems.map(i =>
 							i.id === item.id
-								? { ...i, status: 'error' as const, errorMsg: '响应解析失败' }
+								? { ...i, status: 'error' as const, errorMsg: `响应解析失败: ${preview}` }
 								: i
 						);
-						reject(new Error('响应解析失败'));
+						reject(new Error(`响应解析失败: ${preview}`));
 					}
 				} else {
+					const errDetail = xhr.responseText?.substring(0, 100) || '';
 					uploadItems = uploadItems.map(i =>
 						i.id === item.id
-							? { ...i, status: 'error' as const, errorMsg: `HTTP 错误: ${xhr.status}` }
+							? { ...i, status: 'error' as const, errorMsg: `HTTP 错误 ${xhr.status}: ${errDetail}` }
 							: i
 					);
 					reject(new Error(`HTTP error: ${xhr.status}`));
