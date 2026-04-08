@@ -6,7 +6,6 @@ declare global {
 		swup: AstroIntegration;
 		spineModelInitialized?: boolean;
 		spinePlayerInstance?: any;
-		__stellaMusic?: any;
 		pagefind: {
 			search: (query: string) => Promise<{
 				results: Array<{

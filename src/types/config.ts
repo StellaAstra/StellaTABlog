@@ -45,33 +45,6 @@ export type SiteConfig = {
 
 	musicPlayer: {
 		enable: boolean;
-		// 'meting' uses Meting API, 'local' uses local music list
-		mode?: "meting" | "local";
-		// Default volume (0-1)
-		volume?: number;
-		// Play mode: 'list'=list loop, 'one'=single loop, 'random'=random
-		playMode?: "list" | "one" | "random";
-		// Whether to show lyrics
-		showLyrics?: boolean;
-		// Meting API config
-		meting?: {
-			api?: string;
-			server?: "netease" | "tencent" | "kugou" | "xiami" | "baidu";
-			type?: "song" | "playlist" | "album" | "search" | "artist";
-			id?: string;
-			auth?: string;
-			fallbackApis?: string[];
-		};
-		// Local music config (when mode is 'local')
-		local?: {
-			playlist?: Array<{
-				name: string;
-				artist: string;
-				url: string;
-				cover?: string;
-				lrc?: string;
-			}>;
-		};
 	};
 };
 
