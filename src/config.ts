@@ -47,7 +47,144 @@ export const siteConfig: SiteConfig = {
 		projectId: "trinn56fhz", // Clarity 项目 ID
 	},
 	musicPlayer: {
-		enable: true, // 是否启用音乐播放器
+		enable: true,
+		mode: "meting",
+		volume: 0.7,
+		playMode: "random",
+		showLyrics: true,
+		meting: {
+			api: "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r",
+			server: "netease",
+			type: "playlist",
+			id: "893900023", // Replace with your NetEase Cloud Music playlist ID
+			fallbackApis: [
+				"https://meting.qjqq.cn/?server=:server&type=:type&id=:id&r=:r",
+			],
+		},
+		local: {
+			playlist: [
+				{
+					name: "够爱（翻自 曾沛慈）",
+					artist: "是我呀卡司宝贝",
+					url: "https://music.163.com/song/media/outer/url?id=1846812463.mp3",
+					cover:
+						"http://p2.music.126.net/nQqUGffgtOv5PjfwqgVJyw==/109951166562832347.jpg?param=300x300",
+					lrc: "[00:00.000] 作词 : 无[00:01.000] 作曲 : 无[00:14.056]我穿梭金星 木星 水星 火星 土星 追寻[00:17.051]追寻你 时间滴滴答滴答答的声音[00:42.507]指头还残留 你为我[00:47.510]擦的指甲油 没想透[00:54.764]你好像说过 你和我[00:59.520]会不会有以后[01:04.263]世界一直一直变[01:06.264]地球不停的转动[01:08.260]在你的时空 我从未退缩懦弱[01:16.760]当我靠在你耳朵[01:18.952]只想轻轻对你说[01:21.203]我的温柔 只想让你都拥有[01:28.960]我的爱 只能够[01:31.457]让你一个人 独自拥有",
+				},
+				{
+					name: "老人と海",
+					artist: "ヨルシカ",
+					url: "http://music.163.com/song/media/outer/url?id=2112843978.mp3",
+					cover:
+						"http://p1.music.126.net/5aHcGADR5i6biE5TSqf_aQ==/109951166295171725.jpg?param=300x300",
+				},
+				{
+					name: "让风告诉你",
+					artist: "花玲,喵☆酱,宴宁,kinsen",
+					url: "http://music.163.com/song/media/outer/url?id=1818031620.mp3",
+					cover:
+						"http://p2.music.126.net/pYKBjkB6FoNh5Yxkb9uCbw==/109951165698369632.jpg?param=300x300",
+				},
+				{
+					name: "偏爱",
+					artist: "张芸京",
+					url: "http://music.163.com/song/media/outer/url?id=5238992.mp3",
+					cover:
+						"http://p2.music.126.net/a4KYp477snGHe3ZyjVpe1w==/109951165351505570.jpg?param=300x300",
+				},
+				{
+					name: "主角",
+					artist: "沉画文阁,马里奥,曲杨,draceana",
+					url: "http://music.163.com/song/media/outer/url?id=2161503002.mp3",
+					cover:
+						"http://p1.music.126.net/GydBHMkoBHmIAszwTmixVg==/109951169632692426.jpg?param=300x300",
+				},
+				{
+					name: "Wings！You Are My Future",
+					artist: "Wthegg",
+					url: "http://music.163.com/song/media/outer/url?id=1427978795.mp3",
+					cover:
+						"http://p1.music.126.net/VYrOp9s17r8DWvKKwkmWIw==/109951164765426714.jpg?param=300x300",
+				},
+				{
+					name: "A Shadow in My Heart",
+					artist: "Koi no Koe",
+					url: "http://music.163.com/song/media/outer/url?id=2749544447.mp3",
+					cover:
+						"http://p1.music.126.net/VYrOp9s17r8DWvKKwkmWIw==/109951164765426714.jpg?param=300x300",
+				},
+				{
+					name: "花降らし",
+					artist: "Winky诗",
+					url: "http://music.163.com/song/media/outer/url?id=422790932.mp3",
+					cover:
+						"http://p1.music.126.net/pwpTt5raiqkgGPcqX05HQw==/109951163292374223.jpg?param=300x300",
+				},
+				{
+					name: "山鬼",
+					artist: "Wthegg",
+					url: "http://music.163.com/song/media/outer/url?id=28496172.mp3",
+					cover:
+						"http://p2.music.126.net/gJ1tIJ7s7g_d7vheVDBkjA==/109951164503300910.jpg?param=300x300",
+				},
+				{
+					name: "恋音と雨空",
+					artist: "AAA",
+					url: "http://music.163.com/song/media/outer/url?id=1905677176.mp3",
+					cover:
+						"http://p2.music.126.net/pi4CfJheRtnW5pRwrESyUg==/109951166779457794.jpg?param=300x300",
+				},
+				{
+					name: "春日影",
+					artist: "CRYCHIC",
+					url: "http://music.163.com/song/media/outer/url?id=2149887904.mp3",
+					cover:
+						"http://p2.music.126.net/ftPKFERCtl52kJ3YAQ9jFw==/109951170517222756.jpg?param=300x300",
+				},
+				{
+					name: "Harmonious",
+					artist: "Binary Haze Interactive / Mili",
+					url: "http://music.163.com/song/media/outer/url?id=1850441824.mp3",
+					cover:
+						"http://p2.music.126.net/cCXt0Rbny_HPiEKLNmA6Fw==/109951166057712738.jpg?param=300x300",
+				},
+				{
+					name: "防晒",
+					artist: "多多poi",
+					url: "http://music.163.com/song/media/outer/url?id=1472581969.mp3",
+					cover:
+						"http://p2.music.126.net/dpJ8BbO0Al39b9UVt6hrjg==/109951165253010590.jpg?param=300x300",
+				},
+				{
+					name: "ZERO",
+					artist: "小林啓樹",
+					url: "http://music.163.com/song/media/outer/url?id=28762669.mp3",
+					cover:
+						"http://p2.music.126.net/Zn7vc55s3L4OZVeQ0q17oA==/6023124697610248.jpg?param=300x300",
+				},
+				{
+					name: "酸的。",
+					artist: "ChiliChill",
+					url: "http://music.163.com/song/media/outer/url?id=2048823150.mp3",
+					cover:
+						"http://p2.music.126.net/FAliF-dGwVxp-pbE6ZcK7A==/109951168624114464.jpg?param=300x300",
+				},
+				{
+					name: "独角",
+					artist: "UnicornPhantom",
+					url: "http://music.163.com/song/media/outer/url?id=1934213146.mp3",
+					cover:
+						"http://p2.music.126.net/1HOpmf61G-QHQmm5xIv9rg==/109951167230524234.jpg?param=300x300",
+				},
+				{
+					name: "眼镜的葬礼",
+					artist: "ChiliChill",
+					url: "http://music.163.com/song/media/outer/url?id=2038565489.mp3",
+					cover:
+						"http://p2.music.126.net/9CUSX5TMwwcWzCIHizA_Sg==/109951168540374251.jpg?param=300x300",
+				},
+			],
+		},
 	},
 };
 
