@@ -1,3 +1,4 @@
+<svelte:options runes={false} />
 <script lang="ts">
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
@@ -17,23 +18,22 @@ import { onMount } from "svelte";
 import { siteConfig } from "@/config";
 
 // ==================== Theme Color ====================
-let hue = $state(getHue());
+let hue = getHue();
 const defaultHue = getDefaultHue();
 const showThemeColor = !siteConfig.themeColor.fixed;
 
 // ==================== Waves Animation ====================
-let wavesEnabled = $state(true);
+let wavesEnabled = true;
 const defaultWavesEnabled = getDefaultWavesEnabled();
 
 // ==================== Top Highlight ====================
-let highlightEnabled = $state(true);
+let highlightEnabled = true;
 const defaultHighlightEnabled = getDefaultHighlightEnabled();
 
 // ==================== Banner Settings Logic ====================
 const hasBannerSettings = siteConfig.banner.enable;
-let bannerSettingsIsDefault = $derived(
-	wavesEnabled === defaultWavesEnabled && highlightEnabled === defaultHighlightEnabled
-);
+$: bannerSettingsIsDefault =
+	wavesEnabled === defaultWavesEnabled && highlightEnabled === defaultHighlightEnabled;
 
 // ==================== Panel Visibility ====================
 const hasAnyContent = showThemeColor || hasBannerSettings;
@@ -71,11 +71,9 @@ onMount(() => {
 });
 
 // ==================== Effects ====================
-$effect(() => {
-	if (hue || hue === 0) {
-		setHue(hue);
-	}
-});
+$: if (hue || hue === 0) {
+	setHue(hue);
+}
 </script>
 
 {#if hasAnyContent}
@@ -91,7 +89,7 @@ $effect(() => {
             >
                 {i18n(I18nKey.themeColor)}
                 <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md active:scale-90 will-change-transform"
-                        class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} onclick={resetHue}>
+                        class:opacity-0={hue === defaultHue} class:pointer-events-none={hue === defaultHue} on:click={resetHue}>
                     <div class="text-[var(--btn-content)]">
                         <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                     </div>
@@ -120,7 +118,7 @@ $effect(() => {
         >
             {i18n(I18nKey.bannerSettings)}
             <button aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md active:scale-90 will-change-transform"
-                    class:opacity-0={bannerSettingsIsDefault} class:pointer-events-none={bannerSettingsIsDefault} onclick={resetBannerSettings}>
+                    class:opacity-0={bannerSettingsIsDefault} class:pointer-events-none={bannerSettingsIsDefault} on:click={resetBannerSettings}>
                 <div class="text-[var(--btn-content)]">
                     <Icon icon="fa6-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                 </div>
@@ -131,7 +129,7 @@ $effect(() => {
             <button
                 class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
                 class:bg-[var(--btn-regular-bg-hover)]={wavesEnabled}
-                onclick={toggleWavesEnabled}
+                on:click={toggleWavesEnabled}
             >
                 <Icon icon="material-symbols:airwave-rounded" class="text-[1.25rem] shrink-0"></Icon>
                 <span class="text-sm flex-1">{i18n(I18nKey.wavesAnimation)}</span>
@@ -148,7 +146,7 @@ $effect(() => {
             <button
                 class="w-full btn-regular rounded-md py-2 px-3 flex items-center gap-3 text-left active:scale-95 transition-all relative overflow-hidden"
                 class:bg-[var(--btn-regular-bg-hover)]={highlightEnabled}
-                onclick={toggleHighlightEnabled}
+                on:click={toggleHighlightEnabled}
             >
                 <Icon icon="material-symbols:gradient" class="text-[1.25rem] shrink-0"></Icon>
                 <span class="text-sm flex-1">{i18n(I18nKey.topHighlight)}</span>
