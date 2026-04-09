@@ -59,3 +59,72 @@ export function setTheme(theme: LIGHT_DARK_MODE): void {
 export function getStoredTheme(): LIGHT_DARK_MODE {
 	return (localStorage.getItem("theme") as LIGHT_DARK_MODE) || DEFAULT_THEME;
 }
+
+// ==================== 水波纹动画开关 ====================
+
+export function getDefaultWavesEnabled(): boolean {
+	return true;
+}
+
+export function getStoredWavesEnabled(): boolean {
+	const stored = localStorage.getItem("wavesEnabled");
+	if (stored === null) return getDefaultWavesEnabled();
+	return stored === "true";
+}
+
+export function setWavesEnabled(enabled: boolean): void {
+	localStorage.setItem("wavesEnabled", String(enabled));
+	applyWavesState(enabled);
+}
+
+export function applyWavesState(enabled: boolean): void {
+	const wavesContainer = document.getElementById("header-waves");
+	if (!wavesContainer) return;
+
+	if (enabled) {
+		wavesContainer.style.display = "";
+		wavesContainer.style.opacity = "1";
+	} else {
+		wavesContainer.style.opacity = "0";
+		// 等待过渡动画结束后隐藏
+		setTimeout(() => {
+			if (!getStoredWavesEnabled()) {
+				wavesContainer.style.display = "none";
+			}
+		}, 300);
+	}
+}
+
+// ==================== 顶部高光开关 ====================
+
+export function getDefaultHighlightEnabled(): boolean {
+	return true;
+}
+
+export function getStoredHighlightEnabled(): boolean {
+	const stored = localStorage.getItem("highlightEnabled");
+	if (stored === null) return getDefaultHighlightEnabled();
+	return stored === "true";
+}
+
+export function setHighlightEnabled(enabled: boolean): void {
+	localStorage.setItem("highlightEnabled", String(enabled));
+	applyHighlightState(enabled);
+}
+
+export function applyHighlightState(enabled: boolean): void {
+	const highlight = document.querySelector(".top-gradient-highlight") as HTMLElement;
+	if (!highlight) return;
+
+	if (enabled) {
+		highlight.style.display = "";
+		highlight.style.opacity = "1";
+	} else {
+		highlight.style.opacity = "0";
+		setTimeout(() => {
+			if (!getStoredHighlightEnabled()) {
+				highlight.style.display = "none";
+			}
+		}, 300);
+	}
+}

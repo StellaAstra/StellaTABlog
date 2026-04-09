@@ -487,7 +487,7 @@ onMount(() => {
 </script>
 
 <!-- ============ Page Header ============ -->
-<div class="gallery-page">
+<div class="gallery-page card-base">
 	<div class="gallery-header-section mb-6">
 		<div class="flex items-center gap-3 mb-2">
 			<div class="header-icon-wrapper">

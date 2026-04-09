@@ -1,4 +1,5 @@
 import type {
+	AnnouncementConfig,
 	ExpressiveCodeConfig,
 	LicenseConfig,
 	NavBarConfig,
@@ -49,19 +50,41 @@ export const siteConfig: SiteConfig = {
 	musicPlayer: {
 		enable: true, // 是否启用音乐播放器
 	},
+	pages: {
+		bangumi: true, // 是否启用番组页面
+	},
+	bangumi: {
+		userId: "1234852", // 在这里填写你的 Bangumi 用户名，https://bgm.tv
+		categoryOrder: ["anime", "game", "book", "music"], // 分类显示顺序
+	},
 };
 
 export const navBarConfig: NavBarConfig = {
 	links: [
 		LinkPreset.Home,
 		LinkPreset.Archive,
-		LinkPreset.About,
 		LinkPreset.Links,
-		LinkPreset.Images, // 如果没有StarDots图床，则注释掉 https://stardots.io/zh/documentation/openapi
+		{
+			name: "我的",
+			url: "/my/",
+			icon: "material-symbols:person",
+			children: [
+				LinkPreset.Gallery, // 相册
+				LinkPreset.Bangumi, // 番组计划
+			],
+		},
+		{
+			name: "关于",
+			url: "/about-section/",
+			icon: "material-symbols:info",
+			children: [
+				LinkPreset.About, // 关于我
+			],
+		},
 		{
 			name: "开往🚆",
-			url: "https://www.travellings.cn/train.html", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
+			url: "https://www.travellings.cn/train.html",
+			external: true,
 		},
 	],
 };
@@ -110,6 +133,28 @@ export const licenseConfig: LicenseConfig = {
 	enable: true,
 	name: "CC BY-NC-SA 4.0",
 	url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+};
+
+export const announcementConfig: AnnouncementConfig = {
+	// 公告标题
+	title: "公告",
+
+	// 公告内容
+	content: "欢迎来到我的博客！这是一则示例公告。",
+
+	// 是否允许用户关闭公告
+	closable: true,
+
+	link: {
+		// 启用链接
+		enable: true,
+		// 链接文本
+		text: "了解更多",
+		// 链接 URL
+		url: "/about/",
+		// 内部链接
+		external: false,
+	},
 };
 
 export const commentConfig = {

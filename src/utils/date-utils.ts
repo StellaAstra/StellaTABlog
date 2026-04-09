@@ -37,3 +37,34 @@ export function formatDateI18n(dateString: string): string {
 	const locale = localeMap[lang] || "en-US";
 	return date.toLocaleDateString(locale, options);
 }
+
+// 国际化日期时间格式化函数（带时分秒）
+export function formatDateI18nWithTime(dateInput: Date | string): string {
+	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+	const lang = siteConfig.lang || "en";
+
+	const options: Intl.DateTimeFormatOptions = {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	};
+
+	const localeMap: Record<string, string> = {
+		zh_CN: "zh-CN",
+		zh_TW: "zh-TW",
+		en: "en-US",
+		ja: "ja-JP",
+		ko: "ko-KR",
+		es: "es-ES",
+		th: "th-TH",
+		vi: "vi-VN",
+		tr: "tr-TR",
+		id: "id-ID",
+	};
+
+	const locale = localeMap[lang] || "en-US";
+	return date.toLocaleString(locale, options);
+}

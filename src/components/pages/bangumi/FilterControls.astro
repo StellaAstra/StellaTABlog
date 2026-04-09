@@ -1,0 +1,104 @@
+---
+interface Filter {
+	value: string;
+	label: string;
+	count?: number;
+}
+
+interface Props {
+	filters: Filter[];
+	activeFilter: string;
+	sectionId: string;
+}
+
+const { filters, activeFilter, sectionId } = Astro.props;
+---
+
+<div class="bangumi-filter-controls flex flex-wrap gap-1.5 mb-4">
+  {filters.map((filter) => (
+    <button
+      class="bangumi-filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200"
+      data-filter={filter.value}
+      data-section={sectionId}
+      data-active={filter.value === activeFilter ? "true" : "false"}
+      type="button"
+    >
+      {filter.label}
+      {filter.count !== undefined && (
+        <span class="ml-1">({filter.count})</span>
+      )}
+    </button>
+  ))}
+</div>
+
+<style is:global>
+  .bangumi-filter-btn[data-active="true"] {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  .bangumi-filter-btn[data-active="false"] {
+    background-color: var(--btn-regular-bg);
+    color: var(--btn-content);
+  }
+  .bangumi-filter-btn[data-active="false"]:hover {
+    background-color: var(--btn-regular-bg-hover);
+  }
+</style>
+
+<script is:inline define:vars={{ sectionId }}>
+  function initFilterControls() {
+    const filterButtons = document.querySelectorAll(`[data-section="${sectionId}"][data-filter]`);
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+        const currentSectionId = this.dataset.section;
+
+        // Update active filter button for this section using data-active attribute
+        const sectionButtons = document.querySelectorAll(`[data-section="${currentSectionId}"][data-filter]`);
+        sectionButtons.forEach(btn => {
+          btn.dataset.active = "false";
+        });
+        this.dataset.active = "true";
+
+        // Filter items
+        const items = document.querySelectorAll(`[data-item-section="${currentSectionId}"]`);
+        items.forEach(item => {
+          const itemStatus = item.dataset.itemStatus;
+
+          if (filter === 'all' || itemStatus === filter) {
+            item.classList.remove('hidden');
+            item.style.display = 'block';
+          } else {
+            item.classList.add('hidden');
+            item.style.display = 'none';
+          }
+        });
+
+        // Update pagination
+        updatePagination(currentSectionId);
+      });
+    });
+  }
+
+  function updatePagination(sectionId) {
+    const visibleItems = document.querySelectorAll(`[data-item-section="${sectionId}"]:not(.hidden)`);
+    const pagination = document.querySelector(`[data-pagination-section="${sectionId}"]`);
+
+    if (pagination) {
+      // Trigger pagination update
+      const event = new CustomEvent('updatePagination', {
+        detail: { visibleCount: visibleItems.length }
+      });
+      pagination.dispatchEvent(event);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFilterControls);
+  } else {
+    initFilterControls();
+  }
+</script>

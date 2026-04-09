@@ -46,18 +46,70 @@ const mainPanelTop = siteConfig.banner.enable
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
-<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
-    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
+<div id="top-row" class="z-50 pointer-events-none fixed top-0 left-0 right-0 h-[4.5rem] transition-all duration-700">
+    <div id="navbar-wrapper" class="pointer-events-auto transition-all max-w-[var(--page-width)] px-0 md:px-4 mx-auto">
         <Navbar></Navbar>
     </div>
 </div>
 
 <!-- Banner -->
-{siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
-    <ImageWrapper id="banner" alt="Banner image of the blog" class:list={["object-cover h-full transition duration-700 opacity-0 scale-105"]}
+{siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
+    <ImageWrapper id="banner" alt="Banner image of the blog" class:list={["object-cover h-full transition duration-700 opacity-0 scale-105 overflow-hidden"]}
                   src={siteConfig.banner.src} position={siteConfig.banner.position} type={siteConfig.banner.type || "image"}
     >
     </ImageWrapper>
+
+    <!-- Water waves effect -->
+    <div class="waves absolute -bottom-px h-[10vh] max-h-[150px] min-h-[50px] w-full md:h-[15vh]"
+        id="header-waves"
+        style="transform: translateZ(0);">
+        <svg
+            class="waves"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28"
+            preserveAspectRatio="none"
+            shape-rendering="geometricPrecision"
+        >
+            <defs>
+                <path
+                    id="gentle-wave"
+                    d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"
+                >
+                </path>
+            </defs>
+            <g class="parallax">
+                <use
+                    xlink:href="#gentle-wave"
+                    x="48"
+                    y="0"
+                    class="opacity-25"
+                    fill="var(--page-bg)"
+                ></use>
+                <use
+                    xlink:href="#gentle-wave"
+                    x="48"
+                    y="3"
+                    class="opacity-50"
+                    fill="var(--page-bg)"
+                ></use>
+                <use
+                    xlink:href="#gentle-wave"
+                    x="48"
+                    y="5"
+                    class="opacity-65"
+                    fill="var(--page-bg)"
+                ></use>
+                <use
+                    xlink:href="#gentle-wave"
+                    x="48"
+                    y="7"
+                    class="opacity-75"
+                    fill="var(--page-bg)"
+                ></use>
+            </g>
+        </svg>
+    </div>
 </div>}
 
 <!-- Main content -->

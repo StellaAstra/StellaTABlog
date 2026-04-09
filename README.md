@@ -10,11 +10,15 @@
 
 我的博客只是在原作者[fuwari](https://github.com/saicaca/fuwari)仓库的基础上增加了：
 
-1. 音乐播放器
+1. 音乐播放器（全新 Manager/Player 分离架构，支持网易云歌单/本地音乐、LRC 歌词同步）
 2. 文章置顶固定（原作者仓库PR中的）
 3. 评论系统
 4. 友链页面
 5. 首图支持视频
+6. 番组计划页面（Bangumi）—— 展示你在 [bgm.tv](https://bgm.tv) 上的动画、游戏、书籍、音乐收藏
+7. 云端图库页面（Images）—— 基于 [StarDots](https://stardots.io) 图床的瀑布流图片展示、Fancybox 灯箱预览、拖拽上传
+8. Spine 骨骼动画看板娘 —— 支持 Spine 模型交互、点击动画、随机消息、拖拽移动
+9. Live2D Pio 看板娘 —— 经典 Live2D 模型支持，可与 Spine 二选一
 
 如果对于上述功能不感兴趣的可以直接`clone`原作者的仓库。
 
@@ -56,13 +60,63 @@ clarity: {
 
 ### 音乐播放器
 
-在`public/lib/MasterMusic.js`中修改音乐数据源。
+音乐播放器采用 Manager/Player 分离架构，支持页面切换时不中断播放。
+
+**开关配置（`src/config.ts`）：**
 
 ```ts
 musicPlayer: {
     enable: true, // 是否启用音乐播放器
 },
 ```
+
+**详细配置（`src/config/musicConfig.ts`）：**
+
+```ts
+export const musicPlayerConfig: MusicPlayerConfig = {
+    showInNavbar: true,       // 是否在导航栏显示播放器入口
+    mode: "meting",           // 使用方式："meting"（在线歌单）或 "local"（本地音乐）
+    volume: 0.7,              // 默认音量 (0-1)
+    playMode: "list",         // 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机
+    showLyrics: true,         // 是否启用歌词
+
+    // Meting API 配置（mode 为 "meting" 时使用）
+    meting: {
+        api: "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+        server: "netease",    // 音乐平台：netease/tencent/kugou
+        type: "playlist",     // 类型：song/playlist/album
+        id: "893900023",      // 歌单ID - 替换为你自己的
+        fallbackApis: [       // 备用 API（主 API 失败时自动降级）
+            "https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
+        ],
+    },
+
+    // 本地音乐配置（mode 为 "local" 时使用）
+    local: {
+        playlist: [
+            {
+                name: "歌曲名称",
+                artist: "歌手",
+                url: "/assets/music/song.mp3",
+                cover: "/assets/music/cover/cover.webp",
+                lrc: "",  // 歌词文件路径（可选）
+            },
+        ],
+    },
+};
+```
+
+**功能特性：**
+
+- 🎵 支持网易云/QQ音乐/酷狗歌单在线获取
+- 📁 支持本地音乐文件播放
+- 📝 LRC 歌词同步显示（支持 URL 和内联歌词）
+- 🔄 三种播放模式（列表循环/单曲循环/随机）
+- 💿 旋转唱片封面动画
+- 📋 歌单列表面板
+- 🔊 音量控制与静音
+- ♿ 全面的 ARIA 无障碍支持
+- 🔗 页面切换不中断播放（Swup 兼容）
 
 ### 评论系统
 
@@ -97,6 +151,58 @@ script.src = 'https://registry.npmmirror.com/twikoo/1.6.44/files/dist/twikoo.min
 
 `src/content/spec/links.md`友链页面其实就是`md`文件，如果有新的友链，将参考的`div`复制一份修改里面的内容就行了，对于没有评论系统的，也想使用友链，可以将自己仓库的`issues`地址放出来，让其他博主在`github`上体积`issues`来达到友链提交的效果
 
+### 番组计划（Bangumi）
+
+番组计划页面集成了 [Bangumi 番组计划](https://bgm.tv) 的 API，可以展示你在 bgm.tv 上标记的动画、游戏、书籍、音乐等收藏记录。
+
+**配置方法：**
+
+在 `src/config.ts` 中进行配置：
+
+```ts
+// 页面开关
+pages: {
+    bangumi: true, // 是否启用番组页面
+},
+
+// Bangumi 配置
+bangumi: {
+    userId: "your-username", // 你的 Bangumi 用户名，即 bgm.tv 个人页面 URL 中的用户名
+    categoryOrder: ["anime", "game", "book", "music"], // 分类 Tab 的显示顺序
+},
+```
+
+**参数说明：**
+
+| 参数 | 类型 | 说明 |
+|:-----|:-----|:-----|
+| `pages.bangumi` | `boolean` | 是否启用番组页面，设为 `false` 可关闭 |
+| `bangumi.userId` | `string` | 你的 Bangumi 用户名，在 [bgm.tv](https://bgm.tv) 注册后可获取 |
+| `bangumi.categoryOrder` | `string[]` | 分类 Tab 的显示顺序，可选值：`"anime"`（动画）、`"game"`（游戏）、`"book"`（书籍）、`"music"`（音乐）、`"real"`（三次元） |
+
+**功能特性：**
+
+- 📺 支持动画、游戏、书籍、音乐、三次元五大分类
+- 🏷️ 支持按状态筛选（想看/在看/看过/搁置/抛弃等）
+- ⭐ 显示个人评分和标签
+- 📄 客户端分页，流畅浏览
+- 🌐 支持 10 种语言国际化
+- 🎨 自适应亮色/暗色主题
+
+**导航栏配置：**
+
+番组页面默认已添加到导航栏中（`LinkPreset.Bangumi`）。如果不需要，可以在 `config.ts` 的 `links` 数组中注释掉：
+
+```ts
+links: [
+    LinkPreset.Home,
+    LinkPreset.Archive,
+    LinkPreset.About,
+    LinkPreset.Links,
+    // LinkPreset.Bangumi, // 注释掉即可隐藏番组导航
+],
+```
+
 ### 文章置顶
 
 `pinned` 属性设置为true即为置顶显示
@@ -113,6 +219,129 @@ draft: false
 pinned: false 文章是否固定、置顶
 ---
 ```
+
+### 云端图库（Images）
+
+图库页面集成了 [StarDots](https://stardots.io) 云存储服务，支持瀑布流图片展示、Fancybox 灯箱预览和图片上传。
+
+**配置方法：**
+
+1. 在 [StarDots](https://dashboard.stardots.io) 注册并获取 API 密钥
+2. 在 Cloudflare Pages 环境变量中配置（不在前端暴露密钥）：
+   - `STARDOTS_KEY` = 你的 key
+   - `STARDOTS_SECRET` = 你的 secret
+
+3. 在 `src/config.ts` 中设置默认空间：
+
+```ts
+export const imageLibraryConfig = {
+    defaultSpace: "your-space-name", // 默认空间名称
+};
+```
+
+**导航栏配置：**
+
+图库页面通过 `LinkPreset.Images` 添加到导航栏中，如果不需要可在 `config.ts` 的 `links` 数组中注释掉：
+
+```ts
+links: [
+    LinkPreset.Home,
+    LinkPreset.Archive,
+    LinkPreset.About,
+    LinkPreset.Links,
+    // LinkPreset.Images, // 注释掉即可隐藏图库导航
+],
+```
+
+**功能特性：**
+
+- 🖼️ 瀑布流布局（2-5 列自适应）
+- 🔍 Fancybox 灯箱预览（缩放、全屏、幻灯片、缩略图）
+- ☁️ 支持多空间切换
+- 📤 拖拽上传 & 文件选择上传（支持 JPG/PNG/GIF/WebP/SVG/AVIF，最大 10MB）
+- 📋 上传成功后一键复制链接
+- 📄 分页浏览
+- 💀 加载骨架屏、错误重试、空状态提示
+
+### Spine 骨骼动画看板娘
+
+Spine 看板娘支持在页面角落展示 Spine 骨骼动画模型，支持交互和拖拽。
+
+**配置方法（`src/config.ts`）：**
+
+```ts
+export const spineModelConfig: SpineModelConfig = {
+    enable: true, // 启用 Spine 看板娘
+    model: {
+        path: "/pio/models/Spine/YourModel/model.json", // 模型文件路径
+        scale: 1.0,    // 缩放比例
+        x: 0,          // X轴偏移
+        y: 0,          // Y轴偏移
+    },
+    position: {
+        corner: "bottom-left", // 显示位置：bottom-left/bottom-right/top-left/top-right
+        offsetX: 50,   // 水平偏移
+        offsetY: 0,    // 垂直偏移
+    },
+    size: {
+        width: 335,    // 容器宽度
+        height: 365,   // 容器高度
+    },
+    interactive: {
+        enabled: true,
+        clickAnimations: [],         // 点击时随机播放的动画列表
+        clickMessages: [             // 点击时随机显示的文字消息
+            "嗨，好久不见！",
+            "有什么想对我说的吗？💫",
+        ],
+        messageDisplayTime: 3000,    // 消息显示时间（毫秒）
+        idleAnimations: ["idle"],    // 待机动画列表
+        idleInterval: 8000,          // 待机动画切换间隔
+    },
+    responsive: {
+        hideOnMobile: true,  // 在移动端隐藏
+        mobileBreakpoint: 768,
+    },
+    zIndex: 1000,
+    opacity: 1.0,
+};
+```
+
+**功能特性：**
+
+- 🎭 支持 Spine 4.2 骨骼动画模型
+- 🖱️ 点击播放随机动画 + 显示随机消息
+- ✋ 支持鼠标和触摸拖拽移动
+- 📱 响应式：移动端可配置隐藏
+- 🌐 CDN 加载失败自动回退本地文件
+- 🔗 Swup 页面切换不重新加载模型
+
+### Live2D Pio 看板娘
+
+经典的 Live2D 看板娘，与 Spine 看板娘二选一使用。
+
+**配置方法（`src/config.ts`）：**
+
+```ts
+export const pioConfig: PioConfig = {
+    enable: false, // 启用看板娘（与 Spine 二选一）
+    models: ["/pio/models/illyasviel/illyasviel.model.json"], // 模型路径
+    position: "left",      // 位置：left/right
+    width: 280,            // 宽度
+    height: 250,           // 高度
+    mode: "draggable",     // 模式：static/fixed/draggable
+    hiddenOnMobile: true,  // 移动端隐藏
+    dialog: {
+        welcome: "Welcome!",          // 欢迎词
+        touch: ["你好！", "有什么需要帮助的吗？"], // 触摸提示
+        home: "点这里返回首页！",
+        skin: ["Want to see my new outfit?", "The new outfit looks great~"],
+        close: "下次再见~",
+    },
+};
+```
+
+> **注意：** Spine 看板娘和 Pio 看板娘建议只启用其中一个，同时启用可能造成页面显示冲突。
 
 ## 多提一嘴
 

@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import Announcement from "./Announcement.astro";
 import Categories from "./Categories.astro";
 import Music from "./Music.astro";
 import Profile from "./Profile.astro";
@@ -17,12 +18,13 @@ const musicEnabled = siteConfig.musicPlayer.enable;
 <div id="sidebar" class:list={[className, "w-full"]}>
     <div class="flex flex-col w-full gap-4 mb-4">
         <Profile></Profile>
+        <Announcement class="onload-animation" style="animation-delay: 100ms" />
     </div>
-    <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
-        <Categories class="onload-animation" style="animation-delay: 150ms"></Categories>
-        <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
+    <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 sticky top-[5.5rem]">
         {musicEnabled && (
-            <Music class="onload-animation" style="animation-delay: 250ms" />
+            <Music class="onload-animation" style="animation-delay: 150ms" />
         )}
+        <Categories class="onload-animation" style="animation-delay: 200ms"></Categories>
+        <Tag class="onload-animation" style="animation-delay: 250ms"></Tag>
     </div>
 </div>

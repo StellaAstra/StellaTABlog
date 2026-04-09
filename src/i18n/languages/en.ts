@@ -4,8 +4,9 @@ import type { Translation } from "../translation";
 export const en: Translation = {
 	[Key.home]: "Home",
 	[Key.about]: "About",
+	[Key.aboutMe]: "About Me",
 	[Key.archive]: "Archive",
-	[Key.images]: "Images",
+	[Key.gallery]: "Gallery",
 	[Key.links]: "Links",
 	[Key.search]: "Search",
 
@@ -27,6 +28,10 @@ export const en: Translation = {
 	[Key.postsCount]: "posts",
 
 	[Key.themeColor]: "Theme Color",
+	[Key.displaySettings]: "Display Settings",
+	[Key.bannerSettings]: "Banner Settings",
+	[Key.wavesAnimation]: "Waves Animation",
+	[Key.topHighlight]: "Top Highlight",
 
 	[Key.lightMode]: "Light",
 	[Key.darkMode]: "Dark",
@@ -57,4 +62,86 @@ export const en: Translation = {
 	[Key.musicCover]: "Cover",
 	[Key.musicNoCover]: "No cover available",
 	[Key.musicAudioPlayer]: "Audio Player",
+
+	// Announcement
+	[Key.announcement]: "Announcement",
+	[Key.announcementClose]: "Close",
+
+	[Key.commentSection]: "Comments",
+	[Key.commentSubtitle]: "Share your thoughts and discuss with everyone",
+	[Key.commentNotConfigured]: "Comment system not configured",
+	[Key.guestbookCommentHint]: "Please enable the comment system in the config file",
+	[Key.friends]: "Friends",
+	[Key.friendsDescription]: "Here are my friends, feel free to visit and connect",
+	[Key.guestbook]: "Guestbook",
+	[Key.guestbookDescription]: "Leave your footprint here",
+
+	[Key.postList]: "Post List",
+	[Key.tableOfContents]: "Table of Contents",
+	[Key.tocEmpty]: "No table of contents for this page",
+
+	[Key.updatedAt]: "Updated at",
+	[Key.readTime]: "Read time",
+
+	[Key.all]: "All",
+
+	[Key.bangumi]: "Bangumi",
+
+	// Bangumi Filters & Status
+	[Key.bangumiTitle]: "My Bangumi",
+	[Key.bangumiSubtitle]: "Recording my ACG journey",
+	[Key.bangumiFilterAll]: "All",
+	[Key.bangumiFilterWatched]: "Watched",
+	[Key.bangumiFilterWatching]: "Watching",
+	[Key.bangumiFilterWish]: "Wish",
+	[Key.bangumiFilterOnHold]: "On Hold",
+	[Key.bangumiFilterDropped]: "Dropped",
+	[Key.bangumiFilterGamePlayed]: "Played",
+	[Key.bangumiFilterGamePlaying]: "Playing",
+	[Key.bangumiFilterGameWish]: "Wish to Play",
+	[Key.bangumiFilterBookRead]: "Read",
+	[Key.bangumiFilterBookReading]: "Reading",
+	[Key.bangumiFilterBookWish]: "Wish to Read",
+	[Key.bangumiFilterMusicListened]: "Listened",
+	[Key.bangumiFilterMusicListening]: "Listening",
+	[Key.bangumiFilterMusicWish]: "Wish to Listen",
+	[Key.bangumiStatusWish]: "Wish",
+	[Key.bangumiStatusWatched]: "Watched",
+	[Key.bangumiStatusWatching]: "Watching",
+	[Key.bangumiStatusOnHold]: "On Hold",
+	[Key.bangumiStatusDropped]: "Dropped",
+	[Key.bangumiStatusGameWish]: "Wish to Play",
+	[Key.bangumiStatusGamePlayed]: "Played",
+	[Key.bangumiStatusGamePlaying]: "Playing",
+	[Key.bangumiStatusBookWish]: "Wish to Read",
+	[Key.bangumiStatusBookRead]: "Read",
+	[Key.bangumiStatusBookReading]: "Reading",
+	[Key.bangumiStatusMusicWish]: "Wish to Listen",
+	[Key.bangumiStatusMusicListened]: "Listened",
+	[Key.bangumiStatusMusicListening]: "Listening",
+	[Key.bangumiStatusUnknown]: "Unknown",
+	[Key.bangumiNoData]: "No Data",
+	[Key.bangumiNoDataDescription]: "No items in this category yet",
+	[Key.bangumiEmpty]: "No Data",
+	[Key.bangumiEmptyReason]: "Possible reasons: username does not exist, network issues, or API restrictions",
+	[Key.bangumiUsername]: "Username",
+	[Key.bangumiApi]: "API",
+	[Key.bangumiConfigTip]: "Tip: Set the correct Bangumi username in page settings",
+	[Key.bangumiPrevPage]: "Previous",
+	[Key.bangumiNextPage]: "Next",
+	[Key.bangumiCurrentPage]: "Page",
+	[Key.bangumiTotalPages]: "/",
+	[Key.bangumiPage]: "Page",
+
+	// Bangumi Categories
+	[Key.bangumiCategoryBook]: "Books",
+	[Key.bangumiCategoryAnime]: "Anime",
+	[Key.bangumiCategoryMusic]: "Music",
+	[Key.bangumiCategoryGame]: "Games",
+	[Key.bangumiCategoryReal]: "Real",
+
+	// Bangumi Data Update
+	[Key.bangumiLastUpdated]: "Data updated at",
+	[Key.bangumiUpdatedAt]: "Build time",
+	[Key.bangumiDataStatic]: "Static data",
 };

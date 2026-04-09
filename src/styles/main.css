@@ -1,9 +1,38 @@
+@import './waves.css';
+
 @tailwind components;
+
+/* 页面顶部渐变高光效果 */
+.top-gradient-highlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+    pointer-events: none;
+    z-index: 20;
+    transition: opacity 0.3s ease;
+}
+
+/* 暗色主题下的渐变高光效果 */
+:root.dark .top-gradient-highlight {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
+}
+
+/* 防闪烁：内联脚本设置的 data 属性在页面渲染前隐藏元素 */
+:root[data-waves-disabled="true"] #header-waves {
+    display: none !important;
+}
+:root[data-highlight-disabled="true"] .top-gradient-highlight {
+    display: none !important;
+}
 
 @layer components {
     .card-base {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
     }
+
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
         @apply transition;
     }
@@ -149,4 +178,34 @@
         color: var(--codeblock-bg);
     }
   }
+}
+
+/* ===== 导航栏毛玻璃效果 ===== */
+.navbar-surface {
+    background: transparent !important;
+    border: 1px solid transparent;
+    border-radius: 0 0 0.75rem 0.75rem;
+    transition:
+        background-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        backdrop-filter 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+        -webkit-backdrop-filter 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#navbar.navbar-scrolled .navbar-surface {
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    border-radius: 0 0 0.75rem 0.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+:root.dark #navbar.navbar-scrolled .navbar-surface {
+    background: rgba(0, 0, 0, 0.55) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 动画完成后移除 animation，避免合成层阻断 backdrop-filter */
+#navbar.animation-done {
+    animation: none !important;
+    opacity: 1 !important;
 }

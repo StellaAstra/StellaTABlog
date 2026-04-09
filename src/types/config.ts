@@ -46,6 +46,17 @@ export type SiteConfig = {
 	musicPlayer: {
 		enable: boolean;
 	};
+
+	// 页面开关
+	pages: {
+		bangumi: boolean;
+	};
+
+	// Bangumi 配置
+	bangumi?: {
+		userId?: string;
+		categoryOrder?: ("book" | "anime" | "music" | "game" | "real")[];
+	};
 };
 
 // 音乐播放器配置
@@ -87,6 +98,23 @@ export type MusicPlayerConfig = {
 	};
 };
 
+// 公告栏配置
+export type AnnouncementConfig = {
+	// 公告栏标题
+	title?: string;
+	// 公告栏内容
+	content: string;
+	// 是否可关闭
+	closable?: boolean;
+	// 可选链接
+	link?: {
+		enable?: boolean;
+		text: string;
+		url: string;
+		external?: boolean;
+	};
+};
+
 export type Favicon = {
 	src: string;
 	theme?: "light" | "dark";
@@ -98,13 +126,16 @@ export enum LinkPreset {
 	Archive = 1,
 	About = 2,
 	Links = 3,
-	Images = 4,
+	Gallery = 4,
+	Bangumi = 5,
 }
 
 export type NavBarLink = {
 	name: string;
 	url: string;
 	external?: boolean;
+	icon?: string; // 菜单项图标（Iconify 格式）
+	children?: (NavBarLink | LinkPreset)[]; // 支持子菜单
 };
 
 export type NavBarConfig = {

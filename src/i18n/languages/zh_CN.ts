@@ -4,8 +4,9 @@ import type { Translation } from "../translation";
 export const zh_CN: Translation = {
 	[Key.home]: "主页",
 	[Key.about]: "关于",
+	[Key.aboutMe]: "关于我",
 	[Key.archive]: "归档",
-	[Key.images]: "图片",
+	[Key.gallery]: "相册",
 	[Key.links]: "友链",
 	[Key.search]: "搜索",
 
@@ -27,6 +28,10 @@ export const zh_CN: Translation = {
 	[Key.postsCount]: "篇文章",
 
 	[Key.themeColor]: "主题色",
+	[Key.displaySettings]: "显示设置",
+	[Key.bannerSettings]: "横幅设置",
+	[Key.wavesAnimation]: "水波纹动画",
+	[Key.topHighlight]: "顶部高光",
 
 	[Key.lightMode]: "亮色",
 	[Key.darkMode]: "暗色",
@@ -57,4 +62,86 @@ export const zh_CN: Translation = {
 	[Key.musicCover]: "封面",
 	[Key.musicNoCover]: "暂无封面",
 	[Key.musicAudioPlayer]: "音频播放器",
+
+	// 公告栏
+	[Key.announcement]: "公告",
+	[Key.announcementClose]: "关闭",
+
+	[Key.commentSection]: "评论区",
+	[Key.commentSubtitle]: "分享你的想法，与大家交流讨论",
+	[Key.commentNotConfigured]: "评论系统尚未配置",
+	[Key.guestbookCommentHint]: "您尚未在配置文件中启用评论系统",
+	[Key.friends]: "友链",
+	[Key.friendsDescription]: "这里是我的朋友们，欢迎互相访问交流",
+	[Key.guestbook]: "留言",
+	[Key.guestbookDescription]: "欢迎在这里留下你的足迹",
+
+	[Key.postList]: "文章列表",
+	[Key.tableOfContents]: "目录",
+	[Key.tocEmpty]: "当前页面没有目录",
+
+	[Key.updatedAt]: "更新于",
+	[Key.readTime]: "阅读时间",
+
+	[Key.all]: "全部",
+
+	[Key.bangumi]: "番组计划",
+
+	// 番组筛选和状态
+	[Key.bangumiTitle]: "我的番组计划",
+	[Key.bangumiSubtitle]: "记录我的二次元之旅",
+	[Key.bangumiFilterAll]: "全部",
+	[Key.bangumiFilterWatched]: "看过",
+	[Key.bangumiFilterWatching]: "在看",
+	[Key.bangumiFilterWish]: "想看",
+	[Key.bangumiFilterOnHold]: "搁置",
+	[Key.bangumiFilterDropped]: "抛弃",
+	[Key.bangumiFilterGamePlayed]: "玩过",
+	[Key.bangumiFilterGamePlaying]: "在玩",
+	[Key.bangumiFilterGameWish]: "想玩",
+	[Key.bangumiFilterBookRead]: "读过",
+	[Key.bangumiFilterBookReading]: "在读",
+	[Key.bangumiFilterBookWish]: "想读",
+	[Key.bangumiFilterMusicListened]: "听过",
+	[Key.bangumiFilterMusicListening]: "在听",
+	[Key.bangumiFilterMusicWish]: "想听",
+	[Key.bangumiStatusWish]: "想看",
+	[Key.bangumiStatusWatched]: "看过",
+	[Key.bangumiStatusWatching]: "在看",
+	[Key.bangumiStatusOnHold]: "搁置",
+	[Key.bangumiStatusDropped]: "抛弃",
+	[Key.bangumiStatusGameWish]: "想玩",
+	[Key.bangumiStatusGamePlayed]: "玩过",
+	[Key.bangumiStatusGamePlaying]: "在玩",
+	[Key.bangumiStatusBookWish]: "想读",
+	[Key.bangumiStatusBookRead]: "读过",
+	[Key.bangumiStatusBookReading]: "在读",
+	[Key.bangumiStatusMusicWish]: "想听",
+	[Key.bangumiStatusMusicListened]: "听过",
+	[Key.bangumiStatusMusicListening]: "在听",
+	[Key.bangumiStatusUnknown]: "未知",
+	[Key.bangumiNoData]: "暂无数据",
+	[Key.bangumiNoDataDescription]: "该分类下还没有任何条目",
+	[Key.bangumiEmpty]: "暂无数据",
+	[Key.bangumiEmptyReason]: "可能的原因：用户名不存在、网络连接问题或API限制",
+	[Key.bangumiUsername]: "用户名",
+	[Key.bangumiApi]: "API",
+	[Key.bangumiConfigTip]: "提示：请在页面配置中设置正确的Bangumi用户名",
+	[Key.bangumiPrevPage]: "上一页",
+	[Key.bangumiNextPage]: "下一页",
+	[Key.bangumiCurrentPage]: "第",
+	[Key.bangumiTotalPages]: "页，共",
+	[Key.bangumiPage]: "页",
+
+	// 番组分类
+	[Key.bangumiCategoryBook]: "书籍",
+	[Key.bangumiCategoryAnime]: "动画",
+	[Key.bangumiCategoryMusic]: "音乐",
+	[Key.bangumiCategoryGame]: "游戏",
+	[Key.bangumiCategoryReal]: "三次元",
+
+	// 番组数据更新
+	[Key.bangumiLastUpdated]: "数据更新于",
+	[Key.bangumiUpdatedAt]: "构建时间",
+	[Key.bangumiDataStatic]: "静态数据",
 };

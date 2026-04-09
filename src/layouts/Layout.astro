@@ -138,6 +138,18 @@ const bannerOffset =
 			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+
+			// Load waves animation state from localStorage
+			const wavesEnabled = localStorage.getItem('wavesEnabled');
+			if (wavesEnabled === 'false') {
+				document.documentElement.dataset.wavesDisabled = 'true';
+			}
+
+			// Load top highlight state from localStorage
+			const highlightEnabled = localStorage.getItem('highlightEnabled');
+			if (highlightEnabled === 'false') {
+				document.documentElement.dataset.highlightDisabled = 'true';
+			}
 		</script>
 		<style define:vars={{
 			configHue,
@@ -176,6 +188,10 @@ const bannerOffset =
 		  data-overlayscrollbars-initialize
 	>
 		<ConfigCarrier></ConfigCarrier>
+
+		<!-- 页面顶部渐变高光效果 -->
+		{enableBanner && <div class="top-gradient-highlight" />}
+
 		<slot />
 
 		{/* 新音乐播放器管理器（全局单例） */}
@@ -211,14 +227,8 @@ const bannerOffset =
 	.enable-banner.is-home #main-grid {
 		@apply translate-y-[var(--banner-height-extend)];
 	}
-	.enable-banner #top-row {
-		@apply h-[calc(var(--banner-height-home)_-_4.5rem)] transition-all duration-300
-	}
 	.enable-banner.is-home #sidebar-sticky {
-		@apply top-[calc(1rem_-_var(--banner-height-extend))]
-	}
-	.navbar-hidden {
-		@apply opacity-0 -translate-y-16
+		@apply top-[calc(5.5rem_-_var(--banner-height-extend))]
 	}
 }
 </style>
@@ -231,7 +241,7 @@ import {
 	// SizeObserverPlugin,
 	// ClickScrollPlugin
 } from 'overlayscrollbars';
-import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
+import {getHue, getStoredTheme, setHue, setTheme, applyWavesState, getStoredWavesEnabled, applyHighlightState, getStoredHighlightEnabled} from "../utils/setting-utils";
 import {pathsEqual, url} from "../utils/url-utils";
 import {
 	BANNER_HEIGHT,
@@ -393,10 +403,20 @@ function showBanner() {
 	banner.classList.remove('opacity-0', 'scale-105');
 }
 
+function loadWavesState() {
+	applyWavesState(getStoredWavesEnabled())
+}
+
+function loadHighlightState() {
+	applyHighlightState(getStoredHighlightEnabled())
+}
+
 function init() {
 	// disableAnimation()()		// TODO
 	loadTheme();
 	loadHue();
+	loadWavesState();
+	loadHighlightState();
 	initCustomScrollbar();
 	showBanner();
 }
@@ -420,19 +440,6 @@ const setup = () => {
 	window.swup.hooks.on('link:click', () => {
 		// Remove the delay for the first time page load
 		document.documentElement.style.setProperty('--content-delay', '0ms')
-
-		// prevent elements from overlapping the navbar
-		if (!bannerEnabled) {
-			return
-		}
-		let threshold = window.innerHeight * (BANNER_HEIGHT / 100) - 72 - 16
-		let navbar = document.getElementById('navbar-wrapper')
-		if (!navbar || !document.body.classList.contains('lg:is-home')) {
-			return
-		}
-		if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
-			navbar.classList.add('navbar-hidden')
-		}
 	})
 	window.swup.hooks.on('content:replace', initCustomScrollbar)
 	window.swup.hooks.on('visit:start', (visit: {to: {url: string}}) => {
@@ -487,11 +494,27 @@ if (window?.swup?.hooks) {
 let backToTopBtn = document.getElementById('back-to-top-btn');
 let toc = document.getElementById('toc-wrapper');
 let navbar = document.getElementById('navbar-wrapper')
+let navbarElement = document.getElementById('navbar')
+
+// 动画完成后移除 animation 属性，解除合成层对 backdrop-filter 的阻断
+if (navbarElement) {
+	navbarElement.addEventListener('animationend', () => {
+		navbarElement.classList.add('animation-done')
+	}, { once: true })
+	// fallback: 如果 animationend 没有触发（动画已结束），500ms 后强制移除
+	setTimeout(() => {
+		if (navbarElement && !navbarElement.classList.contains('animation-done')) {
+			navbarElement.classList.add('animation-done')
+		}
+	}, 500)
+}
+
 function scrollFunction() {
 	let bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100)
+	let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
 
 	if (backToTopBtn) {
-		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
+		if (scrollTop > bannerHeight) {
 			backToTopBtn.classList.remove('hide')
 		} else {
 			backToTopBtn.classList.add('hide')
@@ -499,27 +522,19 @@ function scrollFunction() {
 	}
 
 	if (bannerEnabled && toc) {
-		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
+		if (scrollTop > bannerHeight) {
 			toc.classList.remove('toc-hide')
 		} else {
 			toc.classList.add('toc-hide')
 		}
 	}
 
-	if (!bannerEnabled) return
-	if (navbar) {
-		const NAVBAR_HEIGHT = 72
-		const MAIN_PANEL_EXCESS_HEIGHT = MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * 16			// The height the main panel overlaps the banner
-
-		let bannerHeight = BANNER_HEIGHT
-		if (document.body.classList.contains('lg:is-home') && window.innerWidth >= 1024) {
-			bannerHeight = BANNER_HEIGHT_HOME
-		}
-		let threshold = window.innerHeight * (bannerHeight / 100) - NAVBAR_HEIGHT - MAIN_PANEL_EXCESS_HEIGHT - 16
-		if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
-			navbar.classList.add('navbar-hidden')
+	// 滚动超过 50px 时添加毛玻璃背景（与 Firefly semifull 阈值一致）
+	if (navbarElement) {
+		if (scrollTop > 50) {
+			navbarElement.classList.add('navbar-scrolled')
 		} else {
-			navbar.classList.remove('navbar-hidden')
+			navbarElement.classList.remove('navbar-scrolled')
 		}
 	}
 }
