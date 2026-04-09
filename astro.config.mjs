@@ -48,12 +48,12 @@ export default defineConfig({
 			globalInstance: true,
 		}),
 		icon({
-			include: {
-				"preprocess: vitePreprocess(),": ["*"],
-				"fa6-brands": ["*"],
-				"fa6-regular": ["*"],
-				"fa6-solid": ["*"],
-			},
+		include: {
+			"material-symbols": ["*"],
+			"fa6-brands": ["*"],
+			"fa6-regular": ["*"],
+			"fa6-solid": ["*"],
+		},
 		}),
 		expressiveCode({
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
@@ -155,6 +155,9 @@ export default defineConfig({
 		],
 	},
 	vite: {
+		ssr: {
+			noExternal: [/@fontsource-variable\/.*/],
+		},
 		build: {
 			rollupOptions: {
 				onwarn(warning, warn) {

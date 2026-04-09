@@ -1,7 +1,6 @@
 <script lang="ts">
 import Icon from "@iconify/svelte";
-import { formatDateI18n } from "@utils/date-utils";
-import { onMount } from "svelte";
+import { onMount, onDestroy } from "svelte";
 import { imageLibraryConfig } from "../config";
 
 // StarDots 文件数据接口
@@ -72,13 +71,16 @@ let isDragOver = false;
 let isUploading = false;
 let fileInput: HTMLInputElement;
 
+// Fancybox
+let fancyboxLoaded = false;
+
 // 允许的文件类型
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/svg+xml', 'image/avif', 'image/x-icon'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const DEFAULT_SPACE = imageLibraryConfig.defaultSpace;
 
-// API 请求通过 Cloudflare Pages Functions 代理，解决 CORS 和密钥安全问题
+// ========== API 请求 ==========
 
 async function fetchSpaces() {
 	try {
@@ -91,12 +93,10 @@ async function fetchSpaces() {
 
 		if (data.success && data.code === 200) {
 			spaces = data.data;
-			// 设置默认空间
 			if (spaces.length > 0) {
 				const defaultSpace =
 					spaces.find((s) => s.name === DEFAULT_SPACE) || spaces[0];
 				currentSpace = defaultSpace;
-				// 获取默认空间的文件
 				await fetchImages(1, defaultSpace.name);
 			}
 		} else {
@@ -129,7 +129,6 @@ async function fetchImages(page = 1, spaceName?: string) {
 			totalImages = data.data.totalCount;
 			totalPages = Math.ceil(totalImages / data.data.pageSize);
 
-			// 如果是切换空间或者是第一页，更新banner图片
 			if (spaceName && page === 1) {
 				bannerImage = images[0] || null;
 				resetBannerImageState();
@@ -144,6 +143,8 @@ async function fetchImages(page = 1, spaceName?: string) {
 	}
 }
 
+// ========== 工具函数 ==========
+
 function formatFileSize(bytes: number): string {
 	if (bytes === 0) return "0 B";
 	const k = 1024;
@@ -152,13 +153,11 @@ function formatFileSize(bytes: number): string {
 	return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 }
 
-// 从文件名中获取扩展名
 function getExtension(filename: string): string {
 	const parts = filename.split(".");
 	return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : "";
 }
 
-// 格式化时间戳为可读日期
 function formatTimestamp(ts: number): string {
 	const date = new Date(ts * 1000);
 	return date.toLocaleDateString("zh-CN", {
@@ -168,7 +167,6 @@ function formatTimestamp(ts: number): string {
 	});
 }
 
-// 判断文件是否为图片
 function isImageFile(filename: string): boolean {
 	const ext = getExtension(filename);
 	return ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "ico", "avif"].includes(ext);
@@ -177,6 +175,11 @@ function isImageFile(filename: string): boolean {
 function handlePageClick(page: number) {
 	if (page >= 1 && page <= totalPages && page !== currentPage) {
 		fetchImages(page, currentSpace?.name);
+		// 滚动到图片区域顶部
+		const grid = document.querySelector('.gallery-grid');
+		if (grid) {
+			grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
 	}
 }
 
@@ -233,6 +236,46 @@ function resetBannerImageState() {
 	bannerImageError = false;
 }
 
+// ========== Fancybox ==========
+
+async function initFancybox() {
+	try {
+		const { Fancybox } = await import("@fancyapps/ui");
+		await import("@fancyapps/ui/dist/fancybox/fancybox.css");
+		
+		Fancybox.bind('[data-fancybox="gallery"]', {
+			animated: true,
+			showClass: "fancybox-zoomInUp",
+			hideClass: "fancybox-fadeOut",
+			Toolbar: {
+				display: {
+					left: ["infobar"],
+					middle: [],
+					right: ["slideshow", "fullscreen", "thumbs", "download", "close"],
+				},
+			},
+			Images: {
+				zoom: true,
+			},
+			Thumbs: {
+				type: "modern",
+			},
+		});
+		fancyboxLoaded = true;
+	} catch (e) {
+		console.warn('[ImagePanel] Fancybox load failed, falling back to link mode', e);
+	}
+}
+
+function destroyFancybox() {
+	try {
+		import("@fancyapps/ui").then(({ Fancybox }) => {
+			Fancybox.unbind('[data-fancybox="gallery"]');
+			Fancybox.close();
+		});
+	} catch (_) {}
+}
+
 // ========== 上传功能 ==========
 
 function generateUploadId(): string {
@@ -242,7 +285,6 @@ function generateUploadId(): string {
 function toggleUploadPanel() {
 	showUploadPanel = !showUploadPanel;
 	if (!showUploadPanel) {
-		// 关闭面板时清理已完成和失败的项（保留正在上传的）
 		uploadItems = uploadItems.filter(item => item.status === 'uploading');
 	}
 }
@@ -298,7 +340,7 @@ function handleFileSelect(event: Event) {
 	const input = event.target as HTMLInputElement;
 	if (input.files && input.files.length > 0) {
 		addFiles(input.files);
-		input.value = ''; // 重置 input，允许重新选择相同文件
+		input.value = '';
 	}
 }
 
@@ -323,7 +365,6 @@ function handleDrop(event: DragEvent) {
 async function uploadSingleFile(item: UploadItem): Promise<void> {
 	const targetSpace = currentSpace?.name || DEFAULT_SPACE;
 	
-	// 更新状态为上传中
 	uploadItems = uploadItems.map(i =>
 		i.id === item.id ? { ...i, status: 'uploading' as const, progress: 0 } : i
 	);
@@ -393,7 +434,6 @@ async function uploadSingleFile(item: UploadItem): Promise<void> {
 				reject(new Error('Network error'));
 			});
 
-			// 通过 Cloudflare Pages Functions 代理上传
 			xhr.open('POST', '/api/stardots-upload');
 			xhr.send(formData);
 		});
@@ -410,14 +450,12 @@ async function startUpload() {
 
 	isUploading = true;
 
-	// 逐个上传（避免并发过多）
 	for (const item of pendingItems) {
 		await uploadSingleFile(item);
 	}
 
 	isUploading = false;
 
-	// 上传完成后刷新图片列表
 	const hasSuccess = uploadItems.some(item => item.status === 'success');
 	if (hasSuccess && currentSpace) {
 		await fetchImages(1, currentSpace.name);
@@ -426,7 +464,6 @@ async function startUpload() {
 
 function copyToClipboard(text: string) {
 	navigator.clipboard.writeText(text).catch(() => {
-		// 降级方案
 		const textArea = document.createElement('textarea');
 		textArea.value = text;
 		document.body.appendChild(textArea);
@@ -438,250 +475,250 @@ function copyToClipboard(text: string) {
 
 onMount(() => {
 	fetchSpaces();
+	initFancybox();
 	
-	// 清理预览 URL
 	return () => {
 		for (const item of uploadItems) {
 			if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
 		}
+		destroyFancybox();
 	};
 });
 </script>
 
-<div class="card-base px-8 py-6">
-	<!-- Header -->
-	<div class="mb-6">		
-		<!-- Space Tabs + Upload Button -->
-		{#if spaces.length > 0}
-			<div class="flex flex-wrap items-center gap-2 mb-6">
-				{#each spaces as space}
-					<button
-						on:click={() => handleSpaceSwitch(space)}
-						class="btn-regular h-8 text-sm px-3 rounded-lg"
-					>
-						<div class="flex items-center gap-2">
-							<Icon icon="material-symbols:photo-library" class="w-4 h-4" />
-							<span>{space.name}</span>
-							<span class="text-xs opacity-75">({space.fileCount})</span>
-						</div>
-					</button>
-				{/each}
-				
-				<!-- Upload Button -->
-				<button
-					on:click={toggleUploadPanel}
-					class="btn-regular h-8 text-sm px-3 rounded-lg ml-auto"
-					title="上传图片"
-				>
-					<div class="flex items-center gap-2">
-						<Icon icon="material-symbols:cloud-upload" class="w-4 h-4" />
-						<span>上传</span>
-					</div>
-				</button>
+<!-- ============ Page Header ============ -->
+<div class="gallery-page">
+	<div class="gallery-header-section mb-6">
+		<div class="flex items-center gap-3 mb-2">
+			<div class="header-icon-wrapper">
+				<Icon icon="material-symbols:photo-library-rounded" class="w-7 h-7 text-[var(--primary)]" />
 			</div>
-		{/if}
-		
-		<!-- Banner Image - 使用当前相册的第一张图片 -->
-		{#if loading}
-			<!-- Banner Loading State -->
-			<div class="gallery-group bg-[var(--card-bg)] rounded-[var(--radius-large)] overflow-hidden transition-all duration-300 hover:shadow-lg mb-6">
-				<div class="gallery-header cursor-pointer relative h-48 overflow-hidden group">
-					<div class="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
-					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-					<div class="absolute bottom-4 left-4 text-white">
-						<div class="h-6 bg-white/20 rounded mb-2 animate-pulse"></div>
-						<div class="h-4 bg-white/20 rounded mb-1 animate-pulse w-24"></div>
-						<div class="h-3 bg-white/20 rounded w-32 animate-pulse"></div>
-					</div>
-					<div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full text-sm">
-						<div class="h-4 bg-white/20 rounded w-20 animate-pulse"></div>
-					</div>
-				</div>
-			</div>
-		{:else if bannerImage}
-			<div class="gallery-group bg-[var(--card-bg)] rounded-[var(--radius-large)] overflow-hidden transition-all duration-300 hover:shadow-lg mb-6">
-				<div class="gallery-header cursor-pointer relative h-48 overflow-hidden group">
-					<!-- 占位符背景 - 使用图片的主色调或渐变 -->
-					<div class="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 dark:from-gray-700 dark:via-gray-600 dark:to-gray-500 animate-pulse"></div>
-					
-					<img
-						src={bannerImage.url}
-						alt={bannerImage.name}
-						class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-						loading="lazy"
-						fetchpriority="high"
-						decoding="async"
-						on:load={handleBannerImageLoad}
-						on:error={handleBannerImageError}
-					/>
-					
-					<!-- 加载状态指示器 -->
-					{#if !bannerImageLoaded && !bannerImageError}
-						<div class="absolute inset-0 flex items-center justify-center bg-black/20">
-							<div class="flex flex-col items-center gap-3">
-								<div class="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
-								<div class="text-white text-sm font-medium">加载中...</div>
-							</div>
-						</div>
-					{/if}
-					
-					<!-- 错误状态 -->
-					{#if bannerImageError}
-						<div class="absolute inset-0 flex items-center justify-center bg-black/40">
-							<div class="text-center text-white">
-								<Icon icon="material-symbols:broken-image" class="w-12 h-12 mx-auto mb-2 opacity-75" />
-								<div class="text-sm">图片加载失败</div>
-							</div>
-						</div>
-					{/if}
-					
-					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-					<div class="absolute bottom-4 left-4 text-white">
-						<h3 class="text-xl font-bold mb-1">{currentSpace?.name}</h3>
-						<p class="text-sm opacity-90">{totalImages} 张图片</p>
-					</div>
-					<div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full text-sm">
-						{formatTimestamp(bannerImage.uploadedAt)}
-					</div>
-				</div>
-			</div>
-		{/if}
-		
-		<!-- Current Space Info -->
-		{#if currentSpace}
-			<p class="text-black/50 dark:text-white/50">
-				当前空间：{currentSpace.name} - 共 {totalImages} 张图片，第 {currentPage} 页，共 {totalPages} 页，如有侵权联系博主删除！
-			</p>
-		{:else}
-			<p class="text-black/50 dark:text-white/50">
-				共 {totalImages} 张图片，第 {currentPage} 页，共 {totalPages} 页，如有侵权联系博主删除！
-			</p>
-		{/if}
+			<h1 class="text-2xl font-bold text-black/85 dark:text-white/90">
+				图库
+			</h1>
+			{#if totalImages > 0}
+				<span class="photo-count-badge">{totalImages}</span>
+			{/if}
+		</div>
+		<p class="text-sm text-black/45 dark:text-white/45 ml-[2.75rem]">
+			浏览与管理云端图片 · 如有侵权联系博主删除
+		</p>
 	</div>
 
-	<!-- Loading State -->
+	<!-- ============ Space Tabs ============ -->
+	{#if spaces.length > 0}
+		<div class="flex flex-wrap items-center gap-2 mb-6">
+			{#each spaces as space}
+				<button
+					on:click={() => handleSpaceSwitch(space)}
+					class="space-tab"
+					class:space-tab-active={currentSpace?.name === space.name}
+				>
+					<Icon icon={currentSpace?.name === space.name ? "material-symbols:folder-open-rounded" : "material-symbols:folder-rounded"} class="w-4 h-4" />
+					<span>{space.name}</span>
+					<span class="space-tab-count">{space.fileCount}</span>
+				</button>
+			{/each}
+			
+			<button
+				on:click={toggleUploadPanel}
+				class="upload-btn ml-auto"
+				title="上传图片"
+			>
+				<Icon icon="material-symbols:cloud-upload-rounded" class="w-4 h-4" />
+				<span>上传</span>
+			</button>
+		</div>
+	{/if}
+
+	<!-- ============ Banner ============ -->
+	{#if loading && !bannerImage}
+		<div class="banner-card mb-8">
+			<div class="banner-inner">
+				<div class="w-full h-full bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 animate-pulse"></div>
+				<div class="banner-overlay"></div>
+				<div class="banner-content">
+					<div class="h-7 w-40 bg-white/20 rounded-lg animate-pulse mb-2"></div>
+					<div class="h-4 w-24 bg-white/15 rounded animate-pulse"></div>
+				</div>
+			</div>
+		</div>
+	{:else if bannerImage}
+		<div class="banner-card mb-8">
+			<div class="banner-inner">
+				<!-- 占位背景 -->
+				<div class="absolute inset-0 bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600"
+					class:hidden={bannerImageLoaded}
+				></div>
+				
+				<img
+					src={bannerImage.url}
+					alt={bannerImage.name}
+					class="banner-img"
+					class:banner-img-loaded={bannerImageLoaded}
+					loading="eager"
+					fetchpriority="high"
+					decoding="async"
+					on:load={handleBannerImageLoad}
+					on:error={handleBannerImageError}
+				/>
+				
+				{#if !bannerImageLoaded && !bannerImageError}
+					<div class="absolute inset-0 flex items-center justify-center">
+						<div class="animate-spin rounded-full h-8 w-8 border-2 border-white/60 border-t-transparent"></div>
+					</div>
+				{/if}
+				
+				{#if bannerImageError}
+					<div class="absolute inset-0 flex items-center justify-center bg-black/30">
+						<div class="text-center text-white/80">
+							<Icon icon="material-symbols:broken-image-rounded" class="w-10 h-10 mx-auto mb-2 opacity-60" />
+							<div class="text-sm">封面加载失败</div>
+						</div>
+					</div>
+				{/if}
+				
+				<div class="banner-overlay"></div>
+				
+				<div class="banner-content">
+					<h2 class="text-2xl md:text-3xl font-bold text-white mb-1 drop-shadow-lg">
+						{currentSpace?.name || '图库'}
+					</h2>
+					<p class="text-white/80 text-sm flex items-center gap-2">
+						<Icon icon="material-symbols:photo-camera-rounded" class="w-4 h-4" />
+						<span>{totalImages} 张图片</span>
+						<span class="text-white/40">·</span>
+						<span>第 {currentPage}/{totalPages} 页</span>
+					</p>
+				</div>
+
+				<div class="banner-date">
+					<Icon icon="material-symbols:calendar-today-rounded" class="w-3.5 h-3.5" />
+					<span>{bannerImage ? formatTimestamp(bannerImage.uploadedAt) : ''}</span>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<!-- ============ Loading State ============ -->
 	{#if loading}
-		<div class="flex justify-center items-center py-12">
-			<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary)]"></div>
+		<div class="gallery-loading">
+			<div class="loading-grid">
+				{#each Array(8) as _}
+					<div class="skeleton-card">
+						<div class="skeleton-img"></div>
+					</div>
+				{/each}
+			</div>
 		</div>
 	{:else if error}
-		<!-- Error State -->
-		<div class="text-center py-12">
-			<div class="text-red-500 text-lg mb-4">{error}</div>
+		<!-- ============ Error State ============ -->
+		<div class="gallery-empty">
+			<div class="empty-icon error">
+				<Icon icon="material-symbols:error-rounded" class="w-12 h-12" />
+			</div>
+			<h3 class="text-lg font-semibold text-black/70 dark:text-white/70 mt-4 mb-2">加载失败</h3>
+			<p class="text-sm text-black/40 dark:text-white/40 mb-4 max-w-sm">{error}</p>
 			<button 
 				on:click={() => currentSpace ? fetchImages(currentPage, currentSpace.name) : fetchImages(currentPage)}
-				class="btn-card px-6 py-2 rounded-lg"
+				class="retry-btn"
 			>
-				重试
+				<Icon icon="material-symbols:refresh-rounded" class="w-4 h-4" />
+				<span>重新加载</span>
+			</button>
+		</div>
+	{:else if images.filter(img => isImageFile(img.name)).length === 0}
+		<!-- ============ Empty State ============ -->
+		<div class="gallery-empty">
+			<div class="empty-icon">
+				<Icon icon="material-symbols:image-not-supported-rounded" class="w-12 h-12" />
+			</div>
+			<h3 class="text-lg font-semibold text-black/70 dark:text-white/70 mt-4 mb-2">暂无图片</h3>
+			<p class="text-sm text-black/40 dark:text-white/40 mb-4">当前空间还没有上传任何图片</p>
+			<button 
+				on:click={toggleUploadPanel}
+				class="retry-btn"
+			>
+				<Icon icon="material-symbols:cloud-upload-rounded" class="w-4 h-4" />
+				<span>上传第一张</span>
 			</button>
 		</div>
 	{:else}
-		<!-- Images Grid -->
-		<div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 mb-8">
+		<!-- ============ Gallery Grid ============ -->
+		<div class="gallery-grid columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 mb-10">
 			{#each images as image}
 				{#if isImageFile(image.name)}
-				<div class="group relative overflow-hidden rounded-lg bg-[var(--card-bg)] shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 mb-6 break-inside-avoid">
-					<!-- Image Container -->
-					<div 
-						class="relative overflow-hidden bg-gray-100 dark:bg-gray-800"
+					<a
+						href={image.url}
+						data-fancybox="gallery"
+						data-caption={image.name}
+						class="photo-card break-inside-avoid mb-4 block"
 					>
-						<img
-							src={image.url}
-							alt={image.name}
-							title={image.name}
-							class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
-							loading="lazy"
-							decoding="async"
-							fetchpriority="auto"
-						/>
-						
-						<!-- GIF Indicator -->
-						{#if getExtension(image.name) === 'gif'}
-							<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full font-medium">
-								GIF
+						<div class="photo-card-inner">
+							<img
+								src={image.url}
+								alt={image.name}
+								title={image.name}
+								class="photo-img"
+								loading="lazy"
+								decoding="async"
+								fetchpriority="auto"
+							/>
+							
+							{#if getExtension(image.name) === 'gif'}
+								<div class="format-badge">GIF</div>
+							{/if}
+
+							<div class="photo-hover-overlay">
+								<div class="photo-hover-content">
+									<Icon icon="material-symbols:zoom-in-rounded" class="w-8 h-8 text-white drop-shadow-lg" />
+								</div>
 							</div>
-						{/if}
-						
-						<!-- Overlay on hover -->
-						<div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-							<div class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-								<a 
-									href={image.url} 
-									target="_blank" 
-									rel="noopener noreferrer"
-									class="btn-card bg-white/90 hover:bg-white text-black px-4 py-2 rounded-lg shadow-lg"
-								>
-									<Icon icon="material-symbols:open-in-new" class="w-5 h-5 mr-2" />
-									查看原图
-								</a>
+
+							<div class="photo-info-bar">
+								<span class="photo-info-name">{image.name}</span>
+								<span class="photo-info-meta">{image.size || formatFileSize(image.byteSize)}</span>
 							</div>
 						</div>
-					</div>
-					
-					<!-- Image Info -->
-					<div class="p-4">
-						<h3 class="font-semibold text-black/75 dark:text-white/75 mb-2 line-clamp-2 group-hover:text-[var(--primary)] transition-colors duration-300">
-							{image.name}
-						</h3>
-						
-						<div class="space-y-1 text-sm text-black/50 dark:text-white/50">
-							<div class="flex items-center justify-between">
-								<span>大小:</span>
-								<span>{image.size || formatFileSize(image.byteSize)}</span>
-							</div>
-							<div class="flex items-center justify-between">
-								<span>格式:</span>
-								<span class="uppercase">{getExtension(image.name)}</span>
-							</div>
-							<div class="flex items-center justify-between">
-								<span>上传:</span>
-								<span>{formatTimestamp(image.uploadedAt)}</span>
-							</div>
-						</div>
-					</div>
-				</div>
+					</a>
 				{/if}
 			{/each}
 		</div>
 
-		<!-- Pagination -->
+		<!-- ============ Pagination ============ -->
 		{#if totalPages > 1}
-			<div class="flex flex-row gap-3 justify-center">
-				<!-- Previous Page -->
-				<button
-					on:click={() => handlePageClick(currentPage - 1)}
-					disabled={currentPage <= 1}
-					class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
-					aria-label={currentPage > 1 ? "Previous Page" : null}
-				>
-					<Icon icon="material-symbols:chevron-left-rounded" class="text-[1.75rem]" />
-				</button>
+			<div class="pagination-wrapper">
+				<div class="pagination">
+					<button
+						on:click={() => handlePageClick(currentPage - 1)}
+						disabled={currentPage <= 1}
+						class="page-btn page-nav-btn"
+						aria-label="上一页"
+					>
+						<Icon icon="material-symbols:chevron-left-rounded" class="text-xl" />
+					</button>
 
-				<!-- Page Numbers -->
-				<div class="bg-[var(--card-bg)] flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold">
 					{#if currentPage > 3}
 						<button
 							on:click={() => handlePageClick(1)}
-							class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
-							aria-label="Page 1"
+							class="page-btn"
+							aria-label="第 1 页"
 						>
 							1
 						</button>
 						{#if currentPage > 4}
-							<Icon icon="material-symbols:more-horiz" class="mx-1" />
+							<span class="page-ellipsis">…</span>
 						{/if}
 					{/if}
 
 					{#each getPageNumbers() as pageNum}
 						{#if pageNum === currentPage}
-							<div class="h-11 w-11 rounded-lg bg-[var(--primary)] flex items-center justify-center font-bold text-white dark:text-black/70">
-								{pageNum}
-							</div>
+							<div class="page-btn page-active">{pageNum}</div>
 						{:else}
 							<button
 								on:click={() => handlePageClick(pageNum)}
-								class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
-								aria-label="Page {pageNum}"
+								class="page-btn"
+								aria-label="第 {pageNum} 页"
 							>
 								{pageNum}
 							</button>
@@ -690,59 +727,62 @@ onMount(() => {
 
 					{#if currentPage < totalPages - 2}
 						{#if currentPage < totalPages - 3}
-							<Icon icon="material-symbols:more-horiz" class="mx-1" />
+							<span class="page-ellipsis">…</span>
 						{/if}
 						<button
 							on:click={() => handlePageClick(totalPages)}
-							class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
-							aria-label="Page {totalPages}"
+							class="page-btn"
+							aria-label="第 {totalPages} 页"
 						>
 							{totalPages}
 						</button>
 					{/if}
-				</div>
 
-				<!-- Next Page -->
-				<button
-					on:click={() => handlePageClick(currentPage + 1)}
-					disabled={currentPage >= totalPages}
-					class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
-					aria-label={currentPage < totalPages ? "Next Page" : null}
-				>
-					<Icon icon="material-symbols:chevron-right-rounded" class="text-[1.75rem]" />
-				</button>
+					<button
+						on:click={() => handlePageClick(currentPage + 1)}
+						disabled={currentPage >= totalPages}
+						class="page-btn page-nav-btn"
+						aria-label="下一页"
+					>
+						<Icon icon="material-symbols:chevron-right-rounded" class="text-xl" />
+					</button>
+				</div>
+				
+				<p class="text-xs text-black/30 dark:text-white/30 mt-3 text-center">
+					共 {totalImages} 张图片
+				</p>
 			</div>
 		{/if}
 	{/if}
-
 </div>
 
-<!-- Upload Panel Modal -->
+<!-- ============ Upload Panel Modal ============ -->
 {#if showUploadPanel}
-	<!-- Backdrop -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div 
-		class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+		class="upload-modal-backdrop"
 		on:click|self={toggleUploadPanel}
 	>
-		<div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
+		<div class="upload-modal">
 			<!-- Panel Header -->
-			<div class="flex items-center justify-between px-6 py-4 border-b border-black/10 dark:border-white/10">
+			<div class="upload-modal-header">
 				<div class="flex items-center gap-3">
-					<Icon icon="material-symbols:cloud-upload" class="w-6 h-6 text-[var(--primary)]" />
-					<h2 class="text-lg font-bold text-black/80 dark:text-white/80">上传图片</h2>
-					{#if currentSpace}
-						<span class="text-sm text-black/50 dark:text-white/50 bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded-full">
-							{currentSpace.name}
-						</span>
-					{/if}
+					<div class="w-9 h-9 rounded-xl bg-[var(--primary)]/10 flex items-center justify-center">
+						<Icon icon="material-symbols:cloud-upload-rounded" class="w-5 h-5 text-[var(--primary)]" />
+					</div>
+					<div>
+						<h2 class="text-base font-bold text-black/80 dark:text-white/80">上传图片</h2>
+						{#if currentSpace}
+							<p class="text-xs text-black/40 dark:text-white/40">目标空间：{currentSpace.name}</p>
+						{/if}
+					</div>
 				</div>
 				<button 
 					on:click={toggleUploadPanel}
-					class="p-1 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+					class="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
 				>
-					<Icon icon="material-symbols:close" class="w-5 h-5 text-black/50 dark:text-white/50" />
+					<Icon icon="material-symbols:close-rounded" class="w-5 h-5 text-black/40 dark:text-white/40" />
 				</button>
 			</div>
 
@@ -750,10 +790,8 @@ onMount(() => {
 			<div class="px-6 py-4">
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div 
-					class="relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300
-						{isDragOver 
-							? 'border-[var(--primary)] bg-[var(--primary)]/5 scale-[1.02]' 
-							: 'border-black/20 dark:border-white/20 hover:border-[var(--primary)]/50'}"
+					class="drop-zone"
+					class:drop-zone-active={isDragOver}
 					on:dragover={handleDragOver}
 					on:dragleave={handleDragLeave}
 					on:drop={handleDrop}
@@ -768,26 +806,26 @@ onMount(() => {
 					/>
 					
 					<div class="flex flex-col items-center gap-3">
-						<div class="w-16 h-16 rounded-full bg-[var(--primary)]/10 flex items-center justify-center">
+						<div class="w-14 h-14 rounded-2xl bg-[var(--primary)]/10 flex items-center justify-center">
 							<Icon 
-								icon={isDragOver ? "material-symbols:file-download" : "material-symbols:add-photo-alternate-outline"} 
-								class="w-8 h-8 text-[var(--primary)]" 
+								icon={isDragOver ? "material-symbols:file-download-rounded" : "material-symbols:add-photo-alternate-outline-rounded"} 
+								class="w-7 h-7 text-[var(--primary)]" 
 							/>
 						</div>
-						<div>
-							<p class="text-black/70 dark:text-white/70 font-medium">
-								{isDragOver ? '释放鼠标上传文件' : '拖拽图片到此处，或'}
-								{#if !isDragOver}
-									<button 
-										on:click={() => fileInput?.click()} 
-										class="text-[var(--primary)] hover:underline font-semibold"
-									>
-										点击选择文件
-									</button>
-								{/if}
+						<div class="text-center">
+							<p class="text-black/60 dark:text-white/60 text-sm">
+								{isDragOver ? '释放鼠标上传文件' : '拖拽图片到此处'}
 							</p>
-							<p class="text-sm text-black/40 dark:text-white/40 mt-1">
-								支持 JPG、PNG、GIF、WebP、BMP、SVG、AVIF 格式，单文件最大 10MB
+							{#if !isDragOver}
+								<button 
+									on:click={() => fileInput?.click()} 
+									class="text-[var(--primary)] hover:underline text-sm font-medium mt-1"
+								>
+									或点击选择文件
+								</button>
+							{/if}
+							<p class="text-xs text-black/30 dark:text-white/30 mt-2">
+								JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB
 							</p>
 						</div>
 					</div>
@@ -796,46 +834,42 @@ onMount(() => {
 
 			<!-- Upload Items List -->
 			{#if uploadItems.length > 0}
-				<div class="flex-1 overflow-y-auto px-6 pb-2 min-h-0">
-					<div class="flex items-center justify-between mb-3">
-						<span class="text-sm text-black/50 dark:text-white/50">
+				<div class="upload-items-wrapper">
+					<div class="flex items-center justify-between mb-3 px-6">
+						<span class="text-xs text-black/40 dark:text-white/40">
 							{uploadItems.length} 个文件
 							{#if uploadItems.filter(i => i.status === 'success').length > 0}
-								，{uploadItems.filter(i => i.status === 'success').length} 个已完成
+								· {uploadItems.filter(i => i.status === 'success').length} 个完成
 							{/if}
 						</span>
 						{#if uploadItems.some(i => i.status === 'success' || i.status === 'error')}
 							<button 
 								on:click={clearCompletedItems}
-								class="text-sm text-[var(--primary)] hover:underline"
+								class="text-xs text-[var(--primary)] hover:underline"
 							>
 								清除已完成
 							</button>
 						{/if}
 					</div>
 					
-					<div class="space-y-3">
+					<div class="space-y-2 px-6">
 						{#each uploadItems as item (item.id)}
-							<div class="flex items-center gap-3 p-3 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] group/item">
-								<!-- Preview -->
-								<div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0">
+							<div class="upload-item">
+								<div class="upload-item-preview">
 									{#if item.previewUrl}
 										<img src={item.previewUrl} alt={item.name} class="w-full h-full object-cover" />
 									{:else}
-										<div class="w-full h-full flex items-center justify-center">
-											<Icon icon="material-symbols:image" class="w-6 h-6 text-black/20 dark:text-white/20" />
-										</div>
+										<Icon icon="material-symbols:image-rounded" class="w-5 h-5 text-black/15 dark:text-white/15" />
 									{/if}
 								</div>
 
-								<!-- Info -->
 								<div class="flex-1 min-w-0">
 									<p class="text-sm font-medium text-black/70 dark:text-white/70 truncate">{item.name}</p>
-									<div class="flex items-center gap-2 mt-1">
-										<span class="text-xs text-black/40 dark:text-white/40">{formatFileSize(item.size)}</span>
+									<div class="flex items-center gap-2 mt-0.5">
+										<span class="text-xs text-black/35 dark:text-white/35">{formatFileSize(item.size)}</span>
 										
 										{#if item.status === 'uploading'}
-											<div class="flex-1 h-1.5 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+											<div class="flex-1 h-1 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
 												<div 
 													class="h-full bg-[var(--primary)] rounded-full transition-all duration-300"
 													style="width: {item.progress}%"
@@ -843,39 +877,38 @@ onMount(() => {
 											</div>
 											<span class="text-xs text-[var(--primary)] font-medium">{item.progress}%</span>
 										{:else if item.status === 'success'}
-											<span class="text-xs text-green-500 flex items-center gap-1">
-												<Icon icon="material-symbols:check-circle" class="w-3.5 h-3.5" />
-												上传成功
+											<span class="text-xs text-emerald-500 flex items-center gap-0.5">
+												<Icon icon="material-symbols:check-circle-rounded" class="w-3 h-3" />
+												完成
 											</span>
 										{:else if item.status === 'error'}
-											<span class="text-xs text-red-500 flex items-center gap-1" title={item.errorMsg}>
-												<Icon icon="material-symbols:error" class="w-3.5 h-3.5" />
-												{item.errorMsg || '上传失败'}
+											<span class="text-xs text-red-400 flex items-center gap-0.5 truncate" title={item.errorMsg}>
+												<Icon icon="material-symbols:error-rounded" class="w-3 h-3 flex-shrink-0" />
+												<span class="truncate">{item.errorMsg || '失败'}</span>
 											</span>
 										{:else}
-											<span class="text-xs text-black/30 dark:text-white/30">等待上传</span>
+											<span class="text-xs text-black/25 dark:text-white/25">等待中</span>
 										{/if}
 									</div>
 								</div>
 
-								<!-- Actions -->
 								<div class="flex items-center gap-1 flex-shrink-0">
 									{#if item.status === 'success' && item.url}
 										<button
 											on:click={() => item.url && copyToClipboard(item.url)}
-											class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+											class="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
 											title="复制链接"
 										>
-											<Icon icon="material-symbols:content-copy" class="w-4 h-4 text-[var(--primary)]" />
+											<Icon icon="material-symbols:content-copy-rounded" class="w-3.5 h-3.5 text-[var(--primary)]" />
 										</button>
 									{/if}
 									{#if item.status !== 'uploading'}
 										<button
 											on:click={() => removeUploadItem(item.id)}
-											class="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover/item:opacity-100"
+											class="p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors opacity-0 group-hover/item:opacity-100"
 											title="移除"
 										>
-											<Icon icon="material-symbols:delete-outline" class="w-4 h-4 text-red-500" />
+											<Icon icon="material-symbols:close-rounded" class="w-3.5 h-3.5 text-red-400" />
 										</button>
 									{/if}
 								</div>
@@ -886,30 +919,26 @@ onMount(() => {
 			{/if}
 
 			<!-- Panel Footer -->
-			<div class="px-6 py-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between">
+			<div class="upload-modal-footer">
 				<button
 					on:click={() => fileInput?.click()}
-					class="btn-regular h-9 text-sm px-4 rounded-lg"
+					class="footer-add-btn"
 				>
-					<div class="flex items-center gap-2">
-						<Icon icon="material-symbols:add" class="w-4 h-4" />
-						<span>添加文件</span>
-					</div>
+					<Icon icon="material-symbols:add-rounded" class="w-4 h-4" />
+					<span>添加</span>
 				</button>
 				
 				<button
 					on:click={startUpload}
 					disabled={isUploading || uploadItems.filter(i => i.status === 'pending').length === 0}
-					class="h-9 text-sm px-6 rounded-lg font-medium text-white bg-[var(--primary)] hover:opacity-90 
-						disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200
-						flex items-center gap-2"
+					class="footer-upload-btn"
 				>
 					{#if isUploading}
 						<div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
 						<span>上传中...</span>
 					{:else}
-						<Icon icon="material-symbols:cloud-upload" class="w-4 h-4" />
-						<span>开始上传 ({uploadItems.filter(i => i.status === 'pending').length})</span>
+						<Icon icon="material-symbols:cloud-upload-rounded" class="w-4 h-4" />
+						<span>上传 ({uploadItems.filter(i => i.status === 'pending').length})</span>
 					{/if}
 				</button>
 			</div>
@@ -918,60 +947,658 @@ onMount(() => {
 {/if}
 
 <style>
-	.line-clamp-2 {
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
+	/* ====== Page Layout ====== */
+	.gallery-page {
+		padding: 1.5rem 2rem;
+	}
+
+	/* ====== Header ====== */
+	.header-icon-wrapper {
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 0.75rem;
+		background: color-mix(in srgb, var(--primary) 10%, transparent);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.photo-count-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 1.5rem;
+		height: 1.25rem;
+		padding: 0 0.4rem;
+		border-radius: 9999px;
+		background: var(--primary);
+		color: white;
+		font-size: 0.7rem;
+		font-weight: 700;
+	}
+
+	/* ====== Space Tabs ====== */
+	.space-tab {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		height: 2.125rem;
+		padding: 0 0.875rem;
+		border-radius: 9999px;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: rgba(0, 0, 0, 0.55);
+		background: rgba(0, 0, 0, 0.04);
+		border: 1px solid transparent;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	:global(.dark) .space-tab {
+		color: rgba(255, 255, 255, 0.55);
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	.space-tab:hover {
+		color: var(--primary);
+		background: color-mix(in srgb, var(--primary) 8%, transparent);
+	}
+
+	.space-tab-active {
+		color: var(--primary) !important;
+		background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+		border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+	}
+
+	.space-tab-count {
+		font-size: 0.6875rem;
+		opacity: 0.6;
+		font-weight: 400;
+	}
+
+	.upload-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		height: 2.125rem;
+		padding: 0 0.875rem;
+		border-radius: 9999px;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: var(--primary);
+		background: color-mix(in srgb, var(--primary) 8%, transparent);
+		border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.upload-btn:hover {
+		background: color-mix(in srgb, var(--primary) 15%, transparent);
+		border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+	}
+
+	/* ====== Banner ====== */
+	.banner-card {
+		border-radius: var(--radius-large, 1rem);
+		overflow: hidden;
+		box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.1);
+		transition: box-shadow 0.3s ease;
+	}
+
+	.banner-card:hover {
+		box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.15);
+	}
+
+	.banner-inner {
+		position: relative;
+		height: 14rem;
 		overflow: hidden;
 	}
-	
-	/* Banner 图片加载优化 */
-	.gallery-header img {
-		will-change: opacity, transform;
-	}
-	
-	/* 渐进式加载动画 */
-	@keyframes fadeInScale {
-		from {
-			opacity: 0;
-			transform: scale(1.05);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1);
+
+	@media (min-width: 768px) {
+		.banner-inner {
+			height: 18rem;
 		}
 	}
-	
-	.banner-image-loaded {
-		animation: fadeInScale 0.7s ease-out forwards;
+
+	.banner-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transition: opacity 0.6s ease, transform 8s ease;
+		position: relative;
+		z-index: 1;
 	}
-	
-	/* 占位符动画优化 */
-	.animate-pulse {
-		animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+	.banner-img-loaded {
+		opacity: 1;
 	}
-	
-	@keyframes pulse {
-		0%, 100% {
-			opacity: 1;
+
+	.banner-card:hover .banner-img-loaded {
+		transform: scale(1.03);
+	}
+
+	.banner-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 40%, transparent 100%);
+		z-index: 2;
+	}
+
+	.banner-content {
+		position: absolute;
+		bottom: 1.25rem;
+		left: 1.5rem;
+		z-index: 3;
+	}
+
+	@media (min-width: 768px) {
+		.banner-content {
+			bottom: 1.75rem;
+			left: 2rem;
 		}
-		50% {
-			opacity: 0.5;
-		}
 	}
-	
-	/* 上传面板滚动条美化 */
-	.overflow-y-auto::-webkit-scrollbar {
+
+	.banner-date {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.25rem 0.625rem;
+		border-radius: 9999px;
+		background: rgba(0, 0, 0, 0.4);
+		backdrop-filter: blur(8px);
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 0.75rem;
+		z-index: 3;
+	}
+
+	/* ====== Loading Skeleton ====== */
+	.gallery-loading {
+		padding: 0;
+	}
+
+	.loading-grid {
+		columns: 2;
+		gap: 1rem;
+	}
+
+	@media (min-width: 768px) {
+		.loading-grid { columns: 3; }
+	}
+	@media (min-width: 1024px) {
+		.loading-grid { columns: 4; }
+	}
+	@media (min-width: 1280px) {
+		.loading-grid { columns: 5; }
+	}
+
+	.skeleton-card {
+		break-inside: avoid;
+		margin-bottom: 1rem;
+		border-radius: 0.75rem;
+		overflow: hidden;
+		background: rgba(0, 0, 0, 0.03);
+	}
+
+	:global(.dark) .skeleton-card {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.skeleton-img {
+		width: 100%;
+		padding-top: 75%;
+		background: linear-gradient(110deg, transparent 30%, rgba(0,0,0,0.04) 50%, transparent 70%);
+		background-size: 200% 100%;
+		animation: shimmer 1.5s infinite;
+	}
+
+	:global(.dark) .skeleton-img {
+		background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%);
+		background-size: 200% 100%;
+	}
+
+	@keyframes shimmer {
+		to { background-position: -200% 0; }
+	}
+
+	/* ====== Empty / Error State ====== */
+	.gallery-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 4rem 1rem;
+		text-align: center;
+	}
+
+	.empty-icon {
+		width: 5rem;
+		height: 5rem;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.04);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: rgba(0, 0, 0, 0.2);
+	}
+
+	:global(.dark) .empty-icon {
+		background: rgba(255, 255, 255, 0.04);
+		color: rgba(255, 255, 255, 0.2);
+	}
+
+	.empty-icon.error {
+		color: #ef4444;
+		background: rgba(239, 68, 68, 0.08);
+	}
+
+	.retry-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.5rem 1.25rem;
+		border-radius: 9999px;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: white;
+		background: var(--primary);
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.retry-btn:hover {
+		opacity: 0.9;
+		transform: translateY(-1px);
+	}
+
+	/* ====== Photo Cards ====== */
+	.photo-card {
+		text-decoration: none;
+		display: block;
+		cursor: pointer;
+	}
+
+	.photo-card-inner {
+		position: relative;
+		border-radius: 0.75rem;
+		overflow: hidden;
+		background: var(--card-bg, #fff);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.photo-card-inner:hover {
+		box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.12);
+		transform: translateY(-3px);
+	}
+
+	:global(.dark) .photo-card-inner:hover {
+		box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3);
+	}
+
+	.photo-img {
+		width: 100%;
+		height: auto;
+		display: block;
+		transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.photo-card-inner:hover .photo-img {
+		transform: scale(1.05);
+	}
+
+	.format-badge {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		padding: 0.125rem 0.5rem;
+		border-radius: 9999px;
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(4px);
+		color: white;
+		font-size: 0.625rem;
+		font-weight: 700;
+		letter-spacing: 0.03em;
+		z-index: 2;
+	}
+
+	.photo-hover-overlay {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0);
+		transition: background 0.3s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 2;
+	}
+
+	.photo-card-inner:hover .photo-hover-overlay {
+		background: rgba(0, 0, 0, 0.25);
+	}
+
+	.photo-hover-content {
+		opacity: 0;
+		transform: scale(0.8);
+		transition: all 0.3s ease;
+	}
+
+	.photo-card-inner:hover .photo-hover-content {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.photo-info-bar {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 2rem 0.625rem 0.5rem;
+		background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		z-index: 2;
+		opacity: 0;
+		transform: translateY(4px);
+		transition: all 0.3s ease;
+	}
+
+	.photo-card-inner:hover .photo-info-bar {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.photo-info-name {
+		font-size: 0.6875rem;
+		color: rgba(255, 255, 255, 0.9);
+		font-weight: 500;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 65%;
+	}
+
+	.photo-info-meta {
+		font-size: 0.625rem;
+		color: rgba(255, 255, 255, 0.6);
+		flex-shrink: 0;
+	}
+
+	/* ====== Pagination ====== */
+	.pagination-wrapper {
+		padding: 1rem 0 0.5rem;
+	}
+
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.375rem;
+	}
+
+	.page-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.25rem;
+		height: 2.25rem;
+		padding: 0 0.25rem;
+		border-radius: 0.5rem;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: rgba(0, 0, 0, 0.5);
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	:global(.dark) .page-btn {
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.page-btn:hover:not(:disabled):not(.page-active) {
+		background: rgba(0, 0, 0, 0.05);
+		color: var(--primary);
+	}
+
+	:global(.dark) .page-btn:hover:not(:disabled):not(.page-active) {
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.page-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.page-active {
+		background: var(--primary) !important;
+		color: white !important;
+		font-weight: 700;
+		cursor: default;
+	}
+
+	:global(.dark) .page-active {
+		color: rgba(0, 0, 0, 0.7) !important;
+	}
+
+	.page-nav-btn {
+		color: var(--primary);
+	}
+
+	.page-ellipsis {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		color: rgba(0, 0, 0, 0.25);
+		font-size: 0.875rem;
+	}
+
+	:global(.dark) .page-ellipsis {
+		color: rgba(255, 255, 255, 0.25);
+	}
+
+	/* ====== Upload Modal ====== */
+	.upload-modal-backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(8px);
+		z-index: 50;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+	}
+
+	.upload-modal {
+		background: var(--card-bg, #fff);
+		border-radius: 1.25rem;
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+		width: 100%;
+		max-width: 36rem;
+		max-height: 85vh;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.upload-modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1.25rem 1.5rem;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	}
+
+	:global(.dark) .upload-modal-header {
+		border-bottom-color: rgba(255, 255, 255, 0.06);
+	}
+
+	.drop-zone {
+		border: 2px dashed rgba(0, 0, 0, 0.12);
+		border-radius: 1rem;
+		padding: 2rem 1rem;
+		text-align: center;
+		transition: all 0.3s ease;
+		cursor: pointer;
+	}
+
+	:global(.dark) .drop-zone {
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.drop-zone:hover {
+		border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+		background: color-mix(in srgb, var(--primary) 3%, transparent);
+	}
+
+	.drop-zone-active {
+		border-color: var(--primary) !important;
+		background: color-mix(in srgb, var(--primary) 6%, transparent) !important;
+		transform: scale(1.01);
+	}
+
+	.upload-items-wrapper {
+		flex: 1;
+		overflow-y: auto;
+		min-height: 0;
+		padding-bottom: 0.5rem;
+	}
+
+	.upload-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.625rem;
+		border-radius: 0.75rem;
+		background: rgba(0, 0, 0, 0.02);
+		transition: background 0.2s ease;
+	}
+
+	:global(.dark) .upload-item {
+		background: rgba(255, 255, 255, 0.02);
+	}
+
+	.upload-item:hover {
+		background: rgba(0, 0, 0, 0.04);
+	}
+
+	:global(.dark) .upload-item:hover {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.upload-item-preview {
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: rgba(0, 0, 0, 0.04);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	:global(.dark) .upload-item-preview {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	.upload-modal-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem 1.5rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
+	}
+
+	:global(.dark) .upload-modal-footer {
+		border-top-color: rgba(255, 255, 255, 0.06);
+	}
+
+	.footer-add-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.5rem 1rem;
+		border-radius: 0.625rem;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: rgba(0, 0, 0, 0.55);
+		background: rgba(0, 0, 0, 0.04);
+		border: none;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	:global(.dark) .footer-add-btn {
+		color: rgba(255, 255, 255, 0.55);
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	.footer-add-btn:hover {
+		background: rgba(0, 0, 0, 0.08);
+	}
+
+	:global(.dark) .footer-add-btn:hover {
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.footer-upload-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.5rem 1.25rem;
+		border-radius: 0.625rem;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		color: white;
+		background: var(--primary);
+		border: none;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.footer-upload-btn:hover:not(:disabled) {
+		opacity: 0.9;
+	}
+
+	.footer-upload-btn:disabled {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+
+	/* ====== Scrollbar ====== */
+	.upload-items-wrapper::-webkit-scrollbar {
 		width: 4px;
 	}
-	.overflow-y-auto::-webkit-scrollbar-track {
+	.upload-items-wrapper::-webkit-scrollbar-track {
 		background: transparent;
 	}
-	.overflow-y-auto::-webkit-scrollbar-thumb {
-		background-color: rgba(0, 0, 0, 0.15);
+	.upload-items-wrapper::-webkit-scrollbar-thumb {
+		background-color: rgba(0, 0, 0, 0.1);
 		border-radius: 2px;
 	}
-	:global(.dark) .overflow-y-auto::-webkit-scrollbar-thumb {
-		background-color: rgba(255, 255, 255, 0.15);
+	:global(.dark) .upload-items-wrapper::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.1);
+	}
+
+	/* ====== Fancybox Overrides ====== */
+	:global(.fancybox__container) {
+		--fancybox-bg: rgba(0, 0, 0, 0.92);
+	}
+
+	:global(.fancybox__toolbar) {
+		--fancybox-bg: transparent;
+	}
+
+	:global(.fancybox__thumbs) {
+		--fancybox-thumbs-border-radius: 6px;
 	}
 </style>

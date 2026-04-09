@@ -34,6 +34,27 @@ enum I18nKey {
 	author = "author",
 	publishedAt = "publishedAt",
 	license = "license",
+
+	// Music Player
+	music = "music",
+	musicNoPlaying = "musicNoPlaying",
+	musicLyrics = "musicLyrics",
+	musicVolume = "musicVolume",
+	musicPlayMode = "musicPlayMode",
+	musicPrev = "musicPrev",
+	musicNext = "musicNext",
+	musicPlaylist = "musicPlaylist",
+	musicNoLyrics = "musicNoLyrics",
+	musicLoadingLyrics = "musicLoadingLyrics",
+	musicFailedLyrics = "musicFailedLyrics",
+	musicNoSongs = "musicNoSongs",
+	musicError = "musicError",
+	musicPlay = "musicPlay",
+	musicPause = "musicPause",
+	musicProgress = "musicProgress",
+	musicCover = "musicCover",
+	musicNoCover = "musicNoCover",
+	musicAudioPlayer = "musicAudioPlayer",
 }
 
 export default I18nKey;

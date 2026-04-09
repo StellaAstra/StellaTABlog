@@ -48,6 +48,45 @@ export type SiteConfig = {
 	};
 };
 
+// 音乐播放器配置
+export type MusicPlayerConfig = {
+	// 使用方式：'meting' 或 'local'
+	mode?: "meting" | "local";
+
+	// 默认音量 (0-1)
+	volume?: number;
+
+	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
+	playMode?: "list" | "one" | "random";
+
+	// 是否显示歌词
+	showLyrics?: boolean;
+
+	// 是否在导航栏显示音乐播放器
+	showInNavbar?: boolean;
+
+	// Meting API 配置
+	meting?: {
+		api?: string;
+		server?: "netease" | "tencent" | "kugou" | "xiami" | "baidu";
+		type?: "song" | "playlist" | "album" | "search" | "artist";
+		id?: string;
+		auth?: string;
+		fallbackApis?: string[];
+	};
+
+	// 本地音乐配置
+	local?: {
+		playlist?: Array<{
+			name: string;
+			artist: string;
+			url: string;
+			cover?: string;
+			lrc?: string;
+		}>;
+	};
+};
+
 export type Favicon = {
 	src: string;
 	theme?: "light" | "dark";
