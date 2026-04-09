@@ -155,9 +155,9 @@ export default defineConfig({
 		],
 	},
 	vite: {
-		ssr: {
-			noExternal: [/@fontsource-variable\/.*/],
-		},
+		//ssr: {
+		//	noExternal: [/@fontsource-variable\/.*/],
+		//},
 		build: {
 			rollupOptions: {
 				onwarn(warning, warn) {
