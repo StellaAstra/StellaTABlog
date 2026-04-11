@@ -146,7 +146,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			// 是否开启毛玻璃模糊效果，开启可能会影响页面性能，如果不开启则是半透明，请根据自己的喜好开启
 			enableBlur: true,
 			// 毛玻璃模糊度
-			blur: 10,
+			blur: 50,
 		},
 		// 横幅图片轮播配置，仅在当配置多张图片时生效
 		carousel: {
