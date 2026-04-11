@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://stellaastra.dpdns.org/sitemap-index.xml

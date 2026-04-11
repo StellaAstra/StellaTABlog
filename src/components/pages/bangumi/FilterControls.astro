@@ -14,13 +14,18 @@ interface Props {
 const { filters, activeFilter, sectionId } = Astro.props;
 ---
 
-<div class="bangumi-filter-controls flex flex-wrap gap-1.5 mb-4">
+<div class="flex flex-wrap gap-1.5 mb-4">
   {filters.map((filter) => (
     <button
-      class="bangumi-filter-btn px-3 py-1 rounded-full text-xs font-medium transition-all duration-200"
+      class:list={[
+        "px-3 py-1 rounded-full text-xs font-medium transition-all duration-200",
+        {
+          "bg-(--primary) text-white shadow-md": filter.value === activeFilter,
+          "bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover)": filter.value !== activeFilter
+        }
+      ]}
       data-filter={filter.value}
       data-section={sectionId}
-      data-active={filter.value === activeFilter ? "true" : "false"}
       type="button"
     >
       {filter.label}
@@ -31,21 +36,6 @@ const { filters, activeFilter, sectionId } = Astro.props;
   ))}
 </div>
 
-<style is:global>
-  .bangumi-filter-btn[data-active="true"] {
-    background-color: var(--primary);
-    color: white;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  }
-  .bangumi-filter-btn[data-active="false"] {
-    background-color: var(--btn-regular-bg);
-    color: var(--btn-content);
-  }
-  .bangumi-filter-btn[data-active="false"]:hover {
-    background-color: var(--btn-regular-bg-hover);
-  }
-</style>
-
 <script is:inline define:vars={{ sectionId }}>
   function initFilterControls() {
     const filterButtons = document.querySelectorAll(`[data-section="${sectionId}"][data-filter]`);
@@ -55,12 +45,15 @@ const { filters, activeFilter, sectionId } = Astro.props;
         const filter = this.dataset.filter;
         const currentSectionId = this.dataset.section;
 
-        // Update active filter button for this section using data-active attribute
+        // Update active filter button for this section
         const sectionButtons = document.querySelectorAll(`[data-section="${currentSectionId}"][data-filter]`);
         sectionButtons.forEach(btn => {
-          btn.dataset.active = "false";
+          btn.classList.remove('bg-(--primary)', 'text-white', 'shadow-md');
+          btn.classList.add('bg-(--btn-regular-bg)', 'text-(--btn-content)', 'hover:bg-(--btn-regular-bg-hover)');
         });
-        this.dataset.active = "true";
+
+        this.classList.remove('bg-(--btn-regular-bg)', 'text-(--btn-content)', 'hover:bg-(--btn-regular-bg-hover)');
+        this.classList.add('bg-(--primary)', 'text-white', 'shadow-md');
 
         // Filter items
         const items = document.querySelectorAll(`[data-item-section="${currentSectionId}"]`);

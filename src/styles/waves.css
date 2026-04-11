@@ -3,7 +3,18 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. 波浪容器基础样式
+   1. 用户控制 - 通过 html 属性控制显隐
+   -------------------------------------------------------------------------- */
+html[data-waves-enabled="false"] #header-waves {
+    display: none !important;
+}
+
+html[data-waves-enabled="true"] #header-waves {
+    display: block !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. 波浪容器基础样式
    -------------------------------------------------------------------------- */
 #header-waves {
     isolation: isolate;
@@ -12,7 +23,6 @@
     will-change: transform;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
-    transition: opacity 0.3s ease;
 }
 
 .waves {
@@ -32,7 +42,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. 波浪动画
+   3. 波浪动画
    -------------------------------------------------------------------------- */
 .waves > .parallax {
     will-change: transform;
@@ -74,13 +84,51 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. 移动端优化
+   4. 页面切换期间优化
+   -------------------------------------------------------------------------- */
+html.is-page-transitioning #header-waves {
+    contain: layout style paint;
+}
+
+/* --------------------------------------------------------------------------
+   5. 主题切换优化
+   -------------------------------------------------------------------------- */
+.theme-changing #header-waves,
+.theme-changing #header-waves svg,
+.theme-changing #header-waves use {
+    will-change: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.is-theme-transitioning #header-waves {
+    color: var(--page-bg);
+    isolation: isolate;
+    contain: layout style paint;
+    transform: translateZ(0);
+    background: transparent;
+}
+
+.is-theme-transitioning #header-waves use {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* --------------------------------------------------------------------------
+   6. 移动端优化
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
     #header-waves {
         overflow: visible;
         z-index: 5;
         transition: transform 0.3s ease-in, opacity 0.2s ease-in;
+    }
+
+    .mobile-hide-banner #header-waves {
+        display: none !important;
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: transform 0.25s ease-in, opacity 0.15s ease-in;
     }
 
     .waves svg {
@@ -91,4 +139,20 @@
         bottom: -1px !important;
         position: absolute !important;
     }
+}
+
+/* --------------------------------------------------------------------------
+   7. Overlay 模式隐藏波浪
+   -------------------------------------------------------------------------- */
+#wallpaper-wrapper.wallpaper-overlay .waves,
+#wallpaper-wrapper.wallpaper-overlay #header-waves {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. None 模式隐藏波浪
+   -------------------------------------------------------------------------- */
+html[data-wallpaper-mode="none"] .waves,
+html[data-wallpaper-mode="none"] #header-waves {
+    display: none !important;
 }

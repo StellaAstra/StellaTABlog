@@ -1,6 +1,6 @@
 ---
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import type { UserSubjectCollection } from "@/types/bangumi";
 
 interface Props {
@@ -77,18 +77,8 @@ const hiddenCoverTagCount = Math.max(
   rel="noopener noreferrer nofollow"
   class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02] block"
 >
-  {/* 统一使用 3/4 比例，object-cover 自动裁剪适配不同封面 */}
-  <div class="aspect-[3/4] relative overflow-hidden">
-    {item.subject?.images?.large ? (
-      <img
-        src={loadImage ? item.subject.images.large : undefined}
-        data-src={loadImage ? undefined : item.subject.images.large}
-        alt={item.subject.name_cn || item.subject.name}
-        class="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
-        decoding="async"
-      />
-    ) : item.subject?.images?.medium ? (
+  <div class="aspect-2/3 relative overflow-hidden">
+    {item.subject?.images?.medium ? (
       <img
         src={loadImage ? item.subject.images.medium : undefined}
         data-src={loadImage ? undefined : item.subject.images.medium}

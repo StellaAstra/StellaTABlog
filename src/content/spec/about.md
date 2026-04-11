@@ -1,18 +1,8 @@
-::github{repo="saicaca/fuwari"}
+# 关于我 / About Me
 
----
-
-# 关于我 👋
-
-## 👨‍💻 站长介绍
-
-**StellaAstra**
-
-一名啥都干的开发者 🛠️，同时也是资深原神爱好者 ⚔️（老原p了~）
+你好！我是 **StellaAstra** ，一名啥都干的开发者 🛠️，同时也是资深原神爱好者 ⚔️（老原p了~）
 
 热爱技术探索，喜欢分享学习心得，致力于将复杂的技术用简单易懂的方式呈现给大家。
-
----
 
 ## 🎯 主要技能
 
@@ -53,7 +43,7 @@
 
 ---
 
-## 🌟 关于本站
+## 🛠️ 关于本站
 
 ### 📝 博客定位
 
@@ -74,6 +64,10 @@
 
 ---
 
+<!-- 这个网站使用 **Astro** 框架构建，采用了 [Stella](https://github.com/StellaAstra) 模板，Stella 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+
+**Stella** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。 -->
+
 ## 📞 联系方式
 
 ### 📧 邮箱
@@ -82,27 +76,38 @@
 
 有任何技术问题、合作意向或者反馈建议，欢迎随时联系！
 
-<!-- ---
-
 ## 📋 免责声明
 
 ### 🖼️ 图片使用
 
 本站图片资源仅供学习交流使用，喜欢的朋友可以自取 📸
 
-如有版权问题需要下架，请联系站长邮箱：**<1801361622@qq.com>** -->
+如有版权问题需要下架，请联系站长邮箱或在站内评论留言。
+<!-- 
+**🖥️在线预览： [Firefly - Demo site](https://stellaastra.dpdns.org/)**
 
----
+**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
 
-## 🎮 兴趣爱好
+**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
 
-- 🎯 **原神** - 提瓦特大陆的冒险家
-- 👾 **崩铁** - 寰宇开拓者
-- 🕹️ **ZZZ** - 六分街传奇绳匠
-- 💻 **编程** - 代码就是艺术
-- 📚 **技术学习** - 保持好奇心，持续学习
-- 🎵 **音乐** - 代码配音乐，效率翻倍
+**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)**  -->
 
----
+**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
 
-**感谢访问，希望我的分享对你有所帮助！** 🙏
+<!-- ::github{repo="CuteLeaf/Firefly"} -->
+
+::github{repo="saicaca/fuwari"}
+
+
+<!-- ## 📫 联系方式
+
+如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
+
+- 💻 **GitHub**: [CuteLeaf](https://github.com/CuteLeaf)
+- ✉️ **Email**: [xiaye@msn.com](mailto:xiaye@msn.com)
+- 🐧 **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
+
+--- -->
+
+*感谢你的来访！希望在这里能找到对你有用的内容！*
+

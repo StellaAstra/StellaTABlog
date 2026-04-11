@@ -1,12 +1,17 @@
-import rss from "@astrojs/rss";
+import { loadRenderers } from "astro:container";
+import { render } from "astro:content";
+import { getContainerRenderer as getMDXRenderer } from "@astrojs/mdx";
+import rss, { type RSSFeedItem } from "@astrojs/rss";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 import { getSortedPosts } from "@utils/content-utils";
+import { formatDateI18nWithTime } from "@utils/date-utils";
 import { url } from "@utils/url-utils";
 import type { APIContext } from "astro";
-import MarkdownIt from "markdown-it";
+import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import sanitizeHtml from "sanitize-html";
 import { siteConfig } from "@/config";
-
-const parser = new MarkdownIt();
+import pkg from "../../package.json";
 
 function stripInvalidXmlChars(str: string): string {
 	return str.replace(
@@ -18,25 +23,41 @@ function stripInvalidXmlChars(str: string): string {
 
 export async function GET(context: APIContext) {
 	const blog = await getSortedPosts();
-
-	return rss({
-		title: siteConfig.title,
-		description: siteConfig.subtitle || "No description",
-		site: context.site ?? "https://fuwari.vercel.app",
-		items: blog.map((post) => {
-			const content =
-				typeof post.body === "string" ? post.body : String(post.body || "");
-			const cleanedContent = stripInvalidXmlChars(content);
-			return {
+	const renderers = await loadRenderers([getMDXRenderer()]);
+	const container = await AstroContainer.create({ renderers });
+	const feedItems: RSSFeedItem[] = [];
+	for (const post of blog) {
+		if (post.data.password) {
+			feedItems.push({
 				title: post.data.title,
 				pubDate: post.data.published,
 				description: post.data.description || "",
-				link: url(`/posts/${post.slug}/`),
-				content: sanitizeHtml(parser.render(cleanedContent), {
-					allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-				}),
-			};
-		}),
-		customData: `<language>${siteConfig.lang}</language>`,
+				link: url(`/posts/${post.id}/`),
+				content: i18n(I18nKey.passwordProtectedRss),
+			});
+			continue;
+		}
+		const { Content } = await render(post);
+		const rawContent = await container.renderToString(Content);
+		const cleanedContent = stripInvalidXmlChars(rawContent);
+		feedItems.push({
+			title: post.data.title,
+			pubDate: post.data.published,
+			description: post.data.description || "",
+			link: url(`/posts/${post.id}/`),
+			content: sanitizeHtml(cleanedContent, {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+			}),
+		});
+	}
+	return rss({
+		title: siteConfig.title,
+		description: siteConfig.subtitle || "No description",
+		site: context.site ?? "https://stellaastra.dpdns.org",
+		customData: `<templateTheme>Stella</templateTheme>
+		<templateThemeVersion>${pkg.version}</templateThemeVersion>
+		<templateThemeUrl>https://github.com/StellaAstra</templateThemeUrl>
+		<lastBuildDate>${formatDateI18nWithTime(new Date())}</lastBuildDate>`,
+		items: feedItems,
 	});
 }

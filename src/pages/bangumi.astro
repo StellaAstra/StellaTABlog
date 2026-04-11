@@ -1,21 +1,21 @@
 ---
 import { Icon } from "astro-icon/components";
-import BangumiSection from "@components/pages/bangumi/BangumiSection.astro";
-import TabNav from "@components/pages/bangumi/TabNav.astro";
+import BangumiSection from "@/components/pages/bangumi/BangumiSection.astro";
+import TabNav from "@/components/pages/bangumi/TabNav.astro";
 import { siteConfig } from "@/config";
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
-import MainGridLayout from "@layouts/MainGridLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import type {
 	UserSubjectCollection,
 	UserSubjectCollectionResponse,
 } from "@/types/bangumi";
-import { formatDateI18nWithTime } from "@utils/date-utils";
+import { formatDateI18nWithTime } from "@/utils/date-utils";
 
 //参考：霞葉 https://kasuha.com/posts/fuwari-enhance-ep2/
 
 // 检查页面是否启用
-if (!siteConfig.pages?.bangumi) {
+if (!siteConfig.pages.bangumi) {
 	return Astro.redirect("/404/");
 }
 
@@ -24,7 +24,7 @@ const buildTime = formatDateI18nWithTime(new Date());
 
 ////////////// Bangumi 配置 ////////////////////////
 const bangumiConfig = {
-	username: siteConfig.bangumi?.userId,
+	username: siteConfig.bangumi?.userId, // 在这里配置你的Bangumi用户名
 	apiUrl: "https://api.bgm.tv",
 	categories: {
 		book: true,
@@ -35,9 +35,9 @@ const bangumiConfig = {
 	},
 	// 数据获取设置
 	pagination: {
-		limit: 50,
-		delay: 50,
-		maxTotal: 1000,
+		limit: 50, // 每页获取数量
+		delay: 50, // 请求间隔毫秒数，避免频率限制
+		maxTotal: 1000, // 最大获取总数，防止无限循环（0=无限制）
 	},
 };
 //////////////////////////////////////////////////
@@ -76,11 +76,13 @@ async function fetchBangumiData(username: string, subjectType: number) {
 		);
 
 		while (hasMore) {
+			// 开发模式限制：只获取一页
 			if (isDev && maxPages > 0 && allData.length >= limit * maxPages) {
 				console.log(`[Bangumi] 开发模式：已获取 ${maxPages} 页数据，停止获取`);
 				break;
 			}
 
+			// 检查是否超过最大获取限制
 			if (maxTotal > 0 && allData.length >= maxTotal) {
 				console.log(`[Bangumi] 已达到最大获取限制 ${maxTotal}，停止获取`);
 				break;
@@ -92,7 +94,7 @@ async function fetchBangumiData(username: string, subjectType: number) {
 
 			const response = await fetch(url, {
 				headers: {
-					"User-Agent": "StellaAstra Blog",
+					"User-Agent": "YuuOuRou Blog",
 					Accept: "application/json",
 				},
 			});
@@ -112,6 +114,7 @@ async function fetchBangumiData(username: string, subjectType: number) {
 				allData = allData.concat(currentBatch);
 				offset += limit;
 
+				// 如果本次获取的数据少于limit，说明已经是最后一页
 				if (currentBatch.length < limit) {
 					hasMore = false;
 				}
@@ -119,6 +122,7 @@ async function fetchBangumiData(username: string, subjectType: number) {
 				hasMore = false;
 			}
 
+			// 添加延迟避免请求过于频繁
 			if (hasMore) {
 				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
@@ -149,6 +153,7 @@ if (!isUserIdConfigured) {
 }
 
 for (const [categoryKey, enabled] of Object.entries(bangumiConfig.categories)) {
+	// 如果未配置用户ID，跳过数据获取
 	if (!isUserIdConfigured) {
 		break;
 	}
@@ -188,6 +193,7 @@ if (categoryOrder.length > 0) {
 		const bIndex = categoryOrder.indexOf(
 			b.id as (typeof categoryOrder)[number],
 		);
+		// 如果类型在配置中，按配置顺序排序；否则排在后面
 		if (aIndex === -1 && bIndex === -1) return 0;
 		if (aIndex === -1) return 1;
 		if (bIndex === -1) return -1;
@@ -199,13 +205,13 @@ const activeTab = tabs[0]?.id || "anime";
 ---
 
 <MainGridLayout title={i18n(I18nKey.bangumi)} description={i18n(I18nKey.bangumiSubtitle)}>
-  <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+  <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
     <div class="card-base z-10 px-9 py-6 relative w-full">
         <!-- 页面标题 -->
         <div class="relative w-full mb-8">
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="h-8 w-8 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white dark:text-black/70">
+                    <div class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70">
                         <Icon name="material-symbols:movie" class="text-[1.5rem]"></Icon>
                     </div>
                     <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -237,14 +243,14 @@ const activeTab = tabs[0]?.id || "anime";
         </>
       ) : (
         <div class="text-center py-16">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-[var(--btn-regular-bg)] rounded-full mb-6 border border-[var(--line-divider)]">
-            <Icon name="material-symbols:settings" class="text-[2rem] text-[var(--btn-content)]" />
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-(--btn-regular-bg) rounded-full mb-6 border border-(--line-divider)">
+            <Icon name="material-symbols:settings" class="text-[2rem] text-(--btn-content)" />
           </div>
           <h2 class="text-xl font-semibold text-black/80 dark:text-white/80 mb-3">
             {isUserIdConfigured ? i18n(I18nKey.bangumiEmpty) : "未配置 Bangumi 用户ID"}
           </h2>
           <p class="text-black/60 dark:text-white/60 mb-4 max-w-md mx-auto">
-            {isUserIdConfigured ? i18n(I18nKey.bangumiEmptyReason) : "请在 src/config.ts 中配置你的 Bangumi 用户ID"}
+            {isUserIdConfigured ? i18n(I18nKey.bangumiEmptyReason) : "请在 src/config/siteConfig.ts 中配置你的 Bangumi 用户ID"}
           </p>
         </div>
       )}
@@ -254,6 +260,7 @@ const activeTab = tabs[0]?.id || "anime";
 </MainGridLayout>
 
 <style>
+  /* 自定义样式 */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;

@@ -29,3 +29,11 @@ yarn.lock
 # ide
 .idea
 *.iml
+.claude
+
+# docs
+Firefly-docs/
+
+cache/
+package/
+.obsidian/

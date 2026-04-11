@@ -75,10 +75,10 @@ const widgetId =
                 <span class="total-time">0:00</span>
             </div>
 
-            <!-- Volume -->
+            <!-- Volume (Always visible) -->
             <div class="flex items-center gap-1 bg-transparent h-full">
                 <button class="btn-mute hover:text-[var(--primary)] transition-colors p-0.5 rounded-md flex items-center" title={i18n(I18nKey.musicVolume)} aria-label={i18n(I18nKey.musicVolume)}>
-                    <Icon name="material-symbols:volume-up-rounded" class="icon-vol-high text-lg" aria-hidden="true" />
+                    <Icon name="material-symbols:volume-up-rounded" class=" icon-vol-high text-lg" aria-hidden="true" />
                     <Icon name="material-symbols:volume-off-rounded" class="icon-vol-mute text-lg hidden" aria-hidden="true" />
                 </button>
                 <div class="w-16 transition-all duration-300 ease-out flex items-center">
@@ -91,9 +91,10 @@ const widgetId =
     </div>
 </div>
 
-<!-- Progress Bar -->
+<!-- Progress Bar (Slim) -->
 <div class="progress-container relative w-full h-1 bg-neutral-100 dark:bg-neutral-700/50 rounded-full cursor-pointer touch-none mb-2 group mt-2" role="slider" aria-label={i18n(I18nKey.musicProgress)} aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div class="progress-bar absolute left-0 top-0 h-full bg-[var(--primary)] rounded-full w-0 transition-[width] duration-100"></div>
+    <!-- Hover Thumb -->
     <div class="progress-thumb absolute top-1/2 -mt-1.5 -ml-1.5 w-3 h-3 bg-[var(--primary)] ring-2 ring-white dark:ring-neutral-800 rounded-full shadow-sm scale-0 group-hover:scale-100 transition-transform duration-200"></div>
 </div>
 
@@ -111,7 +112,7 @@ const widgetId =
         <Icon name="material-symbols:skip-previous-rounded" class="text-3xl" aria-hidden="true" />
     </button>
 
-    <!-- Play/Pause -->
+    <!-- Play/Pause (Feature) -->
     <button class="btn-play w-12 h-12 bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)] text-[var(--primary)] rounded-full flex items-center justify-center transition-all duration-300" title={i18n(I18nKey.musicPlay)} aria-label={i18n(I18nKey.musicPlay)}>
         <Icon name="material-symbols:play-arrow-rounded" class="icon-play text-3xl ml-0.5" aria-hidden="true" />
         <Icon name="material-symbols:pause-rounded" class="icon-pause text-3xl hidden" aria-hidden="true" />
@@ -122,9 +123,9 @@ const widgetId =
         <Icon name="material-symbols:skip-next-rounded" class="text-3xl" aria-hidden="true" />
     </button>
 
-    <!-- Playlist Toggle -->
+    <!-- Playlist Toggle Arrow -->
     <button class="btn-drawer-toggle text-neutral-400 hover:text-[var(--primary)] transition-all duration-300 p-2 transform active:scale-95" title={i18n(I18nKey.musicPlaylist)} aria-label={i18n(I18nKey.musicPlaylist)}>
-        <Icon name="material-symbols:queue-music-rounded" class="text-xl" aria-hidden="true" />
+        <Icon name="mdi:playlist-music" class="text-xl" aria-hidden="true" />
     </button>
 </div>
 
@@ -139,7 +140,7 @@ const widgetId =
     </div>
 </div>
 
-<!-- Playlist Drawer -->
+<!-- Playlist Drawer (Accordion) -->
 <div class="playlist-drawer grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] grid-rows-[0fr] opacity-0">
     <div class="overflow-hidden min-h-0">
             <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-white/5 mx-1">
@@ -162,6 +163,7 @@ const widgetId =
 <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-neutral-50 dark:hover:bg-white/5 transition-colors group">
     <div class="w-8 h-8 rounded-md overflow-hidden shrink-0 relative bg-neutral-200 dark:bg-neutral-700">
         <img src="" class="item-cover w-full h-full object-cover" loading="lazy" alt="" />
+        <!-- Active Indicator overlay -->
         <div class="item-active-overlay absolute inset-0 bg-[var(--primary)]/20 hidden items-center justify-center">
                 <Icon name="material-symbols:graphic-eq-rounded" class="text-[var(--primary)] text-sm" />
         </div>
@@ -179,7 +181,8 @@ const widgetId =
     var widget = document.getElementById(widgetId);
     if (!widget) return;
 
-    function bootstrap(mgr) {
+    var mgr = window.__StellaMusic;
+    if (!mgr) return;
 
     // ── UI element refs ──────────────────────────────────────
     var ui = {
@@ -225,7 +228,7 @@ const widgetId =
         ui.cover, ui.title, ui.artist, ui.playlistContainer, ui.itemTemplate];
     if (_critical.some(function(el) { return !el; })) return;
 
-    // ── Local state ────────────────────────────────────────
+    // ── Local state (drawers, user scrolling) ────────────────
     var local = {
         isUserScrolling: false,
         scrollTimeout: null,
@@ -434,6 +437,7 @@ const widgetId =
         var s = mgr.getState();
         if (!s.initialized) return;
 
+        // Loading off
         setLoading(false);
 
         if (s.playlist.length === 0) {
@@ -447,6 +451,7 @@ const widgetId =
         updateModeUI(s.playMode);
         updateVolumeUI(s.volume, s.isMuted);
 
+        // Progress
         if (s.duration > 0) {
             ui.progressBar.style.width = s.progress + '%';
             ui.progressThumb.style.left = s.progress + '%';
@@ -455,12 +460,15 @@ const widgetId =
             ui.totalTime.innerText = s.durationStr;
         }
 
+        // Lyrics
         renderLyricsUI(s.lyrics, s.lyrics.length > 0 ? 'loaded' : 'none');
         if (s.currentLrcIndex >= 0) updateLrcHighlight(s.currentLrcIndex);
 
+        // Cover image: if already set, show it
         if (s.track && s.track.pic && ui.cover.src && ui.cover.complete && ui.cover.naturalWidth > 0) {
             ui.cover.classList.remove('opacity-0');
         }
+        // Update cover animation state to match play state
         ui.cover.style.animationPlayState = s.isPlaying ? 'running' : 'paused';
     }
 
@@ -544,7 +552,7 @@ const widgetId =
         mgr.seek(percent);
     });
 
-    // ── Drawer logic ───────────────────────────────────────
+    // ── Drawer logic (local state) ───────────────────────────
     ui.btnLrc.addEventListener('click', function () {
         var isOpen = ui.lrcDrawer.style.gridTemplateRows === '1fr';
         if (isOpen) {
@@ -602,6 +610,7 @@ const widgetId =
         clearTimeout(local.scrollTimeout);
         local.scrollTimeout = setTimeout(function () {
             local.isUserScrolling = false;
+            // Snap back to current lyric
             var s = mgr.getState();
             if (s.currentLrcIndex >= 0) {
                 var line = ui.lrcContainer.querySelector('.lrc-line[data-index="' + s.currentLrcIndex + '"]');
@@ -639,6 +648,7 @@ const widgetId =
             var removed = mutations[i].removedNodes;
             for (var j = 0; j < removed.length; j++) {
                 if (removed[j] === widget || (removed[j].contains && removed[j].contains(widget))) {
+                    // Widget removed from DOM – clean up event listeners
                     Object.keys(handlers).forEach(function (name) {
                         window.removeEventListener(name, handlers[name]);
                     });
@@ -656,30 +666,12 @@ const widgetId =
     // ── Init: either sync existing state or trigger init ─────
     var currentState = mgr.getState();
     if (currentState.initialized) {
+        // Manager already initialized (late mount) – sync all UI
         syncAll();
     } else {
+        // First widget to mount – show loading and trigger init
         setLoading(true);
         mgr.init();
-    }
-    } // end of bootstrap()
-
-    // ── Wait for MusicManager to be available ─────────────────
-    if (window.__stellaMusic) {
-        bootstrap(window.__stellaMusic);
-    } else {
-        // MusicManager script hasn't executed yet; poll until it's ready
-        var pollCount = 0;
-        var pollTimer = setInterval(function () {
-            pollCount++;
-            if (window.__stellaMusic) {
-                clearInterval(pollTimer);
-                bootstrap(window.__stellaMusic);
-            } else if (pollCount > 50) {
-                // Give up after ~5 seconds
-                clearInterval(pollTimer);
-                console.error('[MusicPlayer] MusicManager not found after 5s');
-            }
-        }, 100);
     }
 })();
 </script>
@@ -691,18 +683,5 @@ const widgetId =
     }
     .animate-spin-slow {
         animation: spin-slow 10s linear infinite;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15);
-        border-radius: 2px;
-    }
-    :root.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15);
     }
 </style>

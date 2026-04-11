@@ -3,19 +3,58 @@ import type { Translation } from "../translation";
 
 export const zh_TW: Translation = {
 	[Key.home]: "首頁",
-	[Key.about]: "關於",
-	[Key.archive]: "彙整",
-	[Key.aboutMe]: "關於我",
-	[Key.gallery]: "相冊",
-	[Key.links]: "友鏈",
+	[Key.about]: "關於我",
+	[Key.archive]: "歸檔",
 	[Key.search]: "搜尋",
+	[Key.searchNoResults]: "找不到相關結果。",
+	[Key.searchTypeSomething]: "請輸入搜尋關鍵字。",
+	[Key.searchLoading]: "搜尋中...",
+	[Key.searchSummary]: "摘要",
+	[Key.searchContent]: "內容",
+	[Key.searchViewMore]: "查看更多結果 ({count} 個更多)",
+	[Key.other]: "其他",
+	[Key.all]: "全部",
 
 	[Key.tags]: "標籤",
 	[Key.categories]: "分類",
 	[Key.recentPosts]: "最新文章",
+	[Key.postList]: "文章列表",
+	[Key.tableOfContents]: "目錄",
+	[Key.tocEmpty]: "目前頁面沒有目錄",
+	[Key.music]: "音樂",
+	[Key.musicNoPlaying]: "暫未播放",
+	[Key.musicLyrics]: "歌詞",
+	[Key.musicVolume]: "音量",
+	[Key.musicPlayMode]: "切換播放模式",
+	[Key.musicPrev]: "上一首",
+	[Key.musicNext]: "下一首",
+	[Key.musicPlaylist]: "列表",
+	[Key.musicNoLyrics]: "暫無歌詞",
+	[Key.musicLoadingLyrics]: "正在加載歌詞...",
+	[Key.musicFailedLyrics]: "歌詞加載失敗",
+	[Key.musicNoSongs]: "暫無歌曲",
+	[Key.musicError]: "播放器錯誤",
+	[Key.musicPlay]: "播放",
+	[Key.musicPause]: "暫停",
+	[Key.musicProgress]: "播放進度",
+	[Key.musicCover]: "封面",
+	[Key.musicNoCover]: "暫無封面",
+	[Key.musicAudioPlayer]: "音頻播放器",
+
+	// 公告欄
+	[Key.announcement]: "公告",
+	[Key.announcementClose]: "關閉",
 
 	[Key.comments]: "評論",
-
+	[Key.commentSection]: "評論區",
+	[Key.commentSubtitle]: "分享你的想法，與大家交流討論",
+	[Key.commentNotConfigured]: "評論系統暫未配置",
+	[Key.guestbookCommentHint]:
+		"您還未在配置文件中啟用評論系統，啟用後訪客才可在此留言",
+	[Key.friends]: "友鏈",
+	[Key.friendsDescription]: "這裡是我的朋友們，歡迎互相訪問交流",
+	[Key.guestbook]: "留言",
+	[Key.guestbookDescription]: "歡迎在這裡留下你的足跡，分享你的想法和建議",
 	[Key.untitled]: "無標題",
 	[Key.uncategorized]: "未分類",
 	[Key.noTags]: "無標籤",
@@ -27,11 +66,7 @@ export const zh_TW: Translation = {
 	[Key.postCount]: "篇文章",
 	[Key.postsCount]: "篇文章",
 
-	[Key.themeColor]: "主題色",
-	[Key.displaySettings]: "顯示設定",
-	[Key.bannerSettings]: "橫幅設定",
-	[Key.wavesAnimation]: "水波紋動畫",
-	[Key.topHighlight]: "頂部高光",
+	[Key.themeColor]: "主題色相",
 
 	[Key.lightMode]: "亮色",
 	[Key.darkMode]: "暗色",
@@ -40,56 +75,17 @@ export const zh_TW: Translation = {
 	[Key.more]: "更多",
 
 	[Key.author]: "作者",
-	[Key.publishedAt]: "發佈於",
-	[Key.license]: "許可協議",
-
-	[Key.music]: "音樂",
-	[Key.musicNoPlaying]: "尚未播放",
-	[Key.musicLyrics]: "歌詞",
-	[Key.musicVolume]: "音量",
-	[Key.musicPlayMode]: "切換播放模式",
-	[Key.musicPrev]: "上一首",
-	[Key.musicNext]: "下一首",
-	[Key.musicPlaylist]: "列表",
-	[Key.musicNoLyrics]: "暫無歌詞",
-	[Key.musicLoadingLyrics]: "正在載入歌詞...",
-	[Key.musicFailedLyrics]: "歌詞載入失敗",
-	[Key.musicNoSongs]: "暫無歌曲",
-	[Key.musicError]: "播放器錯誤",
-	[Key.musicPlay]: "播放",
-	[Key.musicPause]: "暫停",
-	[Key.musicProgress]: "播放進度",
-	[Key.musicCover]: "封面",
-	[Key.musicNoCover]: "暫無封面",
-	[Key.musicAudioPlayer]: "音訊播放器",
-
-	// 公告欄
-	[Key.announcement]: "公告",
-	[Key.announcementClose]: "關閉",
-
-	[Key.commentSection]: "評論區",
-	[Key.commentSubtitle]: "分享你的想法，與大家交流討論",
-	[Key.commentNotConfigured]: "評論系統尚未配置",
-	[Key.guestbookCommentHint]: "您尚未在配置文件中啟用評論系統",
-	[Key.friends]: "友鏈",
-	[Key.friendsDescription]: "這裡是我的朋友們，歡迎互相訪問交流",
-	[Key.guestbook]: "留言",
-	[Key.guestbookDescription]: "歡迎在這裡留下你的足跡",
-
-	[Key.postList]: "文章列表",
-	[Key.tableOfContents]: "目錄",
-	[Key.tocEmpty]: "當前頁面沒有目錄",
-
+	[Key.publishedAt]: "發布於",
 	[Key.updatedAt]: "更新於",
-	[Key.readTime]: "閱讀時間",
+	[Key.readTime]: "閱讀時長",
+	[Key.license]: "許可協議",
+	[Key.bangumi]: "番組計劃",
 
-	[Key.all]: "全部",
-
-	[Key.bangumi]: "番組計畫",
-
-	// 番組篩選和狀態
-	[Key.bangumiTitle]: "我的番組計畫",
+	// 番組計劃
+	[Key.bangumiTitle]: "我的番組計劃",
 	[Key.bangumiSubtitle]: "記錄我的二次元之旅",
+
+	// 番組計劃篩選和狀態文本
 	[Key.bangumiFilterAll]: "全部",
 	[Key.bangumiFilterWatched]: "看過",
 	[Key.bangumiFilterWatching]: "在看",
@@ -120,13 +116,13 @@ export const zh_TW: Translation = {
 	[Key.bangumiStatusMusicListened]: "聽過",
 	[Key.bangumiStatusMusicListening]: "在聽",
 	[Key.bangumiStatusUnknown]: "未知",
-	[Key.bangumiNoData]: "暫無資料",
+	[Key.bangumiNoData]: "暫無數據",
 	[Key.bangumiNoDataDescription]: "該分類下還沒有任何條目",
-	[Key.bangumiEmpty]: "暫無資料",
-	[Key.bangumiEmptyReason]: "可能的原因：使用者名稱不存在、網路連線問題或API限制",
-	[Key.bangumiUsername]: "使用者名稱",
+	[Key.bangumiEmpty]: "暫無數據",
+	[Key.bangumiEmptyReason]: "可能的原因：用戶名不存在、網絡連接問題或API限制",
+	[Key.bangumiUsername]: "用戶名",
 	[Key.bangumiApi]: "API",
-	[Key.bangumiConfigTip]: "提示：請在頁面配置中設定正確的Bangumi使用者名稱",
+	[Key.bangumiConfigTip]: "提示：請在頁面配置中設置正確的Bangumi用戶名",
 	[Key.bangumiPrevPage]: "上一頁",
 	[Key.bangumiNextPage]: "下一頁",
 	[Key.bangumiCurrentPage]: "第",
@@ -140,10 +136,10 @@ export const zh_TW: Translation = {
 	[Key.bangumiCategoryGame]: "遊戲",
 	[Key.bangumiCategoryReal]: "三次元",
 
-	// 番組資料更新
-	[Key.bangumiLastUpdated]: "資料更新於",
-	[Key.bangumiUpdatedAt]: "建置時間",
-	[Key.bangumiDataStatic]: "靜態資料",
+	// 番組數據更新
+	[Key.bangumiLastUpdated]: "數據更新於",
+	[Key.bangumiUpdatedAt]: "構建時間",
+	[Key.bangumiDataStatic]: "靜態數據",
 
 	// 分頁
 	[Key.paginationFirst]: "首頁",
@@ -153,7 +149,7 @@ export const zh_TW: Translation = {
 	[Key.paginationPage]: "第",
 	[Key.paginationOf]: "頁，共",
 	[Key.paginationTotal]: "頁，總計",
-	[Key.paginationRecords]: "筆記錄",
+	[Key.paginationRecords]: "條記錄",
 
 	// 404頁面
 	[Key.notFound]: "404",
@@ -164,22 +160,23 @@ export const zh_TW: Translation = {
 	// RSS頁面
 	[Key.rss]: "RSS 訂閱",
 	[Key.rssDescription]: "訂閱獲取最新更新",
-	[Key.rssSubtitle]: "透過 RSS 訂閱，第一時間獲取最新文章和動態",
-	[Key.rssLink]: "RSS 連結",
-	[Key.rssCopyToReader]: "複製連結到你的 RSS 閱讀器",
-	[Key.rssCopyLink]: "複製連結",
+	[Key.rssSubtitle]: "通過 RSS 訂閱，第一時間獲取最新文章和動態",
+	[Key.rssLink]: "RSS 鏈接",
+	[Key.rssCopyToReader]: "複製鏈接到你的 RSS 閱讀器",
+	[Key.rssCopyLink]: "複製鏈接",
 	[Key.rssLatestPosts]: "最新文章",
 	[Key.rssWhatIsRSS]: "什麼是 RSS？",
-	[Key.rssWhatIsRSSDescription]: "RSS（Really Simple Syndication）是一種用於發布經常更新內容的標準格式。透過 RSS，你可以：",
-	[Key.rssBenefit1]: "即時獲取網站最新內容，無需手動訪問",
+	[Key.rssWhatIsRSSDescription]:
+		"RSS（Really Simple Syndication）是一種用於發布經常更新內容的標準格式。通過 RSS，你可以：",
+	[Key.rssBenefit1]: "及時獲取網站最新內容，無需手動訪問",
 	[Key.rssBenefit2]: "在一個地方管理多個網站的訂閱",
 	[Key.rssBenefit3]: "避免錯過重要更新和文章",
 	[Key.rssBenefit4]: "享受無廣告的純淨閱讀體驗",
 	[Key.rssHowToUse]: "推薦使用 Feedly、Inoreader 或其他 RSS 閱讀器來訂閱本站。",
-	[Key.rssCopied]: "RSS 連結已複製到剪貼簿！",
-	[Key.rssCopyFailed]: "複製失敗，請手動複製連結",
+	[Key.rssCopied]: "RSS 鏈接已複製到剪貼板！",
+	[Key.rssCopyFailed]: "複製失敗，請手動複製鏈接",
 
-	// 最後編輯時間卡片
+	//最後編輯時間卡片
 	[Key.lastModifiedPrefix]: "最後更新於 ",
 	[Key.lastModifiedOutdated]: "部分內容可能已過時",
 	[Key.lastModifiedDaysAgo]: "距今已過 {days} 天",
@@ -190,7 +187,7 @@ export const zh_TW: Translation = {
 	[Key.minute]: "分",
 	[Key.second]: "秒",
 
-	// 瀏覽量統計
+	// 訪問量統計
 	[Key.pageViews]: "瀏覽量",
 	[Key.pageViewsLoading]: "載入中...",
 	[Key.pageViewsError]: "統計不可用",
@@ -198,7 +195,7 @@ export const zh_TW: Translation = {
 	// 置頂
 	[Key.pinned]: "置頂",
 
-	// 相關文章
+	// 相關文章推薦
 	[Key.relatedPosts]: "相關文章",
 	[Key.randomPosts]: "隨機文章",
 	[Key.smartRecommend]: "智慧推薦",
@@ -210,28 +207,36 @@ export const zh_TW: Translation = {
 	// 壁紙模式
 	[Key.wallpaperMode]: "壁紙模式",
 	[Key.wallpaperBannerMode]: "橫幅壁紙",
-	[Key.wallpaperOverlayMode]: "全螢幕透明",
+	[Key.wallpaperOverlayMode]: "全屏透明",
 	[Key.wallpaperNoneMode]: "純色背景",
+	[Key.wallpaperVideoMode]: "影片壁紙",
 
-	// 橫幅設定
-	[Key.bannerSettings]: "橫幅設定",
+	// 橫幅設置
+	[Key.bannerSettings]: "橫幅設置",
 	[Key.bannerTitle]: "首頁橫幅標題",
 	[Key.bannerCarousel]: "橫幅輪播",
 	[Key.wavesAnimation]: "水波紋動畫",
 	[Key.overlaySettings]: "透明設定",
-	[Key.overlayOpacity]: "壁紙透明度",
+	[Key.overlayOpacity]: "桌布透明度",
 	[Key.overlayBlur]: "背景模糊度",
 	[Key.overlayCardOpacity]: "卡片透明度",
 
+	// 影片設定
+	[Key.videoSettings]: "影片設定",
+	[Key.videoPause]: "暫停影片",
+	[Key.videoSwitch]: "切換影片",
+	[Key.videoCarousel]: "影片輪播",
+
 	// 文章佈局
 	[Key.postListLayout]: "文章佈局",
-	[Key.postListLayoutList]: "列表",
+	[Key.postListLayoutList]: "清單",
 	[Key.postListLayoutGrid]: "網格",
 
 	// 贊助頁面
 	[Key.sponsor]: "贊助",
 	[Key.sponsorTitle]: "贊助支持",
-	[Key.sponsorDescription]: "如果我的內容對你有幫助，歡迎透過以下方式贊助我！",
+	[Key.sponsorDescription]:
+		"如果我的內容對你有幫助，歡迎通過以下方式贊助我，你的支持是我持續創作的動力！",
 	[Key.sponsorMethods]: "贊助方式",
 	[Key.sponsorList]: "贊助列表",
 	[Key.sponsorEmpty]: "暫無贊助記錄",
@@ -242,7 +247,8 @@ export const zh_TW: Translation = {
 	[Key.scanToSponsor]: "掃碼贊助",
 	[Key.sponsorGoTo]: "前往贊助",
 	[Key.sponsorButton]: "支持與分享",
-	[Key.sponsorButtonText]: "如果這篇文章對你有幫助，歡迎分享給更多人或贊助支持！",
+	[Key.sponsorButtonText]:
+		"如果這篇文章對你有幫助，歡迎分享給更多人或贊助支持！",
 
 	[Key.shareOnSocial]: "文章分享",
 	[Key.shareOnSocialDescription]: "如果這篇文章對你有幫助，歡迎分享給更多人！",
@@ -259,7 +265,7 @@ export const zh_TW: Translation = {
 	[Key.siteStatsDays]: "{days} 天",
 	[Key.today]: "今天",
 
-	// 日曆
+	// 日曆組件
 	[Key.calendarSunday]: "日",
 	[Key.calendarMonday]: "一",
 	[Key.calendarTuesday]: "二",
@@ -284,14 +290,14 @@ export const zh_TW: Translation = {
 	[Key.generatingPoster]: "海報生成中...",
 	[Key.copied]: "已複製",
 	[Key.copyLink]: "複製連結",
-	[Key.savePoster]: "儲存海報",
+	[Key.savePoster]: "保存海報",
 	[Key.scanToRead]: "掃碼閱讀文章",
 
-	// 代碼塊折疊
+	// 代碼區塊折疊配置
 	[Key.codeCollapsibleShowMore]: "展開",
 	[Key.codeCollapsibleShowLess]: "收起",
-	[Key.codeCollapsibleExpanded]: "代碼塊已展開",
-	[Key.codeCollapsibleCollapsed]: "代碼塊已折疊",
+	[Key.codeCollapsibleExpanded]: "代碼區塊已展開",
+	[Key.codeCollapsibleCollapsed]: "代碼區塊已折疊",
 
 	// 相簿頁面
 	[Key.gallery]: "相簿",
@@ -300,6 +306,30 @@ export const zh_TW: Translation = {
 	[Key.galleryAlbums]: "本相簿",
 	[Key.galleryNoAlbums]: "暫無相簿",
 	[Key.galleryBackToAlbums]: "返回相簿列表",
+
+	// 雲端圖庫
+	[Key.cloudGallery]: "雲端圖庫",
+	[Key.cloudGalleryDescription]: "瀏覽與管理雲端圖片",
+	[Key.cloudGalleryLoading]: "載入中...",
+	[Key.cloudGalleryError]: "載入失敗",
+	[Key.cloudGalleryEmpty]: "暫無圖片",
+	[Key.cloudGalleryRetry]: "重新載入",
+	[Key.cloudGalleryUpload]: "上傳",
+	[Key.cloudGalleryUploadTitle]: "上傳圖片",
+	[Key.cloudGalleryUploadDrop]: "拖曳圖片到此處",
+	[Key.cloudGalleryUploadSelect]: "或點擊選擇檔案",
+	[Key.cloudGalleryUploadHint]: "JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
+	[Key.cloudGalleryUploadStart]: "開始上傳",
+	[Key.cloudGalleryUploadUploading]: "上傳中...",
+	[Key.cloudGalleryUploadDone]: "完成",
+	[Key.cloudGalleryUploadFailed]: "失敗",
+	[Key.cloudGalleryUploadPending]: "等待中",
+	[Key.cloudGalleryUploadClearDone]: "清除已完成",
+	[Key.cloudGalleryUploadAdd]: "新增",
+	[Key.cloudGalleryImages]: "張圖片",
+	[Key.cloudGalleryPage]: "頁",
+	[Key.cloudGalleryLocalAlbums]: "本地相簿",
+	[Key.cloudGalleryCloudAlbums]: "雲端圖庫",
 
 	// 密碼保護
 	[Key.passwordProtected]: "密碼保護",

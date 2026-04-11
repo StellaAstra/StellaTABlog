@@ -1,7 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 
 interface Props {
 	totalItems: number;
@@ -15,10 +15,11 @@ const totalPages = Math.ceil(totalItems / itemsPerPage);
 
 // 生成智能分页页码数组
 function generatePageNumbers(current: number, total: number) {
-	const delta = 2;
+	const delta = 2; // 当前页左右显示的页码数量
 	const range: number[] = [];
 	const rangeWithDots: (number | string)[] = [];
 
+	// 如果总页数小于等于7，显示所有页码
 	if (total <= 7) {
 		for (let i = 1; i <= total; i++) {
 			range.push(i);
@@ -26,23 +27,29 @@ function generatePageNumbers(current: number, total: number) {
 		return range;
 	}
 
+	// 计算显示范围
 	const left = Math.max(2, current - delta);
 	const right = Math.min(total - 1, current + delta);
 
+	// 始终显示第一页
 	rangeWithDots.push(1);
 
+	// 如果左边界大于2，添加省略号
 	if (left > 2) {
 		rangeWithDots.push("...");
 	}
 
+	// 添加中间页码
 	for (let i = left; i <= right; i++) {
 		rangeWithDots.push(i);
 	}
 
+	// 如果右边界小于最后一页-1，添加省略号
 	if (right < total - 1) {
 		rangeWithDots.push("...");
 	}
 
+	// 始终显示最后一页（如果总页数大于1）
 	if (total > 1) {
 		rangeWithDots.push(total);
 	}
@@ -59,7 +66,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     <div class="mobile-pagination items-center gap-3">
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="prev"
         data-section={sectionId}
         disabled={currentPage === 1}
@@ -69,15 +76,15 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
       </button>
 
       <!-- 移动端页码信息 -->
-      <div class="bg-[var(--card-bg)] flex items-center rounded-lg px-4 h-11 gap-1.5">
-        <span class="mobile-current-page text-base font-bold text-[var(--primary)]">{currentPage}</span>
+      <div class="bg-(--card-bg) flex items-center rounded-lg px-4 h-11 gap-1.5">
+        <span class="mobile-current-page text-base font-bold text-(--primary)">{currentPage}</span>
         <span class="text-sm text-neutral-500 dark:text-neutral-500">/</span>
         <span class="mobile-total-pages text-base font-bold text-neutral-700 dark:text-neutral-300">{totalPages}</span>
       </div>
 
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="next"
         data-section={sectionId}
         disabled={currentPage === totalPages}
@@ -91,7 +98,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     <div class="desktop-pagination items-center gap-3">
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="prev"
         data-section={sectionId}
         disabled={currentPage === 1}
@@ -100,7 +107,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
         <Icon name="material-symbols:chevron-left-rounded" class="text-[1.75rem]" />
       </button>
 
-      <div class="bg-[var(--card-bg)] flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold" data-page-numbers={sectionId}>
+      <div class="bg-(--card-bg) flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold" data-page-numbers={sectionId}>
         {pageNumbers.map((pageItem) => (
           pageItem === '...' ? (
             <Icon name="material-symbols:more-horiz" class="mx-1" />
@@ -110,7 +117,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
               class:list={[
                 "rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold",
                 {
-                  "bg-[var(--primary)] text-white dark:text-black/70": pageItem === currentPage,
+                  "bg-(--primary) text-white dark:text-black/70": pageItem === currentPage,
                   "btn-card active:scale-[0.85]": pageItem !== currentPage
                 }
               ]}
@@ -127,7 +134,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
       <button
         type="button"
-        class="btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="btn-card overflow-hidden rounded-lg text-(--primary) w-11 h-11 disabled:opacity-50 disabled:cursor-not-allowed"
         data-page="next"
         data-section={sectionId}
         disabled={currentPage === totalPages}
@@ -146,6 +153,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     const pagination = document.querySelector(`[data-pagination-section="${sectionId}"]`);
     if (!pagination) return;
 
+    // 更新移动端页码显示
     function updateMobileDisplay() {
       const mobileCurrentPage = pagination.querySelector('.mobile-current-page');
       if (mobileCurrentPage) {
@@ -174,6 +182,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
       });
     });
 
+    // Listen for filter updates
     if (pagination) {
       pagination.addEventListener('updatePagination', function(_event) {
         currentPage = 1;
@@ -199,10 +208,12 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
         }
       }
 
+      // Hide all items first
       for (const item of items) {
         item.style.display = 'none';
       }
 
+      // Show items for current page
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       for (let i = startIndex; i < endIndex && i < items.length; i++) {
@@ -212,13 +223,16 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
         }
       }
 
+      // Update pagination buttons
       updatePaginationButtons(totalPages);
     }
 
+    // 生成智能分页页码数组的JavaScript版本
     function generatePageNumbers(current, total) {
-      const delta = 2;
+      const delta = 2; // 当前页左右显示的页码数量
       const rangeWithDots = [];
 
+      // 如果总页数小于等于7，显示所有页码
       if (total <= 7) {
         for (let i = 1; i <= total; i++) {
           rangeWithDots.push(i);
@@ -226,25 +240,49 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
         return rangeWithDots;
       }
 
+      // 计算显示范围
       const left = Math.max(2, current - delta);
       const right = Math.min(total - 1, current + delta);
 
+      // 始终显示第一页
       rangeWithDots.push(1);
-      if (left > 2) rangeWithDots.push('...');
-      for (let i = left; i <= right; i++) rangeWithDots.push(i);
-      if (right < total - 1) rangeWithDots.push('...');
-      if (total > 1) rangeWithDots.push(total);
+
+      // 如果左边界大于2，添加省略号
+      if (left > 2) {
+        rangeWithDots.push('...');
+      }
+
+      // 添加中间页码
+      for (let i = left; i <= right; i++) {
+        rangeWithDots.push(i);
+      }
+
+      // 如果右边界小于最后一页-1，添加省略号
+      if (right < total - 1) {
+        rangeWithDots.push('...');
+      }
+
+      // 始终显示最后一页（如果总页数大于1）
+      if (total > 1) {
+        rangeWithDots.push(total);
+      }
 
       return rangeWithDots;
     }
 
     function updatePaginationButtons(totalPages) {
+      // 更新所有的上一页和下一页按钮（移动端和桌面端）
       const prevButtons = pagination.querySelectorAll('[data-page="prev"]');
       const nextButtons = pagination.querySelectorAll('[data-page="next"]');
       const pageNumbersContainer = pagination.querySelector(`[data-page-numbers="${sectionId}"]`);
 
-      prevButtons.forEach(btn => { btn.disabled = currentPage === 1; });
-      nextButtons.forEach(btn => { btn.disabled = currentPage === totalPages; });
+      prevButtons.forEach(btn => {
+        btn.disabled = currentPage === 1;
+      });
+
+      nextButtons.forEach(btn => {
+        btn.disabled = currentPage === totalPages;
+      });
 
       if (pageNumbersContainer) {
         pageNumbersContainer.innerHTML = '';
@@ -252,17 +290,15 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
         pageNumbers.forEach(pageItem => {
           if (pageItem === '...') {
+            // 创建省略号图标
             const iconContainer = document.createElement('span');
             iconContainer.innerHTML = '<svg class="mx-1" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>';
             pageNumbersContainer.appendChild(iconContainer.firstChild);
           } else {
             const button = document.createElement('button');
             button.className = pageItem === currentPage
-              ? 'rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold text-white dark:text-black/70'
+              ? 'rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold bg-(--primary) text-white dark:text-black/70'
               : 'rounded-lg overflow-hidden w-11 h-11 flex items-center justify-center font-bold btn-card active:scale-[0.85]';
-            if (pageItem === currentPage) {
-              button.style.backgroundColor = 'var(--primary)';
-            }
             button.dataset.page = pageItem.toString();
             button.dataset.section = sectionId;
             button.textContent = pageItem.toString();
@@ -277,9 +313,11 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
       }
     }
 
+    // Initial page setup
     updatePage();
   }
 
+  // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPagination);
   } else {
@@ -289,11 +327,13 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
 <style>
   .responsive-pagination {
+    /* 确保在所有设备上都能正确显示 */
     max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
+  /* 移动端样式 (< 768px) */
   .mobile-pagination {
     display: flex;
     padding: 0 1rem;
@@ -303,6 +343,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
     display: none;
   }
 
+  /* 桌面端样式 (>= 768px) */
   @media (min-width: 768px) {
     .mobile-pagination {
       display: none;

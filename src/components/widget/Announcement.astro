@@ -1,7 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-import WidgetLayout from "@/components/widget/WidgetLayout.astro";
-import { announcementConfig } from "@/config";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { announcementConfig } from "@/config/announcementConfig";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 
@@ -15,6 +15,7 @@ const className = Astro.props.class;
 const style = Astro.props.style;
 ---
 
+<!-- 组件显示现在由sidebarLayoutConfig统一控制，无需检查config.enable -->
 <WidgetLayout
   name={config.title || i18n(I18nKey.announcement)}
   id="announcement"
@@ -51,7 +52,7 @@ const style = Astro.props.style;
             onclick="this.closest('widget-layout').style.display='none'"
             aria-label={i18n(I18nKey.announcementClose)}
           >
-            <Icon name="fa6-solid:xmark" class="text-sm" />
+            <Icon name="fa7-solid:xmark" class="text-sm" />
           </button>
         )
       }

@@ -5,8 +5,11 @@ export function formatDateToYYYYMMDD(date: Date): string {
 }
 
 // 国际化日期格式化函数
-export function formatDateI18n(dateString: string): string {
-	const date = new Date(dateString);
+export function formatDateI18n(
+	dateInput: Date | string,
+	includeTime?: boolean,
+): string {
+	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
 	const lang = siteConfig.lang || "en";
 
 	// 根据语言设置不同的日期格式
@@ -15,6 +18,17 @@ export function formatDateI18n(dateString: string): string {
 		month: "long",
 		day: "numeric",
 	};
+
+	if (includeTime) {
+		options.hour = "2-digit";
+		options.minute = "2-digit";
+		options.second = "2-digit";
+	}
+
+	// 如果配置了时区，则将其用于格式化（IANA 时区字符串）
+	if (siteConfig.timezone) {
+		(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone;
+	}
 
 	// 语言代码映射
 	const localeMap: Record<string, string> = {
@@ -35,36 +49,36 @@ export function formatDateI18n(dateString: string): string {
 	};
 
 	const locale = localeMap[lang] || "en-US";
-	return date.toLocaleDateString(locale, options);
+	return includeTime
+		? date.toLocaleString(locale, options)
+		: date.toLocaleDateString(locale, options);
 }
 
 // 国际化日期时间格式化函数（带时分秒）
 export function formatDateI18nWithTime(dateInput: Date | string): string {
+	return formatDateI18n(dateInput, true);
+}
+
+// 统一格式为 YYYY-MM-DD HH:mm，支持站点时区
+export function formatDateTimeToYYYYMMDDHHmm(dateInput: Date | string): string {
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-	const lang = siteConfig.lang || "en";
 
 	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
-		month: "long",
-		day: "numeric",
+		month: "2-digit",
+		day: "2-digit",
 		hour: "2-digit",
 		minute: "2-digit",
-		second: "2-digit",
+		hour12: false,
 	};
 
-	const localeMap: Record<string, string> = {
-		zh_CN: "zh-CN",
-		zh_TW: "zh-TW",
-		en: "en-US",
-		ja: "ja-JP",
-		ko: "ko-KR",
-		es: "es-ES",
-		th: "th-TH",
-		vi: "vi-VN",
-		tr: "tr-TR",
-		id: "id-ID",
-	};
+	if (siteConfig.timezone) {
+		options.timeZone = siteConfig.timezone;
+	}
 
-	const locale = localeMap[lang] || "en-US";
-	return date.toLocaleString(locale, options);
+	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
+	const get = (type: Intl.DateTimeFormatPartTypes) =>
+		parts.find((p) => p.type === type)?.value || "";
+
+	return `${get("year")}-${get("month")}-${get("day")} ${get("hour")}:${get("minute")}`;
 }

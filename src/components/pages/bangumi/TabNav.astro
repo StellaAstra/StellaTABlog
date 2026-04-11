@@ -13,18 +13,23 @@ interface Props {
 const { tabs, activeTab } = Astro.props;
 ---
 
-<div class="border-b border-[var(--line-divider)] mb-3">
+<div class="border-b border-(--line-divider) mb-3">
   <nav class="flex space-x-8" aria-label="Tabs">
     {tabs.map((tab) => (
       <button
-        class="bangumi-tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
+        class:list={[
+          "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200",
+          {
+            "border-(--primary) text-(--primary)": tab.id === activeTab,
+            "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300": tab.id !== activeTab
+          }
+        ]}
         data-tab={tab.id}
-        data-tab-active={tab.id === activeTab ? "true" : "false"}
         type="button"
       >
         {tab.name}
         {tab.count !== undefined && (
-          <span class="bangumi-tab-badge ml-2 py-0.5 px-2 rounded-full text-xs">
+          <span class="ml-2 bg-(--btn-regular-bg) text-(--btn-content) py-0.5 px-2 rounded-full text-xs">
             {tab.count}
           </span>
         )}
@@ -32,31 +37,6 @@ const { tabs, activeTab } = Astro.props;
     ))}
   </nav>
 </div>
-
-<style is:global>
-  .bangumi-tab-btn[data-tab-active="true"] {
-    border-bottom-color: var(--primary);
-    color: var(--primary);
-  }
-  .bangumi-tab-btn[data-tab-active="false"] {
-    border-bottom-color: transparent;
-    color: rgb(107 114 128); /* gray-500 */
-  }
-  .bangumi-tab-btn[data-tab-active="false"]:hover {
-    color: rgb(55 65 81); /* gray-700 */
-    border-bottom-color: rgb(209 213 219); /* gray-300 */
-  }
-  :root.dark .bangumi-tab-btn[data-tab-active="false"] {
-    color: rgb(156 163 175); /* gray-400 */
-  }
-  :root.dark .bangumi-tab-btn[data-tab-active="false"]:hover {
-    color: rgb(209 213 219); /* gray-300 */
-  }
-  .bangumi-tab-badge {
-    background-color: var(--btn-regular-bg);
-    color: var(--btn-content);
-  }
-</style>
 
 <script>
   function initTabNavigation() {
@@ -98,11 +78,14 @@ const { tabs, activeTab } = Astro.props;
         return;
       }
 
-      // Update active tab using data attribute
+      // Update active tab
       tabButtons.forEach(btn => {
-        (btn as HTMLElement).dataset.tabActive = "false";
+        btn.classList.remove('border-(--primary)', 'text-(--primary)');
+        btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
       });
-      targetButton.dataset.tabActive = "true";
+
+      targetButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+      targetButton.classList.add('border-(--primary)', 'text-(--primary)');
 
       // Show/hide sections
       sections.forEach(section => {

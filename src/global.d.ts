@@ -1,10 +1,17 @@
-import type { AstroIntegration } from "@swup/astro";
-
 declare global {
+	interface HTMLElementTagNameMap {
+		"table-of-contents": HTMLElement & {
+			init?: () => void;
+		};
+	}
+
 	interface Window {
-		// type from '@swup/astro' is incorrect
-		swup: AstroIntegration;
+		// biome-ignore lint/suspicious/noExplicitAny: External library
+		swup: any;
+		live2dModelInitialized?: boolean;
 		spineModelInitialized?: boolean;
+		floatingTOCListenersInitialized?: boolean;
+		// biome-ignore lint/suspicious/noExplicitAny: External library
 		spinePlayerInstance?: any;
 		pagefind: {
 			search: (query: string) => Promise<{
@@ -13,7 +20,7 @@ declare global {
 				}>;
 			}>;
 		};
-		__stellaMusic?: {
+		__StellaMusic?: {
 			init: () => Promise<void>;
 			getState: () => {
 				playlist: Array<{
@@ -58,6 +65,11 @@ declare global {
 			loadTrack: (index: number, autoPlay: boolean) => void;
 		};
 	}
+
+	interface MediaQueryList {
+		addListener(listener: (e: MediaQueryListEvent) => void): void;
+		removeListener(listener: (e: MediaQueryListEvent) => void): void;
+	}
 }
 
 interface SearchResult {
@@ -85,3 +97,5 @@ interface SearchResult {
 	raw_url?: string;
 	sub_results?: SearchResult[];
 }
+
+export type { SearchResult };

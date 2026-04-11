@@ -1,0 +1,92 @@
+---
+import { Icon } from "astro-icon/components";
+import CloudGallery from "@/components/pages/gallery/CloudGallery.svelte";
+import { imageLibraryConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+// 检查页面是否启用
+if (!siteConfig.pages.gallery) {
+	return Astro.redirect("/404/");
+}
+
+const title = i18n(I18nKey.cloudGallery);
+const description = i18n(I18nKey.cloudGalleryDescription);
+
+// 构建 i18n texts 传递给 Svelte 组件
+const texts: Record<string, string> = {
+	cloudGallery: i18n(I18nKey.cloudGallery),
+	cloudGalleryDescription: i18n(I18nKey.cloudGalleryDescription),
+	cloudGalleryLoading: i18n(I18nKey.cloudGalleryLoading),
+	cloudGalleryError: i18n(I18nKey.cloudGalleryError),
+	cloudGalleryEmpty: i18n(I18nKey.cloudGalleryEmpty),
+	cloudGalleryRetry: i18n(I18nKey.cloudGalleryRetry),
+	cloudGalleryUpload: i18n(I18nKey.cloudGalleryUpload),
+	cloudGalleryUploadTitle: i18n(I18nKey.cloudGalleryUploadTitle),
+	cloudGalleryUploadDrop: i18n(I18nKey.cloudGalleryUploadDrop),
+	cloudGalleryUploadSelect: i18n(I18nKey.cloudGalleryUploadSelect),
+	cloudGalleryUploadHint: i18n(I18nKey.cloudGalleryUploadHint),
+	cloudGalleryUploadStart: i18n(I18nKey.cloudGalleryUploadStart),
+	cloudGalleryUploadUploading: i18n(I18nKey.cloudGalleryUploadUploading),
+	cloudGalleryUploadDone: i18n(I18nKey.cloudGalleryUploadDone),
+	cloudGalleryUploadFailed: i18n(I18nKey.cloudGalleryUploadFailed),
+	cloudGalleryUploadPending: i18n(I18nKey.cloudGalleryUploadPending),
+	cloudGalleryUploadClearDone: i18n(I18nKey.cloudGalleryUploadClearDone),
+	cloudGalleryUploadAdd: i18n(I18nKey.cloudGalleryUploadAdd),
+	cloudGalleryImages: i18n(I18nKey.cloudGalleryImages),
+	cloudGalleryPage: i18n(I18nKey.cloudGalleryPage),
+};
+---
+
+<MainGridLayout title={title} description={description}>
+  <div
+    class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
+  >
+    <div class="card-base z-10 px-9 py-6 relative w-full">
+      <!-- 页面标题和描述 -->
+      <div class="mb-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div
+            class="h-8 w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
+          >
+            <Icon name="material-symbols:cloud" class="text-[1.5rem]" />
+          </div>
+          <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            {title}
+          </div>
+        </div>
+        {description && (
+          <p class="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+            {description}
+          </p>
+        )}
+      </div>
+
+      <!-- 标签页切换: 本地相册 / 云端图库 -->
+      <div class="flex items-center gap-2 mb-6">
+        <a
+          href="/gallery/"
+          class="btn-regular px-4 py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors duration-200 text-sm font-medium inline-flex items-center gap-1.5"
+        >
+          <Icon name="material-symbols:photo-library" class="text-base" />
+          {i18n(I18nKey.cloudGalleryLocalAlbums)}
+        </a>
+        <div
+          class="btn-regular px-4 py-1.5 rounded-lg bg-(--primary) text-white transition-colors duration-200 text-sm font-medium inline-flex items-center gap-1.5"
+        >
+          <Icon name="material-symbols:cloud" class="text-base" />
+          {i18n(I18nKey.cloudGalleryCloudAlbums)}
+        </div>
+      </div>
+
+      <!-- 云端图库组件 (CSR) -->
+      <CloudGallery
+        client:only="svelte"
+        defaultSpace={imageLibraryConfig.defaultSpace}
+        columnWidth={240}
+        texts={texts}
+      />
+    </div>
+  </div>
+</MainGridLayout>

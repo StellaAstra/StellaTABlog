@@ -59,7 +59,7 @@ const managerConfigStr = JSON.stringify({
 <script is:inline data-swup-ignore-script define:vars={{ managerConfigStr }}>
 (function () {
     // Singleton guard – only create once
-    if (window.__stellaMusic) return;
+    if (window.__StellaMusic) return;
 
     var config = JSON.parse(managerConfigStr);
 
@@ -96,7 +96,7 @@ const managerConfigStr = JSON.stringify({
 
     // ── Audio element (persistent, attached to body) ────────
     var audio = document.createElement('audio');
-    audio.preload = 'auto';
+    audio.crossOrigin = 'anonymous';
     audio.style.display = 'none';
     document.body.appendChild(audio);
 
@@ -132,7 +132,6 @@ const managerConfigStr = JSON.stringify({
         if (!config.meting) return;
         var m = config.meting;
         var apis = [m.api].concat(m.fallbackApis || []);
-        var lastError = null;
 
         for (var i = 0; i < apis.length; i++) {
             var baseApi = apis[i];
@@ -145,42 +144,27 @@ const managerConfigStr = JSON.stringify({
                     .replace(':r', Math.random());
                 if (m.auth) fetchUrl += '&auth=' + m.auth;
 
-                console.log('[MusicManager] Fetching from:', fetchUrl);
                 var res = await fetch(fetchUrl);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
-                var raw = await res.text();
-                console.log('[MusicManager] Raw response length:', raw.length);
-
-                var data;
-                try {
-                    data = JSON.parse(raw);
-                } catch (parseErr) {
-                    console.warn('[MusicManager] JSON parse failed:', parseErr, 'raw:', raw.substring(0, 200));
-                    throw new Error('Invalid JSON response');
-                }
+                var data = await res.json();
 
                 if (Array.isArray(data) && data.length > 0) {
-                    console.log('[MusicManager] Got', data.length, 'tracks from API', i);
                     state.playlist = data.map(function (item) {
                         return {
                             name: item.title || item.name || 'Unknown',
                             artist: item.author || item.artist || 'Unknown',
                             url: item.url,
                             pic: item.pic || item.cover || '',
-                            lrc: item.lrc || ''
+                            lrc: item.lrc
                         };
                     });
-                    console.log('[MusicManager] First track:', JSON.stringify(state.playlist[0]));
                     return;
-                } else {
-                    console.warn('[MusicManager] API returned empty or non-array:', typeof data, Array.isArray(data) ? data.length : '');
                 }
             } catch (e) {
-                lastError = e;
-                console.warn('[MusicManager] Meting API #' + i + ' failed:', baseApi, e.message || e);
+                console.warn('Meting API failed for ' + baseApi, e);
             }
         }
-        throw new Error('All Meting APIs failed' + (lastError ? ': ' + lastError.message : ''));
+        throw new Error('All Meting APIs failed');
     }
 
     // ── Lyrics ───────────────────────────────────────────────
@@ -221,7 +205,6 @@ const managerConfigStr = JSON.stringify({
         state.currentIndex = index;
         var track = state.playlist[index];
 
-        console.log('[MusicManager] Loading track #' + index + ':', track.name, '| URL:', track.url);
         audio.src = track.url;
 
         loadLyrics(track);
@@ -357,10 +340,7 @@ const managerConfigStr = JSON.stringify({
     });
 
     audio.addEventListener('error', function () {
-        var errCode = audio.error ? audio.error.code : 'unknown';
-        var errMsg = audio.error ? audio.error.message : '';
-        console.error('[MusicManager] Audio error - code:', errCode, 'message:', errMsg, 'src:', audio.src);
-        state.error = 'Audio playback error (code: ' + errCode + ')';
+        state.error = 'Audio playback error';
         emit('fm:error', { message: state.error });
     });
 
@@ -368,7 +348,6 @@ const managerConfigStr = JSON.stringify({
     async function init() {
         if (state.initialized || state.initializing) return;
         state.initializing = true;
-        console.log('[MusicManager] Initializing... mode:', config.mode);
 
         try {
             if (config.mode === 'meting' && config.meting) {
@@ -376,8 +355,6 @@ const managerConfigStr = JSON.stringify({
             } else if (config.mode === 'local') {
                 state.playlist = config.localPlaylist || [];
             }
-
-            console.log('[MusicManager] Playlist loaded:', state.playlist.length, 'tracks');
 
             if (state.playlist.length > 0) {
                 // Apply volume
@@ -424,7 +401,7 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Public API ───────────────────────────────────────────
-    window.__stellaMusic = {
+    window.__StellaMusic = {
         init: init,
         getState: function () {
             var track = state.playlist[state.currentIndex] || null;
