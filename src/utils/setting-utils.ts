@@ -707,10 +707,10 @@ function updateNavbarTransparency(mode: WALLPAPER_MODE) {
 	// 滚动检测功能
 	if (
 		transparentMode === "semifull" &&
-		mode === WALLPAPER_BANNER &&
+		(mode === WALLPAPER_BANNER || mode === WALLPAPER_VIDEO) &&
 		typeof window.initSemifullScrollDetection === "function"
 	) {
-		// 仅在Banner模式的semifull下启用滚动检测
+		// 在Banner模式和Video模式的semifull下启用滚动检测
 		window.initSemifullScrollDetection();
 	} else if (window.semifullScrollHandler) {
 		// 移除滚动监听器

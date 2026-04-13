@@ -22,22 +22,21 @@ import NavMenuPanel from "./NavMenuPanel.astro";
 const className = Astro.props.class;
 
 // 获取导航栏透明模式配置
-const navbarTransparentMode =
-	backgroundWallpaper.mode === "banner"
-		? backgroundWallpaper.banner?.navbar?.transparentMode || "semi"
-		: "semi";
+// banner 和 video 模式都使用横幅式壁纸，共享 navbar 配置
+const isBannerLikeMode = backgroundWallpaper.mode === "banner" || backgroundWallpaper.mode === "video";
+const navbarTransparentMode = isBannerLikeMode
+	? backgroundWallpaper.banner?.navbar?.transparentMode || "semi"
+	: "semi";
 
 // 获取导航栏毛玻璃效果配置
-const navbarEnableBlur =
-	backgroundWallpaper.mode === "banner"
-		? (backgroundWallpaper.banner?.navbar?.enableBlur ?? true)
-		: false;
+const navbarEnableBlur = isBannerLikeMode
+	? (backgroundWallpaper.banner?.navbar?.enableBlur ?? true)
+	: false;
 
 // 获取导航栏模糊度
-const navbarBlur =
-	backgroundWallpaper.mode === "banner"
-		? (backgroundWallpaper.banner?.navbar?.blur ?? 20)
-		: 0;
+const navbarBlur = isBannerLikeMode
+	? (backgroundWallpaper.banner?.navbar?.blur ?? 20)
+	: 0;
 
 // 获取导航栏标题，如果没有设置则使用 siteConfig.title
 const navbarTitle = siteConfig.navbar.title || siteConfig.title;
