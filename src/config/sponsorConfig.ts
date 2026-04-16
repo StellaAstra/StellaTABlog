@@ -61,6 +61,12 @@ export const sponsorConfig: SponsorConfig = {
 	sponsors: [
 		// 示例：已实名赞助者
 		{
+			name: "LCPD拉灯",
+			amount: "¥50",
+			date: "2026-4-16",
+		},
+
+		{
 			name: "StellaAstra",
 			amount: "¥50",
 			date: "2025-10-18",

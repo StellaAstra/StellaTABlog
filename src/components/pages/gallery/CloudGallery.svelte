@@ -516,7 +516,7 @@ $: if (images.length > 0 && fancyboxLoaded) {
 			class="cg-upload-btn ml-auto"
 			title={texts.cloudGalleryUpload || "上传"}
 		>
-			<Icon icon="material-symbols:cloud-upload-rounded" class="w-4 h-4" />
+			<Icon icon="material-symbols:backup-rounded" class="w-4 h-4" />
 			<span>{texts.cloudGalleryUpload || "上传"}</span>
 		</button>
 	</div>
@@ -636,7 +636,7 @@ $: if (images.length > 0 && fancyboxLoaded) {
 			{texts.cloudGalleryDescription || "当前空间还没有上传任何图片"}
 		</p>
 		<button on:click={toggleUploadPanel} class="cg-action-btn">
-			<Icon icon="material-symbols:cloud-upload-rounded" class="w-4 h-4" />
+			<Icon icon="material-symbols:backup-rounded" class="w-4 h-4" />
 			<span>{texts.cloudGalleryUpload || "上传"}</span>
 		</button>
 	</div>
@@ -764,7 +764,7 @@ $: if (images.length > 0 && fancyboxLoaded) {
 						class="w-9 h-9 rounded-xl bg-(--primary)/10 flex items-center justify-center"
 					>
 						<Icon
-							icon="material-symbols:cloud-upload-rounded"
+							icon="material-symbols:backup-rounded"
 							class="w-5 h-5 text-(--primary)"
 						/>
 					</div>
@@ -814,7 +814,7 @@ $: if (images.length > 0 && fancyboxLoaded) {
 						>
 							<Icon
 								icon={isDragOver
-									? "material-symbols:file-download-rounded"
+									? "material-symbols:download-rounded"
 									: "material-symbols:add-photo-alternate-outline-rounded"}
 								class="w-7 h-7 text-(--primary)"
 							/>
@@ -982,7 +982,7 @@ $: if (images.length > 0 && fancyboxLoaded) {
 						></div>
 						<span>{texts.cloudGalleryUploadUploading || "上传中..."}</span>
 					{:else}
-						<Icon icon="material-symbols:cloud-upload-rounded" class="w-4 h-4" />
+						<Icon icon="material-symbols:backup-rounded" class="w-4 h-4" />
 						<span
 							>{texts.cloudGalleryUploadStart || "上传"} ({uploadItems.filter(
 								(i) => i.status === "pending",

@@ -1,5 +1,5 @@
 ---
-title: Pre-RenderDocMCP
+title: RenderDoc MCP Server 详细分析报告
 published: 2026-04-16
 description: 'AI自动化分析逆向工具'
 image: './0.png'
@@ -8,8 +8,6 @@ category: ''
 draft: false 
 lang: 'zh_CN'
 ---
-
-# RenderDoc MCP Server 详细分析报告
 
 > **版本**: v1.6.0 | **工具数量**: 37 个 | **日期**: 2026-04-16
 
