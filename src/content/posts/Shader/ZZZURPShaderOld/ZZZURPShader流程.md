@@ -13,7 +13,7 @@ pinned: false
 :::tip
 下面视频是新版优化后的ZZZShader
 :::
-<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV1MHhHzqEok" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV1MHhHzqEok&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 :::warning
 该文章只是从我的旧博客以及语雀笔记上迁移，目前已经迭代过一个版本，该文章版本已经过时，仅供参考，新版的文档可能后续会更新(待定)

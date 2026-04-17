@@ -15,6 +15,7 @@ lang: 'zh_CN'
 该自研的RenderDocMCP源码并不会分享出来，本文章仅作为制作成果分享展示
 :::
 
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV1EPd5BGEiR&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 ---
 
 ## 一、项目概述
