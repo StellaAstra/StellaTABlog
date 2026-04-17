@@ -4,7 +4,7 @@ published: 2025-10-18
 description: '有效果但是没写文章打算后面补充'
 image: './logo.jpg'
 tags: [大饼]
-category: '大饼'
+category: 'Introduce'
 draft: false
 lang: ''
 pinned: true
