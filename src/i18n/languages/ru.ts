@@ -216,6 +216,7 @@ export const ru: Translation = {
 	[Key.wallpaperBannerMode]: "Баннер обои",
 	[Key.wallpaperOverlayMode]: "Прозрачный",
 	[Key.wallpaperNoneMode]: "Однотонный фон",
+	[Key.wallpaperVideoMode]: "Видео обои",
 
 	// Настройки баннера
 	[Key.bannerSettings]: "Настройки баннера",
@@ -226,6 +227,12 @@ export const ru: Translation = {
 	[Key.overlayOpacity]: "Прозрачность обоев",
 	[Key.overlayBlur]: "Размытие фона",
 	[Key.overlayCardOpacity]: "Прозрачность карточек",
+
+	// Настройки видео
+	[Key.videoSettings]: "Настройки видео",
+	[Key.videoPause]: "Пауза видео",
+	[Key.videoSwitch]: "Переключить видео",
+	[Key.videoCarousel]: "Карусель видео",
 
 	// Макет списка сообщений
 	[Key.postListLayout]: "Макет списка сообщений",
@@ -310,7 +317,8 @@ export const ru: Translation = {
 
 	// Облачная галерея
 	[Key.cloudGallery]: "Облачная галерея",
-	[Key.cloudGalleryDescription]: "Просмотр и управление облачными изображениями",
+	[Key.cloudGalleryDescription]:
+		"Просмотр и управление облачными изображениями",
 	[Key.cloudGalleryLoading]: "Загрузка...",
 	[Key.cloudGalleryError]: "Ошибка загрузки",
 	[Key.cloudGalleryEmpty]: "Нет изображений",
@@ -319,7 +327,8 @@ export const ru: Translation = {
 	[Key.cloudGalleryUploadTitle]: "Загрузить изображения",
 	[Key.cloudGalleryUploadDrop]: "Перетащите изображения сюда",
 	[Key.cloudGalleryUploadSelect]: "или нажмите для выбора файлов",
-	[Key.cloudGalleryUploadHint]: "JPG / PNG / GIF / WebP / SVG / AVIF · Макс 10МБ",
+	[Key.cloudGalleryUploadHint]:
+		"JPG / PNG / GIF / WebP / SVG / AVIF · Макс 10МБ",
 	[Key.cloudGalleryUploadStart]: "Начать загрузку",
 	[Key.cloudGalleryUploadUploading]: "Загрузка...",
 	[Key.cloudGalleryUploadDone]: "Готово",

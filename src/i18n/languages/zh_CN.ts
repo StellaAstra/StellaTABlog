@@ -52,7 +52,8 @@ export const zh_CN: Translation = {
 	[Key.guestbookCommentHint]:
 		"您还未在配置文件中启用评论系统，启用后访客才可在此留言",
 	[Key.friends]: "友链",
-	[Key.friendsDescription]: "这里是我的朋友们和我参与过的项目以及个人的平台链接和实用网站，欢迎互相访问交流",
+	[Key.friendsDescription]:
+		"这里是我的朋友们和我参与过的项目以及个人的平台链接和实用网站，欢迎互相访问交流",
 	[Key.guestbook]: "留言",
 	[Key.guestbookDescription]: "欢迎在这里留下你的足迹，分享你的想法和建议",
 	[Key.untitled]: "无标题",
@@ -316,7 +317,8 @@ export const zh_CN: Translation = {
 	[Key.cloudGalleryUploadTitle]: "上传图片",
 	[Key.cloudGalleryUploadDrop]: "拖拽图片到此处",
 	[Key.cloudGalleryUploadSelect]: "或点击选择文件",
-	[Key.cloudGalleryUploadHint]: "JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
+	[Key.cloudGalleryUploadHint]:
+		"JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
 	[Key.cloudGalleryUploadStart]: "开始上传",
 	[Key.cloudGalleryUploadUploading]: "上传中...",
 	[Key.cloudGalleryUploadDone]: "完成",

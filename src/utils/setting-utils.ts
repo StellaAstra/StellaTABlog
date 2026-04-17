@@ -344,19 +344,19 @@ export function applyWallpaperModeToDocument(mode: WALLPAPER_MODE) {
 				body.classList.add("no-banner-layout");
 				showOverlayMode();
 				break;
-		case WALLPAPER_VIDEO:
-			body.classList.add("enable-banner");
-			showVideoMode();
-			break;
-		case WALLPAPER_NONE:
-			body.classList.add("no-banner-layout");
-			hideAllWallpapers();
-			break;
-		default:
-			body.classList.add("no-banner-layout");
-			hideAllWallpapers();
-			break;
-	}
+			case WALLPAPER_VIDEO:
+				body.classList.add("enable-banner");
+				showVideoMode();
+				break;
+			case WALLPAPER_NONE:
+				body.classList.add("no-banner-layout");
+				hideAllWallpapers();
+				break;
+			default:
+				body.classList.add("no-banner-layout");
+				hideAllWallpapers();
+				break;
+		}
 
 		// 更新导航栏透明模式
 		updateNavbarTransparency(mode);
@@ -1128,7 +1128,10 @@ function startVideoCarouselIfNeeded(): void {
 	if (!getStoredVideoCarouselEnabled()) return;
 	const carrier = document.getElementById("config-carrier");
 	if (!carrier) return;
-	const interval = Number.parseInt(carrier.dataset.wallpaperVideoCarouselInterval || "30000", 10);
+	const interval = Number.parseInt(
+		carrier.dataset.wallpaperVideoCarouselInterval || "30000",
+		10,
+	);
 	videoCarouselTimer = setInterval(() => {
 		switchToNextVideo();
 	}, interval);
@@ -1144,7 +1147,9 @@ function stopVideoCarousel(): void {
 
 // 监听视频轮播变化事件
 if (typeof window !== "undefined") {
-	window.addEventListener("videoCarouselChange", ((event: CustomEvent<{ enabled: boolean }>) => {
+	window.addEventListener("videoCarouselChange", ((
+		event: CustomEvent<{ enabled: boolean }>,
+	) => {
 		if (event.detail.enabled) {
 			startVideoCarouselIfNeeded();
 		} else {
@@ -1212,14 +1217,17 @@ export function switchToNextVideo(): void {
 	const videoListMobileStr = carrier.dataset.wallpaperVideoListMobile;
 	if (!videoListStr && !videoListMobileStr) return;
 
-	const videoList = videoListStr ? JSON.parse(videoListStr) as string[] : [];
-	const videoListMobile = videoListMobileStr ? JSON.parse(videoListMobileStr) as string[] : [];
+	const videoList = videoListStr ? (JSON.parse(videoListStr) as string[]) : [];
+	const videoListMobile = videoListMobileStr
+		? (JSON.parse(videoListMobileStr) as string[])
+		: [];
 
 	if (videoList.length <= 1 && videoListMobile.length <= 1) return;
 
 	// 获取当前索引
 	const currentIndex = getStoredVideoIndex();
-	const nextIndex = (currentIndex + 1) % Math.max(videoList.length, videoListMobile.length, 1);
+	const nextIndex =
+		(currentIndex + 1) % Math.max(videoList.length, videoListMobile.length, 1);
 
 	setStoredVideoIndex(nextIndex);
 	applyVideoIndexToDocument(nextIndex, videoList, videoListMobile);

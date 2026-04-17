@@ -3,61 +3,62 @@ import { backgroundWallpaper, siteConfig } from "@/config";
 
 // 解析视频壁纸源（返回第一个视频路径，兼容旧逻辑）
 function getVideoSrc(): string {
-  const videoConfig = backgroundWallpaper.video;
-  if (!videoConfig?.src) return "";
-  if (typeof videoConfig.src === "string") return videoConfig.src;
-  if (Array.isArray(videoConfig.src)) return videoConfig.src[0] || "";
-  const desktop = videoConfig.src.desktop;
-  if (typeof desktop === "string") return desktop;
-  if (Array.isArray(desktop)) return desktop[0] || "";
-  const mobile = videoConfig.src.mobile;
-  if (typeof mobile === "string") return mobile;
-  if (Array.isArray(mobile)) return mobile[0] || "";
-  return "";
+	const videoConfig = backgroundWallpaper.video;
+	if (!videoConfig?.src) return "";
+	if (typeof videoConfig.src === "string") return videoConfig.src;
+	if (Array.isArray(videoConfig.src)) return videoConfig.src[0] || "";
+	const desktop = videoConfig.src.desktop;
+	if (typeof desktop === "string") return desktop;
+	if (Array.isArray(desktop)) return desktop[0] || "";
+	const mobile = videoConfig.src.mobile;
+	if (typeof mobile === "string") return mobile;
+	if (Array.isArray(mobile)) return mobile[0] || "";
+	return "";
 }
 
 function getVideoSrcMobile(): string {
-  const videoConfig = backgroundWallpaper.video;
-  if (!videoConfig?.src) return "";
-  if (typeof videoConfig.src === "string") return videoConfig.src;
-  if (Array.isArray(videoConfig.src)) return videoConfig.src[0] || "";
-  const mobile = videoConfig.src.mobile;
-  if (typeof mobile === "string") return mobile;
-  if (Array.isArray(mobile)) return mobile[0] || "";
-  const desktop = videoConfig.src.desktop;
-  if (typeof desktop === "string") return desktop;
-  if (Array.isArray(desktop)) return desktop[0] || "";
-  return "";
+	const videoConfig = backgroundWallpaper.video;
+	if (!videoConfig?.src) return "";
+	if (typeof videoConfig.src === "string") return videoConfig.src;
+	if (Array.isArray(videoConfig.src)) return videoConfig.src[0] || "";
+	const mobile = videoConfig.src.mobile;
+	if (typeof mobile === "string") return mobile;
+	if (Array.isArray(mobile)) return mobile[0] || "";
+	const desktop = videoConfig.src.desktop;
+	if (typeof desktop === "string") return desktop;
+	if (Array.isArray(desktop)) return desktop[0] || "";
+	return "";
 }
 
 // 解析视频列表（用于多视频切换和轮播）
 function getVideoList(): string[] {
-  const videoConfig = backgroundWallpaper.video;
-  if (!videoConfig?.src) return [];
-  if (typeof videoConfig.src === "string") return [videoConfig.src];
-  if (Array.isArray(videoConfig.src)) return videoConfig.src;
-  const desktop = videoConfig.src.desktop;
-  if (typeof desktop === "string") return [desktop];
-  if (Array.isArray(desktop)) return desktop;
-  return [];
+	const videoConfig = backgroundWallpaper.video;
+	if (!videoConfig?.src) return [];
+	if (typeof videoConfig.src === "string") return [videoConfig.src];
+	if (Array.isArray(videoConfig.src)) return videoConfig.src;
+	const desktop = videoConfig.src.desktop;
+	if (typeof desktop === "string") return [desktop];
+	if (Array.isArray(desktop)) return desktop;
+	return [];
 }
 
 function getVideoListMobile(): string[] {
-  const videoConfig = backgroundWallpaper.video;
-  if (!videoConfig?.src) return [];
-  if (typeof videoConfig.src === "string") return [videoConfig.src];
-  if (Array.isArray(videoConfig.src)) return videoConfig.src;
-  const mobile = videoConfig.src.mobile;
-  if (typeof mobile === "string") return [mobile];
-  if (Array.isArray(mobile)) return mobile;
-  return [];
+	const videoConfig = backgroundWallpaper.video;
+	if (!videoConfig?.src) return [];
+	if (typeof videoConfig.src === "string") return [videoConfig.src];
+	if (Array.isArray(videoConfig.src)) return videoConfig.src;
+	const mobile = videoConfig.src.mobile;
+	if (typeof mobile === "string") return [mobile];
+	if (Array.isArray(mobile)) return mobile;
+	return [];
 }
 
 const videoSrc = getVideoSrc();
 const videoSrcMobile = getVideoSrcMobile();
 const videoList = getVideoList();
 const videoListMobile = getVideoListMobile();
-const videoCarouselInterval = backgroundWallpaper.video?.carousel?.interval ?? 30000;
+const videoCarouselInterval =
+	backgroundWallpaper.video?.carousel?.interval ?? 30000;
 ---
 
 <!-- 全局配置载体 -->

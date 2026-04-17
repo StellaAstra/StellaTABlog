@@ -43,7 +43,7 @@ export const profileConfig: ProfileConfig = {
 			name: "bilibili",
 			icon: "fa7-brands:bilibili",
 			url: "https://space.bilibili.com/38784899?spm_id_from=333.1007.0.0",
-			showName: false
+			showName: false,
 		},
 		{
 			name: "TalkArtist",

@@ -318,7 +318,8 @@ export const zh_TW: Translation = {
 	[Key.cloudGalleryUploadTitle]: "上傳圖片",
 	[Key.cloudGalleryUploadDrop]: "拖曳圖片到此處",
 	[Key.cloudGalleryUploadSelect]: "或點擊選擇檔案",
-	[Key.cloudGalleryUploadHint]: "JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
+	[Key.cloudGalleryUploadHint]:
+		"JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
 	[Key.cloudGalleryUploadStart]: "開始上傳",
 	[Key.cloudGalleryUploadUploading]: "上傳中...",
 	[Key.cloudGalleryUploadDone]: "完成",

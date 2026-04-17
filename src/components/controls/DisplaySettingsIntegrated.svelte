@@ -21,10 +21,10 @@ import {
 	getStoredOverlayBlur,
 	getStoredOverlayCardOpacity,
 	getStoredOverlayOpacity,
+	getStoredVideoCarouselEnabled,
+	getStoredVideoPaused,
 	getStoredWallpaperMode,
 	getStoredWavesEnabled,
-	getStoredVideoPaused,
-	getStoredVideoCarouselEnabled,
 	getVideoListLength,
 	setBannerCarouselEnabled,
 	setBannerTitleEnabled,
@@ -32,10 +32,10 @@ import {
 	setOverlayBlur,
 	setOverlayCardOpacity,
 	setOverlayOpacity,
+	setVideoCarouselEnabled,
+	setVideoPaused,
 	setWallpaperMode,
 	setWavesEnabled,
-	setVideoPaused,
-	setVideoCarouselEnabled,
 	switchToNextVideo,
 } from "@utils/setting-utils";
 import { onMount } from "svelte";
@@ -79,7 +79,7 @@ const isWallpaperSwitchable = backgroundWallpaper.switchable ?? true;
 const hasVideoSrc = (() => {
 	if (typeof document === "undefined") return false;
 	const carrier = document.getElementById("config-carrier");
-	return carrier?.dataset.wallpaperVideoSrc ? true : false;
+	return !!carrier?.dataset.wallpaperVideoSrc;
 })();
 const videoListCount = (() => {
 	if (typeof document === "undefined") return 0;

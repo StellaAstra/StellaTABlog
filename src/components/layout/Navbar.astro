@@ -23,7 +23,8 @@ const className = Astro.props.class;
 
 // 获取导航栏透明模式配置
 // banner 和 video 模式都使用横幅式壁纸，共享 navbar 配置
-const isBannerLikeMode = backgroundWallpaper.mode === "banner" || backgroundWallpaper.mode === "video";
+const isBannerLikeMode =
+	backgroundWallpaper.mode === "banner" || backgroundWallpaper.mode === "video";
 const navbarTransparentMode = isBannerLikeMode
 	? backgroundWallpaper.banner?.navbar?.transparentMode || "semi"
 	: "semi";

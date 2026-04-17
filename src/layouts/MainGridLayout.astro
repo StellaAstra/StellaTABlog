@@ -302,11 +302,16 @@ const bannerCarouselInterval = Math.max(
 
 // 视频壁纸源解析（支持字符串、字符串数组和桌面/移动端对象）
 const videoConfig = backgroundWallpaper.video;
-function resolveVideoSrc(src: any, preferDesktop: boolean): string {
+function resolveVideoSrc(
+	src: string | string[] | Record<string, unknown> | undefined | null,
+	preferDesktop: boolean,
+): string {
 	if (!src) return "";
 	if (typeof src === "string") return src;
 	if (Array.isArray(src)) return src[0] || "";
-	const primary = preferDesktop ? (src.desktop || src.mobile) : (src.mobile || src.desktop);
+	const primary = preferDesktop
+		? src.desktop || src.mobile
+		: src.mobile || src.desktop;
 	if (typeof primary === "string") return primary;
 	if (Array.isArray(primary)) return primary[0] || "";
 	return "";

@@ -24,8 +24,7 @@ export const friendsPageConfig: FriendsPageConfig = {
 export const friendsConfig: FriendLink[] = [
 	{
 		title: "Stella’s TA Skills Share Blog",
-		imgurl:
-			"https://stellaastra.dpdns.org/favicon/icon2.png",
+		imgurl: "https://stellaastra.dpdns.org/favicon/icon2.png",
 		desc: "一探索图形技术与分享的平台",
 		siteurl: "https://stellaastra.dpdns.org/",
 		tags: ["Blog"],
@@ -44,7 +43,8 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "GitHub",
-		imgurl: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+		imgurl:
+			"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
 		desc: "代码托管与开源项目分享",
 		siteurl: "https://github.com/StellaAstra",
 		tags: ["个人链接"],
@@ -90,11 +90,21 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "WindHolm",
-		imgurl: "https://q.qlogo.cn/headimg_dl?dst_uin=1323472112&spec=640&img_type=png",
+		imgurl:
+			"https://q.qlogo.cn/headimg_dl?dst_uin=1323472112&spec=640&img_type=png",
 		desc: "追求爱的过程也是爱！",
 		siteurl: "https://windholm.dpdns.org/",
 		tags: ["Blog"],
 		weight: 73,
+		enabled: true,
+	},
+	{
+		title: "流萤白沙のBlog",
+		imgurl: "https://img.lyrashore.com/img/2025/03/favicon.webp",
+		desc: "学习-记录-分享",
+		siteurl: "https://lyrashore.com",
+		tags: ["Blog"],
+		weight: 72,
 		enabled: true,
 	},
 

@@ -325,7 +325,8 @@ export const en: Translation = {
 	[Key.cloudGalleryUploadTitle]: "Upload Images",
 	[Key.cloudGalleryUploadDrop]: "Drop images here",
 	[Key.cloudGalleryUploadSelect]: "or click to select files",
-	[Key.cloudGalleryUploadHint]: "JPG / PNG / GIF / WebP / SVG / AVIF · Max 10MB",
+	[Key.cloudGalleryUploadHint]:
+		"JPG / PNG / GIF / WebP / SVG / AVIF · Max 10MB",
 	[Key.cloudGalleryUploadStart]: "Start Upload",
 	[Key.cloudGalleryUploadUploading]: "Uploading...",
 	[Key.cloudGalleryUploadDone]: "Done",

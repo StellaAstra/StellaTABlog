@@ -324,7 +324,8 @@ export const ja: Translation = {
 	[Key.cloudGalleryUploadTitle]: "画像をアップロード",
 	[Key.cloudGalleryUploadDrop]: "ここに画像をドロップ",
 	[Key.cloudGalleryUploadSelect]: "またはクリックしてファイルを選択",
-	[Key.cloudGalleryUploadHint]: "JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
+	[Key.cloudGalleryUploadHint]:
+		"JPG / PNG / GIF / WebP / SVG / AVIF · 最大 10MB",
 	[Key.cloudGalleryUploadStart]: "アップロード開始",
 	[Key.cloudGalleryUploadUploading]: "アップロード中...",
 	[Key.cloudGalleryUploadDone]: "完了",

@@ -3,8 +3,8 @@ import Icon from "@iconify/svelte";
 import { onMount } from "svelte";
 
 // Props: i18n 翻译文本通过 props 传入（因为 Svelte 组件无法直接调用 Astro 的 i18n）
-export let defaultSpace: string = "stella1028";
-export let columnWidth: number = 240;
+export let defaultSpace = "stella1028";
+export let columnWidth = 240;
 export let texts: Record<string, string> = {};
 
 // StarDots 文件数据接口
@@ -103,8 +103,7 @@ async function fetchSpaces() {
 		if (data.success && data.code === 200) {
 			spaces = data.data;
 			if (spaces.length > 0) {
-				const ds =
-					spaces.find((s) => s.name === defaultSpace) || spaces[0];
+				const ds = spaces.find((s) => s.name === defaultSpace) || spaces[0];
 				currentSpace = ds;
 				await fetchImages(1, ds.name);
 			}
@@ -112,7 +111,10 @@ async function fetchSpaces() {
 			error = data.message || texts.cloudGalleryError || "获取空间列表失败";
 		}
 	} catch (err) {
-		error = err instanceof Error ? err.message : texts.cloudGalleryError || "网络请求失败";
+		error =
+			err instanceof Error
+				? err.message
+				: texts.cloudGalleryError || "网络请求失败";
 	}
 }
 
@@ -141,7 +143,10 @@ async function fetchImages(page = 1, spaceName?: string) {
 			error = data.message || texts.cloudGalleryError || "获取图片失败";
 		}
 	} catch (err) {
-		error = err instanceof Error ? err.message : texts.cloudGalleryError || "网络请求失败";
+		error =
+			err instanceof Error
+				? err.message
+				: texts.cloudGalleryError || "网络请求失败";
 	} finally {
 		loading = false;
 	}
@@ -173,7 +178,17 @@ function formatTimestamp(ts: number): string {
 
 function isImageFile(filename: string): boolean {
 	const ext = getExtension(filename);
-	return ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "ico", "avif"].includes(ext);
+	return [
+		"jpg",
+		"jpeg",
+		"png",
+		"gif",
+		"webp",
+		"bmp",
+		"svg",
+		"ico",
+		"avif",
+	].includes(ext);
 }
 
 function handlePageClick(page: number) {
@@ -399,14 +414,23 @@ async function uploadSingleFile(item: UploadItem): Promise<void> {
 						if (response.success && response.code === 200) {
 							uploadItems = uploadItems.map((i) =>
 								i.id === item.id
-									? { ...i, status: "success" as const, progress: 100, url: response.data?.url }
+									? {
+											...i,
+											status: "success" as const,
+											progress: 100,
+											url: response.data?.url,
+										}
 									: i,
 							);
 							resolve();
 						} else {
 							uploadItems = uploadItems.map((i) =>
 								i.id === item.id
-									? { ...i, status: "error" as const, errorMsg: response.message || "上传失败" }
+									? {
+											...i,
+											status: "error" as const,
+											errorMsg: response.message || "上传失败",
+										}
 									: i,
 							);
 							reject(new Error(response.message));
@@ -422,7 +446,11 @@ async function uploadSingleFile(item: UploadItem): Promise<void> {
 				} else {
 					uploadItems = uploadItems.map((i) =>
 						i.id === item.id
-							? { ...i, status: "error" as const, errorMsg: `HTTP 错误 ${xhr.status}` }
+							? {
+									...i,
+									status: "error" as const,
+									errorMsg: `HTTP 错误 ${xhr.status}`,
+								}
 							: i,
 					);
 					reject(new Error(`HTTP error: ${xhr.status}`));
