@@ -4,7 +4,7 @@ published: 2026-04-16
 description: 'AI自动化分析逆向工具'
 image: './0.png'
 tags: [AI,MCP,小工具,RenderDoc,模型提取,贴图提取]
-category: ''
+category: '小工具'
 draft: false 
 lang: 'zh_CN'
 ---

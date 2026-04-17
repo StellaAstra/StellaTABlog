@@ -6,7 +6,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 注意：如果设置为 "none" 或 "overlay"，则 src 中的图片将不会显示
 	// 注意：如果设置为 "video"，则 src 中的图片将不会显示
 	// 注意：如果设置为 "overlay"，则 src 中的图片将不会显示"
-	mode: "video",
+	mode: "banner",
 	// 是否允许用户通过导航栏切换壁纸模式，设为false可提升性能（只渲染当前模式）
 	switchable: true,
 	/**
