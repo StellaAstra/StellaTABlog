@@ -2,7 +2,7 @@
 title: 基于CubeMap的晶石效果
 published: 2025-10-18
 description: '通过Reflection Probe烘焙CubeMap实现晶石折射与反射效果'
-image: './image-2.png'
+image: './SparCubeMap/image-2.png'
 tags: [测试,Shader,CubeMap,Reflection Probe]
 category: '小效果测试'
 draft: false
@@ -35,7 +35,7 @@ fresnel             = max(pow(fresnel, _F_Power), 0.00001) * _F_Intensity + _F_B
 
 效果如下图所示：
 
-![](image-0.png)
+![](SparCubeMap/image-0.png)
 
 接下来是整个效果实现的核心也就是第二个pass，他主要实现的是晶石的折射与反射效果
 
@@ -51,11 +51,11 @@ half4 Refle         = SAMPLE_TEXTURECUBE_LOD(_ReflectTex, sampler_ReflectTex, RD
 
 接下来看效果：
 
-![](image-1.png)
+![](SparCubeMap/image-1.png)
 
 非常不错接下来我们将两个pass都加上，效果如下：
 
-![](image-2.png)
+![](SparCubeMap/image-2.png)
 
 不错我们的效果实现了！！
 

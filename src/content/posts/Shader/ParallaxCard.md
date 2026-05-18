@@ -2,7 +2,7 @@
 title: 光追视差卡牌效果
 published: 2025-10-18
 description: '光追视差原理'
-image: './image-0.png'
+image: './ParallaxCard/image-0.png'
 tags: [测试,视差,Shader,卡牌]
 category: '小效果测试'
 draft: false
@@ -12,11 +12,11 @@ pinned: false
 
 ## 一.核心原理讲解
 
-![](image-0.png)
+![](ParallaxCard/image-0.png)
 
 我们要做的就是求出B点位置坐标，然后用B的坐标去采样一张贴图，那么当我们相机转动视角的时候就会实现一个视差一样的效果，就相当于在A的平面计算一个假的平面，他们之间存在一定的深度关系，这样我们就能实现光追视差效果。不明白的话我们简化一下上面的图，请看下面这张。
 
-![](image-1.png)
+![](ParallaxCard/image-1.png)
 
 我们要求出B点的坐标，通过**射线与平面相交**
 
@@ -60,11 +60,11 @@ return parallax;
 
 上面就是计算角色层的深度坐标，这里我们把它叫做p1，让我们来看一下效果
 
-![](image-2.png)
+![](ParallaxCard/image-2.png)
 
 没有问题，接下来背景层同理，我们来看一下效果
 
-![](image-3.png)
+![](ParallaxCard/image-3.png)
 
 很好也没问题，这里我们将背景层叫做p2
 
@@ -88,7 +88,7 @@ noise = pow(noise*noise2,_P2NoiseMapVec.x) * _P2NoiseMapVec.y;
 
 让我们来看一效果
 
-![](image-4.png)
+![](ParallaxCard/image-4.png)
 
 很好这样的波动流光效果有了
 
@@ -104,11 +104,11 @@ p2 = p2 *(1+ noise * ( Luminance(p2) > (2.0 / 256.0) ) ) * _ParallaxMap2Tint;
 
 我们再来看一下效果
 
-![](image-5.png)
+![](ParallaxCard/image-5.png)
 
 这个可能不是很好我们看另一个
 
-![](image-6.png)
+![](ParallaxCard/image-6.png)
 
 非常完美
 
@@ -134,15 +134,15 @@ float4 color = lerp(p2,p1,p1.a);
 
 请看p1的alpha通道
 
-![](image-7.png)
+![](ParallaxCard/image-7.png)
 
 通过p1的alpha通道来lerp可以保证p1层在p2层上面，我们来看效果
 
-![](image-8.png)
+![](ParallaxCard/image-8.png)
 
 当当混合完成接下来我们将画框层也通过Alpah蒙版进行融合，使相框在最外层看效果
 
-![](image-9.png)
+![](ParallaxCard/image-9.png)
 
 很好到这边我们正面效果就已经完成了！！！鼓掌，接下来我们来实现背面的彩色效果
 
@@ -193,7 +193,7 @@ back = backMap + mask * pow(nh, 300) * 128 * rainbow * lum;
 
 到这里背面的效果也完成了我们来看一下背面的彩色效果
 
-![](image-10.png)
+![](ParallaxCard/image-10.png)
 
 非常完美！
 

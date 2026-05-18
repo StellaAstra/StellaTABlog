@@ -2,7 +2,7 @@
 title: RenderDoc MCP Server 详细分析报告
 published: 2026-04-16
 description: 'AI自动化分析逆向工具'
-image: './0.png'
+image: './RenderDocMCP/0.png'
 tags: [AI,MCP,小工具,RenderDoc,模型提取,贴图提取]
 category: '小工具'
 draft: false 

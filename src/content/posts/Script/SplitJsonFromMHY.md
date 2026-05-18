@@ -2,7 +2,7 @@
 title: mhy游戏资源查询更新小工具-fuck_mhy.py
 published: 2025-10-22
 description: '拆分json文件并对比上版本json文件浏览增加内容'
-image: './00.jpg'
+image: './Model_Get_SplitJson/00.jpg'
 tags: [小工具,ZZZ,解包]
 category: '小工具'
 draft: false
@@ -256,13 +256,13 @@ print("=" * 50)
 
 好了下面是效果和完整的代码，我对你们还是太好了代码都已经补上注释
 
-![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-33-07-image.png)
+![](Model_Get_SplitJson/image-1.png)
 
-![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-37-42-image.png)
+![](Model_Get_SplitJson/image-2.png)
 
-![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-39-27-image.png)
+![](Model_Get_SplitJson/image-3.png)
 
-![](C:\Users\Administrator\AppData\Roaming\marktext\images\2025-10-22-14-40-30-image.png)
+![](Model_Get_SplitJson/image-4.png)
 
 ## 完整代码
 

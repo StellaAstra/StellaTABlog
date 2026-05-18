@@ -2,7 +2,7 @@
 title: 终末地渲染Shader流程
 published: 2026-05-11
 description: '终末地角色渲染方案-unity'
-image: './image-0.png'
+image: './EndfieldShader/image-0.png'
 tags: [测试,Arknights:Endfield,Shader,游戏角色]
 category: '游戏角色Shader还原'
 draft: false
@@ -94,7 +94,7 @@ flowchart TD
 | `LightRotater.cs`                                          | Demo 场景灯光旋转辅助                                                         |
 | `MouseOrbit.cs`                                            | Demo 场景相机环绕辅助                                                         |
 
-`Assets/Script/ScreenSpacePlanarReflection` 当前目录为空，未发现实际反射插件实现。
+<!-- `Assets/Script/ScreenSpacePlanarReflection` 当前目录为空，未发现实际反射插件实现。 -->
 
 ---
 
@@ -392,14 +392,14 @@ Stencil
 | `_PCF_MEDIUM` | 5x5 Tent | 9        | 默认推荐      |
 | `_PCF_HIGH`   | 7x7 Tent | 16       | 最柔和，性能最高  |
 
-#### 自阴影方案对比：泊松圆盘 + PCF Filter vs Stencil 隔离 + PCF Fetch
+#### 自阴影方案对比：泊松圆盘 + PCF Filter vs Stencil 隔离 + PCF Tent Filter
 
 | 方案 | 核心思路 | 优点 | 缺点 |
 | --- | --- | --- | --- |
 | 泊松圆盘 + PCF Filter | 围绕 Shadow Coord 按泊松圆盘偏移多次采样 ShadowMap，再把多次比较结果平均成软阴影。 | 实现直观；采样分布不规则，边缘比固定网格更自然；不依赖 Stencil，适合单角色或简单投影场景快速验证。 | 多角色时缺少接收对象隔离，角色 A 的自阴影容易影响角色 B；采样半径、Bias、随机旋转不好调，近景容易出现抖动、噪点或游泳感；采样数量越高性能越贵；在 Atlas Tile 边缘容易跨 Tile 采样产生污染。 |
-| Stencil 隔离 + PCF Fetch | 角色主 Pass / 深度 Pass 写入唯一 `_StencilRef`，自阴影体积 Pass 只在 `Comp Equal` 的区域写入；PCF 使用 Unity Tent Filter 的优化 Fetch 数量生成 3x3 / 5x5 / 7x7 软阴影。 | 自阴影严格限制在当前角色身上，多角色不会互相串影；Fetch 数量固定且可控，`3x3=4`、`5x5=9`、`7x7=16`；更适合二次元角色近景，稳定性和可调试性更好；可以和 Shadow Ramp、全局自阴影强度直接组合。 | 需要所有相关角色材质正确写入 Stencil，透明头发、脸、衣服等 Pass 要保持一致；Stencil 状态不能通过 `MaterialPropertyBlock` 修改，需要运行时克隆材质写 `_StencilRef`；会占用 Stencil 位，角色数量和其他 Stencil 用法需要规划；隔离解决的是“画到谁身上”，阴影锯齿仍然需要依赖分辨率、Bias 和 PCF 档位调节。 |
+| Stencil 隔离 + PCF Tent Filter | 角色主 Pass / 深度 Pass 写入唯一 `_StencilRef`，自阴影体积 Pass 只在 `Comp Equal` 的区域写入；PCF 使用 Unity Tent Filter 的优化 Fetch 数量生成 3x3 / 5x5 / 7x7 软阴影。 | 自阴影严格限制在当前角色身上，多角色不会互相串影；Fetch 数量固定且可控，`3x3=4`、`5x5=9`、`7x7=16`；更适合二次元角色近景，稳定性和可调试性更好；可以和 Shadow Ramp、全局自阴影强度直接组合。 | 需要所有相关角色材质正确写入 Stencil，透明头发、脸、衣服等 Pass 要保持一致；Stencil 状态不能通过 `MaterialPropertyBlock` 修改，需要运行时克隆材质写 `_StencilRef`；会占用 Stencil 位，角色数量和其他 Stencil 用法需要规划；隔离解决的是“画到谁身上”，阴影锯齿仍然需要依赖分辨率、Bias 和 PCF 档位调节。 |
 
-当前终末地渲染还原工程的自阴影默认推荐使用 `Stencil 隔离 + PCF Fetch`。它比单纯的 `泊松圆盘 + PCF Filter` 更适合多角色、近景角色和需要稳定 NPR 阴影边界的场景；泊松圆盘方案更适合作为不需要角色隔离时的实验性软阴影方案。
+当前终末地渲染还原工程的自阴影默认推荐使用 `Stencil 隔离 + PCF Tent Filter`。它比单纯的 `泊松圆盘 + PCF Filter` 更适合多角色、近景角色和需要稳定 NPR 阴影边界的场景；泊松圆盘方案更适合作为不需要角色隔离时的实验性软阴影方案。
 
 Ramp 逻辑：
 
@@ -2632,25 +2632,25 @@ flowchart TD
 
 最后在下面放点角色图片
 
-![](CharPic/AKEKURI.png)
-![](CharPic/ALESH.png)
-![](CharPic/ANTAL.png)
-![](CharPic/ARCLIGHT.png)
-![](CharPic/ARDELIA.png)
-![](CharPic/AVYWENNA.png)
-![](CharPic/CATCHER.png)
-![](CharPic/CHENQIANYU.png)
-![](CharPic/DAPAN.png)
-![](CharPic/EMBER.png)
-![](CharPic/ESTELLA.png)
-![](CharPic/FLUORITE.png)
-![](CharPic/GILBERTA.png)
-![](CharPic/LAEVATAIN.png)
-![](CharPic/LASTRITE.png)
-![](CharPic/LIFENG.png)
-![](CharPic/PERLICA.png)
-![](CharPic/POGRANICHNIK.png)
-![](CharPic/SNOWSHINE.png)
-![](CharPic/WULFGARD.png)
-![](CharPic/XAIHI.png)
-![](CharPic/YVONNE.png)
+![](EndfieldShader/CharPic/AKEKURI.png)
+![](EndfieldShader/CharPic/ALESH.png)
+![](EndfieldShader/CharPic/ANTAL.png)
+![](EndfieldShader/CharPic/ARCLIGHT.png)
+![](EndfieldShader/CharPic/ARDELIA.png)
+![](EndfieldShader/CharPic/AVYWENNA.png)
+![](EndfieldShader/CharPic/CATCHER.png)
+![](EndfieldShader/CharPic/CHENQIANYU.png)
+![](EndfieldShader/CharPic/DAPAN.png)
+![](EndfieldShader/CharPic/EMBER.png)
+![](EndfieldShader/CharPic/ESTELLA.png)
+![](EndfieldShader/CharPic/FLUORITE.png)
+![](EndfieldShader/CharPic/GILBERTA.png)
+![](EndfieldShader/CharPic/LAEVATAIN.png)
+![](EndfieldShader/CharPic/LASTRITE.png)
+![](EndfieldShader/CharPic/LIFENG.png)
+![](EndfieldShader/CharPic/PERLICA.png)
+![](EndfieldShader/CharPic/POGRANICHNIK.png)
+![](EndfieldShader/CharPic/SNOWSHINE.png)
+![](EndfieldShader/CharPic/WULFGARD.png)
+![](EndfieldShader/CharPic/XAIHI.png)
+![](EndfieldShader/CharPic/YVONNE.png)
