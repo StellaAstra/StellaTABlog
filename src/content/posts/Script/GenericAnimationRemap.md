@@ -8,6 +8,9 @@ category: '小工具'
 draft: false 
 lang: 'zh_CN'
 ---
+### 项目地址
+
+::github{repo="StellaAstra/UnityTools"}
 ### 1. 插件用途
 
 `GenericAnimationBoneRemapperWindow` 是一个 Unity 编辑器插件，用于把已有 Generic 动画复制成新的 `.anim` 文件，并根据目标模型中的同名 `Transform` 重写动画曲线绑定路径。
