@@ -1,5 +1,5 @@
 ---
-title: RenderDocFreeCamera
+title: 在 RenderDoc 中实现自由相机：从截帧回放到跨游戏相机识别
 published: 2026-10-12
 description: 'RDC下的自由视角相机'
 image: './RDCFreeCam/1.jpg'
