@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="455" viewBox="0 0 1120 455" role="img" aria-labelledby="title desc">
+<title id="title">D3D11.1 共享常量缓冲区与绑定范围</title><desc id="desc">示意图不按比例。4194304 字节资源中从57344字节开始的4608字节范围用于相机常量。将它复制为紧凑替换缓冲区，绑定到偏移零，绘制后恢复原绑定。</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#637389" stroke-width="1.5"/></marker></defs>
+<rect width="1120" height="455" rx="20" fill="#f3f6fb"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#172c46">
+<text x="36" y="46" font-size="23" font-weight="700">资源大小 ≠ 当前绘制可见的常量范围</text>
+<text x="36" y="76" font-size="15" fill="#52647b">《终末地》frame5818 的实际观测值 · 示意图不按比例</text>
+<text x="36" y="121" font-size="17">原始共享资源：4,194,304 B（4 MiB）</text>
+<rect x="36" y="141" width="1048" height="65" rx="8" fill="#dbe3ef"/>
+<rect x="248" y="141" width="300" height="65" fill="#376da8"/>
+<text x="398" y="180" font-size="19" text-anchor="middle" fill="#fff">本次绑定范围：4,608 B</text>
+<g font-size="14" fill="#52647b"><text x="36" y="230">0</text><text x="248" y="230">起点 57,344 B</text><text x="548" y="230">终点 61,952 B</text><text x="1084" y="230" text-anchor="end">4,194,304 B</text></g>
+<path d="M398 242V286" fill="none" stroke="#637389" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="430" y="270" font-size="15" fill="#52647b">只读取有效范围并修改副本</text>
+<rect x="248" y="301" width="300" height="62" rx="8" fill="#237f76"/>
+<text x="398" y="338" text-anchor="middle" font-size="19" fill="#fff">紧凑副本：4,608 B</text>
+<text x="36" y="338" font-size="17">替换时绑定起点为 0</text>
+<path d="M560 332H646" fill="none" stroke="#637389" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="671" y="324" font-size="17">执行原绘制</text><text x="671" y="352" font-size="15" fill="#52647b">结束后恢复原资源与 57,344 B 的绑定偏移</text>
+<text x="36" y="413" font-size="15" fill="#52647b">API 偏移单位是 16 B 常量；图中已换算成字节。Shader 可见窗口最大为 64 KiB。</text>
+</g></svg>

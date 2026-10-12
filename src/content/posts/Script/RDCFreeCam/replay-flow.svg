@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="490" viewBox="0 0 1120 490" role="img" aria-labelledby="title desc">
+<title id="title">自由相机的数据流</title><desc id="desc">键鼠输入通过世界空间姿态和最新状态队列进入回放。整帧识别提供相机证据，绘制时绑定修改后的常量副本，绘制结束恢复原绑定。</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#637389" stroke-width="1.5"/></marker></defs>
+<rect width="1120" height="490" rx="20" fill="#f3f6fb"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#172c46">
+<text x="36" y="46" font-size="23" font-weight="700">自由相机：从输入到原始绘制回放</text>
+<text x="36" y="75" font-size="15" fill="#52647b">识别负责提供证据，交互负责生成姿态，替换只作用于回放副本。</text>
+<g fill="#fff" stroke="#d2dce9" stroke-width="1.5"><rect x="36" y="112" width="225" height="85" rx="12"/><rect x="308" y="112" width="225" height="85" rx="12"/><rect x="580" y="112" width="225" height="85" rx="12"/><rect x="852" y="112" width="232" height="85" rx="12"/></g>
+<g font-size="19" font-weight="700" text-anchor="middle"><text x="148" y="146">键鼠输入</text><text x="420" y="146">世界空间姿态</text><text x="692" y="146">合并最新状态</text><text x="968" y="146">回放到当前 EID</text></g>
+<g font-size="14" text-anchor="middle" fill="#52647b"><text x="148" y="175">移动 · 观察 · 环绕 · 推拉</text><text x="420" y="175">位置 + 正交方向基</text><text x="692" y="175">同时仅一个相机回放任务</text><text x="968" y="175">刷新所选纹理输出</text></g>
+<g stroke="#637389" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M261 154H297"/><path d="M533 154H569"/><path d="M805 154H841"/><path d="M968 197V255"/></g>
+<rect x="36" y="266" width="290" height="155" rx="12" fill="#e6edf9" stroke="#bccce7"/>
+<text x="58" y="298" font-size="19" font-weight="700">首次启用：扫描整帧</text><g font-size="15" fill="#415b7c"><text x="58" y="329">读取实际绑定的 VS 常量范围</text><text x="58" y="355">验证 V / VP / 逆矩阵或位置</text><text x="58" y="381">聚合、评分、选择或拒绝</text><text x="58" y="407">选定相机后恢复当前事件</text></g>
+<rect x="373" y="266" width="711" height="155" rx="12" fill="#e5f2f0" stroke="#b6d8d2"/>
+<text x="397" y="300" font-size="19" font-weight="700">每次命中的图形绘制</text>
+<g font-size="17" text-anchor="middle"><text x="472" y="350">绑定常量副本</text><text x="727" y="350">执行原始 Draw</text><text x="982" y="350">恢复原绑定</text></g>
+<g stroke="#637389" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M326 344H360"/><path d="M552 344H630"/><path d="M813 344H886"/></g>
+<text x="397" y="393" font-size="15" fill="#37655f">源资源与 RDC 不被改写；原绑定的资源、偏移和数量一并恢复。</text>
+<text x="36" y="459" font-size="14" fill="#52647b">当前范围：本地 D3D11 / D3D11.1；识别入口为 VS，替换覆盖图形阶段，未通用适配计算着色器。</text>
+</g></svg>
