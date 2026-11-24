@@ -10,7 +10,7 @@ lang: 'zh_CN'
 ---
 ### 项目地址
 
-::github{repo="asonMa0012/MooaToon"}
+::github{repo="JasonMa0012/MooaToon"}
 
 ![当前 5.7 分支下的 L_LookDev_UnityChan：全身与脸部特写](MooaToonEngineParsing/10-lookdev-unitychan-5.7.jpg)
 
