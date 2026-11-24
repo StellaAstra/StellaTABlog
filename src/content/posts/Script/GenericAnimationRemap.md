@@ -3,7 +3,7 @@ title: Generic 动画骨骼重映射插件实现与使用
 published: 2026-05-18
 description: '解包动画后动画资产因为路径问题导致不可使用解决方案'
 image: './GenericAnimationRemap/image-00.png'
-tags: [小工具,解包，动画]
+tags: [小工具, 解包, 动画]
 category: '小工具'
 draft: false 
 lang: 'zh_CN'
