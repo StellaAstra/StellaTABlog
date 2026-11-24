@@ -9,6 +9,7 @@
     "ignoreUnknown": false,
     "includes": [
       "**",
+      "!**/*.md",
       "!**/src/**/*.css",
       "!**/src/public/**/*",
       "!**/dist/**/*",
